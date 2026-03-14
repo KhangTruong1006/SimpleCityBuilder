@@ -22,12 +22,12 @@ public class RoadManager : MonoBehaviour
 
     public void PlaceRoad(Vector3Int position)
     {
-        if(placementManager.CheckIfPositionInBound(position) == false)
+        if(placementManager.isPositionInBound(position) == false)
         {
             return;
         }
         
-        if(placementManager.CheckifPositionIsFree(position) == false) {
+        if(placementManager.isPositionFree(position) == false) {
             return;
         }
 
@@ -40,7 +40,7 @@ public class RoadManager : MonoBehaviour
             startPosition = position;
 
             temporaryPlacementPositions.Add(position);
-            placementManager.PlaceTemporaryStructure(position, roadFixer.deadEnd, CellType.Road);
+            placementManager.placeTemporaryStructure(position, roadFixer.deadEnd, CellType.Road);
         }
 
         else
@@ -59,11 +59,11 @@ public class RoadManager : MonoBehaviour
 
             foreach (var temporaryPosition in temporaryPlacementPositions)
             {
-                if (placementManager.CheckifPositionIsFree(temporaryPosition) == false)
+                if (placementManager.isPositionFree(temporaryPosition) == false)
                 {
                     continue;
                 }
-                placementManager.PlaceTemporaryStructure(temporaryPosition, roadFixer.deadEnd, CellType.Road);
+                placementManager.placeTemporaryStructure(temporaryPosition, roadFixer.deadEnd, CellType.Road);
             }
         }
         fixRoadPrefabs();

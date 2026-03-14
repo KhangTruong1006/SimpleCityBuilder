@@ -62,14 +62,14 @@ public class StructureManager : MonoBehaviour
     private bool checkPositionBeforePlacement(Vector3Int position)
     {
         // Check if the position is within bounds
-        if (placementManager.CheckIfPositionInBound(position) ==  false)
+        if (placementManager.isPositionInBound(position) ==  false)
         {
             Debug.Log("Position is out of bound, cannot place structure here.");
             return false;
         }
 
         // Check if the position is free
-        if (placementManager.CheckifPositionIsFree(position) == false)
+        if (placementManager.isPositionFree(position) == false)
         {
             Debug.Log("Position is occupied, cannot place structure here.");
             return false;
