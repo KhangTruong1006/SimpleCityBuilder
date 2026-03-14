@@ -21,10 +21,10 @@ public class InputManager : MonoBehaviour
 
     public void Update()
     {
-        CheckClickDownEvent();
-        CheckClickUpEvent();
-        CheckClickHoldEvent();
-        CheckArrowInput();
+        checkClickDownEvent();
+        checkClickUpEvent();
+        checkClickHoldEvent();
+        checkArrowInput();
     }
 
     private Vector3Int? RaycastGround()
@@ -39,12 +39,12 @@ public class InputManager : MonoBehaviour
         return null;
     }
 
-    private void CheckArrowInput()
+    private void checkArrowInput()
     {
         cameraMovementVector = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     }
 
-    private void CheckClickHoldEvent()
+    private void checkClickHoldEvent()
     {
         if(Input.GetMouseButton(0) && EventSystem.current.IsPointerOverGameObject() == false)
         {
@@ -56,7 +56,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void CheckClickUpEvent()
+    private void checkClickUpEvent()
     {
         if (Input.GetMouseButtonUp(0) && EventSystem.current.IsPointerOverGameObject() == false)
         {
@@ -64,7 +64,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void CheckClickDownEvent()
+    private void checkClickDownEvent()
     {
         if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject() == false)
         {
