@@ -16,7 +16,8 @@ public class PlacementManager : MonoBehaviour
         placementGrid = new Grid(width, height);
     }
 
-    internal bool CheckIfPositionInBound(Vector3Int position)
+    // check if structure's position is in bound of the map
+    internal bool isPositionInBound(Vector3Int position)
     {
         if(position.x >= 0 && position.x < width && position.z >= 0 && position.z < height)
         {
@@ -25,24 +26,25 @@ public class PlacementManager : MonoBehaviour
         return false;
     }
 
-    internal bool CheckifPositionIsFree(Vector3Int position)
+    // check if the position is empty and can be built on
+    internal bool isPositionFree(Vector3Int position)
     {
-        return CheckIfPositionIsOfType(position, CellType.Empty);
+        return isPositionOfType(position, CellType.Empty);
     }
 
-    private bool CheckIfPositionIsOfType(Vector3Int position, CellType type)
+    private bool isPositionOfType(Vector3Int position, CellType type)
     {
         return placementGrid[position.x, position.z] == type;
     }
 
-    internal void PlaceTemporaryStructure(Vector3Int position, GameObject structurePrefab, CellType type)
+    internal void placeTemporaryStructure(Vector3Int position, GameObject structurePrefab, CellType type)
     {
         placementGrid[position.x, position.z] = type;
-        StructureModel structure = CreateNewStructureModel(position, structurePrefab, type);
+        StructureModel structure = createNewStructureModel(position, structurePrefab, type);
         temporaryRoadObjects.Add(position, structure);
     }
 
-    private StructureModel CreateNewStructureModel(Vector3Int position, GameObject structurePrefab, CellType type)
+    private StructureModel createNewStructureModel(Vector3Int position, GameObject structurePrefab, CellType type)
     {
         GameObject structure = new GameObject(type.ToString());
 
@@ -110,31 +112,21 @@ public class PlacementManager : MonoBehaviour
         foreach(var structure in temporaryRoadObjects)
         {
             structureDictionary.Add(structure.Key, structure.Value);
-            destroyNatureAt(structure.Key);
+            destroyNature(structure.Key);
         }
         temporaryRoadObjects.Clear();
-    }
-
-    internal bool isPositionInBound(Vector3 position)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal bool isPositionFree(Vector3 position)
-    {
-        throw new NotImplementedException();
     }
 
     internal void placeObjectOnTheMap(Vector3Int position, GameObject prefab, CellType type)
     {
         placementGrid[position.x, position.z] = type;
-        StructureModel structure = CreateNewStructureModel(position, prefab, type);
+        StructureModel structure = createNewStructureModel(position, prefab, type);
         structureDictionary.Add(position, structure);
 
-        destroyNatureAt(position);
+        destroyNature(position);
     }
 
-    private void destroyNatureAt(Vector3Int position)
+    private void destroyNature(Vector3Int position)
     {
         RaycastHit[] hits = Physics.BoxCastAll(position + new Vector3(0,0.5f,0), new Vector3(0.5f, 0.5f, 0.5f), 
             transform.up, Quaternion.identity, 1f, 1 << LayerMask.NameToLayer("Nature"));
