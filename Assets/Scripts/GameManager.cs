@@ -17,7 +17,10 @@ public class GameManager : MonoBehaviour
         uiController.onSpecialPlacement += SpecialPlacementHandler;
 
     }
-
+    private void Update()
+    {
+        cameraMovement.MoveCamera(new Vector3(inputManager.CameraMovementVector.x, 0, inputManager.CameraMovementVector.y));
+    }
     private void SpecialPlacementHandler()
     {
         clearInputActions();
@@ -44,10 +47,5 @@ public class GameManager : MonoBehaviour
         inputManager.OnMouseClick = null ;
         inputManager.OnMouseHold = null;
         inputManager.OnMouseUp = null;
-    }
-
-    private void Update()
-    {
-        cameraMovement.MoveCamera(new Vector3(inputManager.CameraMovementVector.x, 0, inputManager.CameraMovementVector.y));
     }
 }
