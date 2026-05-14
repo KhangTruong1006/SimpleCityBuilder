@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using SVS;
 using System;
 using System.Linq;
@@ -7,6 +8,7 @@ public class StructureManager : MonoBehaviour
 {
     public StructurePrefabWeighted[] housesPrefabs, specialPrefabs;
     public PlacementManager placementManager;
+    public PopulationManager populationManager;
 
     private float[] houseWeights, specialWeights;
 
@@ -22,6 +24,10 @@ public class StructureManager : MonoBehaviour
         {
             int randomIndex = getRandomWeightedIndex(houseWeights);
             placementManager.placeObjectOnTheMap(position, housesPrefabs[randomIndex].prefab, CellType.Structure);
+            if (populationManager != null)
+            {
+                populationManager.UpdateCapacity(housesPrefabs[randomIndex].population);
+            }
             AudioPlayer.instance.PlayPlacementSound();
         };
     }
@@ -90,5 +96,20 @@ public struct StructurePrefabWeighted
 {
     public GameObject prefab;
     [Range(0f, 1f)]
-    public float weight;   
+    public float weight;
+    [Min(0)]
+    public int population;
+    [Min(0)]
+    public int job;
+
+    //economy
+    [Min(0)]
+    public int cost;
+    [Min(0)]
+    public int income;
+    [Min(0)]
+    public int spending;
+    [Range(0f, 1f)]
+    public int tax;
+    
 }
