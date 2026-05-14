@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public InputManager inputManager;
     public UIController uiController;
     public StructureManager structureManager;
+    public PopulationManager populationManager;
 
     private void Start()
     {
