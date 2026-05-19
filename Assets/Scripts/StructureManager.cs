@@ -6,16 +6,16 @@ using UnityEngine;
 
 public class StructureManager : MonoBehaviour
 {
-    public StructurePrefabWeighted[] housesPrefabs, specialPrefabs;
+    public StructurePrefabWeighted[] housesPrefabs, commercialPrefabs, specialPrefabs;
     public PlacementManager placementManager;
     public PopulationManager populationManager;
 
-    private float[] houseWeights, specialWeights;
-
+    private float[] houseWeights, commercialWeights, specialWeights;
     private void Start()
     {
-        houseWeights = housesPrefabs.Select(prefabStates => prefabStates.weight).ToArray();
-        specialWeights = specialPrefabs.Select(prefabStates => prefabStates.weight).ToArray();
+        houseWeights = housesPrefabs.Select(prefabStats=> prefabStats.weight).ToArray();
+        commercialWeights = commercialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
+        specialWeights = specialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
     }
 
     public void placeHouse(Vector3Int position)
@@ -34,10 +34,15 @@ public class StructureManager : MonoBehaviour
 
     public void placeSpecialStructure(Vector3Int position)
     {
+        placeStructure(position, specialPrefabs, specialWeights);
+    }
+
+    private void placeStructure(Vector3Int position, StructurePrefabWeighted[] prefabArray, float[] structureWeights)
+    {
         if (checkPositionBeforePlacement(position))
         {
-            int randomIndex = getRandomWeightedIndex(specialWeights);
-            placementManager.placeObjectOnTheMap(position, specialPrefabs[randomIndex].prefab, CellType.Structure);
+            int randomIndex = getRandomWeightedIndex(structureWeights);
+            placementManager.placeObjectOnTheMap(position, prefabArray[randomIndex].prefab, CellType.Structure);
             AudioPlayer.instance.PlayPlacementSound();
         };
     }
@@ -50,12 +55,11 @@ public class StructureManager : MonoBehaviour
             sum += weights[i];
         }
 
-        float randomValue = UnityEngine.Random.Range(0f, sum);
+        float randomValue = UnityEngine.Random.Range(0, sum);
         float tempSum = 0f;
 
         for (int i = 0; i < weights.Length; i++)
         {
-            tempSum += weights[i];
             if (randomValue >= tempSum && randomValue < tempSum + weights[i])
             {
                 return i;
