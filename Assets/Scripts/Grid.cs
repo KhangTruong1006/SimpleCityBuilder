@@ -52,6 +52,9 @@ public enum CellType
     Road,
     Structure,
     SpecialStructure,
+    Residential,
+    Commercial,
+    Industrial,
     None
 }
 
