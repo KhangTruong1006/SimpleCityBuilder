@@ -6,36 +6,27 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public Action onRoadPlacement, onHousePlacement, onSpecialPlacement;
-    public Button placeRoadButton, placeHouseButton, placeSpecialButton;
+    public Action onRoadPlacement, onHousePlacement, onCommercialPlacement, onSpecialPlacement;
+    public Button placeRoadButton, placeHouseButton, placeCommercialButton, placeSpecialButton;
 
     public Color outlineColor;
     List<Button> buttonList;
 
     private void Start()
     {
-        buttonList = new List<Button> { placeRoadButton, placeHouseButton, placeSpecialButton };
+        buttonList = new List<Button> { placeRoadButton, placeHouseButton, placeCommercialButton, placeSpecialButton };
 
         //Road Button
-        placeRoadButton.onClick.AddListener(() => {
-            resetButtonColor();
-            modifyOutline(placeRoadButton);
-            onRoadPlacement?.Invoke();
-        });
+        placeRoadButton.onClick.AddListener(() => handleButtonClick(placeRoadButton, onRoadPlacement));
 
         //House Button
-        placeHouseButton.onClick.AddListener(() => {
-            resetButtonColor();
-            modifyOutline(placeHouseButton);
-            onHousePlacement?.Invoke();
-        });
+        placeHouseButton.onClick.AddListener(() => handleButtonClick(placeHouseButton, onHousePlacement));
+
+        // Commercial Button
+        placeCommercialButton.onClick.AddListener(() => handleButtonClick(placeCommercialButton, onCommercialPlacement));
 
         //Special Button
-        placeSpecialButton.onClick.AddListener(() => {
-            resetButtonColor();
-            modifyOutline(placeSpecialButton);
-            onSpecialPlacement?.Invoke();
-        });
+        placeSpecialButton.onClick.AddListener(() => handleButtonClick(placeSpecialButton, onSpecialPlacement));
     }
 
     private void modifyOutline(Button button)
@@ -52,5 +43,12 @@ public class UIController : MonoBehaviour
             var outline = button.GetComponent<Outline>();
             outline.enabled = false;
         }
+    }
+
+    private void handleButtonClick(Button button, System.Action action)
+    {
+        resetButtonColor();
+        modifyOutline(button);
+        action?.Invoke();
     }
 }
