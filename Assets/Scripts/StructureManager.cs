@@ -6,32 +6,33 @@ using UnityEngine;
 
 public class StructureManager : MonoBehaviour
 {
-    public StructurePrefabWeighted[] housesPrefabs, commercialPrefabs, specialPrefabs;
+    public StructurePrefabWeighted[] housesPrefabs, commercialPrefabs, industrialPrefabs, specialPrefabs;
     public PlacementManager placementManager;
     public PopulationManager populationManager;
 
-    private float[] houseWeights, commercialWeights, specialWeights;
+    private float[] houseWeights, commercialWeights, industrialWeights, specialWeights;
     private void Start()
     {
         houseWeights = housesPrefabs.Select(prefabStats=> prefabStats.weight).ToArray();
         commercialWeights = commercialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
+        industrialWeights = industrialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
         specialWeights = specialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
     }
 
     public void placeHouse(Vector3Int position)
     {
-        if (checkPositionBeforePlacement(position))
-        {
-            int randomIndex = getRandomWeightedIndex(houseWeights);
-            placementManager.placeObjectOnTheMap(position, housesPrefabs[randomIndex].prefab, CellType.Structure);
-            if (populationManager != null)
-            {
-                populationManager.UpdateCapacity(housesPrefabs[randomIndex].population);
-            }
-            AudioPlayer.instance.PlayPlacementSound();
-        };
+        placeStructure(position, housesPrefabs, houseWeights);
     }
 
+    public void placeCommercial(Vector3Int position)
+    {
+        placeStructure(position, commercialPrefabs, commercialWeights);
+    }
+
+    private void placeIndustrial(Vector3Int position)
+    {
+        placeStructure(position, industrialPrefabs, industrialWeights);
+    }
     public void placeSpecialStructure(Vector3Int position)
     {
         placeStructure(position, specialPrefabs, specialWeights);
@@ -43,6 +44,7 @@ public class StructureManager : MonoBehaviour
         {
             int randomIndex = getRandomWeightedIndex(structureWeights);
             placementManager.placeObjectOnTheMap(position, prefabArray[randomIndex].prefab, CellType.Structure);
+            populationManager.updateCapacityAndJobs(prefabArray[randomIndex].population, prefabArray[randomIndex].job);
             AudioPlayer.instance.PlayPlacementSound();
         };
     }
@@ -115,5 +117,4 @@ public struct StructurePrefabWeighted
     public int spending;
     [Range(0f, 1f)]
     public int tax;
-    
 }
