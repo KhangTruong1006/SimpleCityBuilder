@@ -8,14 +8,14 @@ public class PopulationManager : MonoBehaviour
 
     [Header("Current Statistics")]
     public int population;
-    public int capacity;
-    public int jobs;
-    public int workers;
+    public int populationCapacity;
+    public int availableJobs;
+    public int employedPopulation;
 
 
     [Header("Simulation Settings")]
     public float tickRateInSeconds = 2.0f;
-    public float citySatisfaction = 50.0f; // Scale from 0 to 100
+    public float citySatisfaction = 100f; // Scale from 0 to 100
 
     public float tickTimer = 0.0f;
 
@@ -31,38 +31,41 @@ public class PopulationManager : MonoBehaviour
     }
     
 
-    public void updateCapacityAndJobs(int capacityAmount, int jobsAmount)
+    public void updateCapacity(int capacityAmount)
     {
-        capacity += capacityAmount;
-        jobs += jobsAmount;
-
-        Debug.Log($"Population capacity updated: {capacity}");
-        Debug.Log($"Jobs updated: {jobs}");
+        populationCapacity += capacityAmount;
+        Debug.Log($"Population capacity updated: {populationCapacity}");
     }
 
-   private void runSimulationTick()
+    public void updateJobs(int jobsAmount)
+    {
+        availableJobs += jobsAmount;
+        Debug.Log($"Jobs updated: {availableJobs}");
+    }
+
+    private void runSimulationTick()
     {
         calculateEmployment();
         calculateSatisfaction();
         calculatePopulationChange();
 
         uiController.displayPopulation(population);
-        uiController.displayJobs(jobs);
+        uiController.displayJobs(availableJobs);
         uiController.displaySatisfaction(citySatisfaction);
     }
 
     private void calculateEmployment()
     {
-        workers = Math.Min(population, jobs);
+        employedPopulation = Math.Min(population, availableJobs);
     }
 
     private void calculateSatisfaction()
     {
-        float employmentRate = population > 0 ? (float)workers / population : 1.0f;
-        float housingRate = capacity > 0 ? (float)population / capacity : 0.0f;
+        float employmentRate = population > 0 ? (float)employedPopulation / population : 1.0f;
+        float housingRate = populationCapacity > 0 ? (float)population / populationCapacity : 0.0f;
 
-        //float targetSatisfaction = (employmentRate * 0.5f + housingRate * 0.5f) * 100f;
-        float targetSatisfaction = 50.0f;
+        float targetSatisfaction = (employmentRate * 0.5f + housingRate * 0.5f) * 100f;
+        //float targetSatisfaction = 50.0f;
 
         // If employmen rate is low, satisfaction drops
         if (employmentRate < 0.7f) 
@@ -87,11 +90,11 @@ public class PopulationManager : MonoBehaviour
     private void calculatePopulationChange()
     {
         //Population increase if thresholds are met
-        if(citySatisfaction > 60.0f && population < capacity)
+        if(citySatisfaction > 60.0f && population < populationCapacity)
         {
-            int growth = Mathf.CeilToInt((capacity - population) * 0.05f);
+            int growth = Mathf.CeilToInt((populationCapacity - population) * 0.05f);
             growth = Mathf.Clamp(growth, 1, 100);
-            population = Math.Min(population + growth, capacity);
+            population = Math.Min(population + growth, populationCapacity);
 
         }
         //Population decline if thresholds are not met
@@ -101,6 +104,6 @@ public class PopulationManager : MonoBehaviour
             decline = Mathf.Clamp(decline, 1, 50);
             population = Math.Max(population - decline, 0);
         }
-        Debug.Log($"Population : {population} Jobs: {jobs} Workers: {workers} Satisfaction: {citySatisfaction}");
+        Debug.Log($"Population : {population} Jobs: {availableJobs} Workers: {employedPopulation} Satisfaction: {citySatisfaction}");
     }
 }
