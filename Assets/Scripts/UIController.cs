@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public class UIController : MonoBehaviour
 {
     public Action onRoadPlacement, onHousePlacement, onCommercialPlacement, onSpecialPlacement;
     public Button placeRoadButton, placeHouseButton, placeCommercialButton, placeSpecialButton;
+    public TextMeshProUGUI populationText, budgetText, jobsText, satisfactionText;
 
     public Color outlineColor;
     List<Button> buttonList;
@@ -27,6 +29,27 @@ public class UIController : MonoBehaviour
 
         //Special Button
         placeSpecialButton.onClick.AddListener(() => handleButtonClick(placeSpecialButton, onSpecialPlacement));
+    }
+
+
+    public void displayPopulation(int population)
+    {
+        displayStat(populationText, $"{population}");
+    }
+
+    public void displayBudget(int budget)
+    {
+        displayStat(budgetText, $"${budget}");
+    }
+
+    public void displayJobs(int jobs)
+    {
+        displayStat(jobsText, $"{jobs}");
+    }
+
+    public void displaySatisfaction(float satisfaction)
+    {
+        displayStat(satisfactionText, $"{satisfaction:F1}%");
     }
 
     private void modifyOutline(Button button)
@@ -50,5 +73,10 @@ public class UIController : MonoBehaviour
         resetButtonColor();
         modifyOutline(button);
         action?.Invoke();
+    }
+
+    private void displayStat(TextMeshProUGUI textElement, string text)
+    {
+        textElement.text = text;
     }
 }
