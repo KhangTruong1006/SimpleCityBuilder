@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PopulationManager : MonoBehaviour
 {
-    public StructureManager structureManager;
+    public UIController uiController;
 
 
     [Header("Current Statistics")]
@@ -45,6 +45,10 @@ public class PopulationManager : MonoBehaviour
         calculateEmployment();
         calculateSatisfaction();
         calculatePopulationChange();
+
+        uiController.displayPopulation(population);
+        uiController.displayJobs(jobs);
+        uiController.displaySatisfaction(citySatisfaction);
     }
 
     private void calculateEmployment()
@@ -97,8 +101,6 @@ public class PopulationManager : MonoBehaviour
             decline = Mathf.Clamp(decline, 1, 50);
             population = Math.Max(population - decline, 0);
         }
-
         Debug.Log($"Population : {population} Jobs: {jobs} Workers: {workers} Satisfaction: {citySatisfaction}");
-        //Update UI
     }
 }
