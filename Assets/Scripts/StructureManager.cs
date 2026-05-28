@@ -7,6 +7,9 @@ using UnityEngine;
 public class StructureManager : MonoBehaviour
 {
     public StructurePrefabWeighted[] housesPrefabs, commercialPrefabs, industrialPrefabs, specialPrefabs;
+    public ResidentialPrefab[] residentialPrefabs;
+    public CommercialPrefab[] commercialPrefabs1;
+
     public PlacementManager placementManager;
     public PopulationManager populationManager;
 
@@ -44,7 +47,8 @@ public class StructureManager : MonoBehaviour
         {
             int randomIndex = getRandomWeightedIndex(structureWeights);
             placementManager.placeObjectOnTheMap(position, prefabArray[randomIndex].prefab, CellType.Structure);
-            populationManager.updateCapacityAndJobs(prefabArray[randomIndex].population, prefabArray[randomIndex].job);
+            populationManager.updateCapacity(prefabArray[randomIndex].population);
+            populationManager.updateJobs(prefabArray[randomIndex].job);
             AudioPlayer.instance.PlayPlacementSound();
         };
     }
@@ -117,4 +121,23 @@ public struct StructurePrefabWeighted
     public int spending;
     [Range(0f, 1f)]
     public int tax;
+}
+[Serializable]
+public struct ResidentialPrefab
+{
+    public GameObject prefab;
+    [Range(0f, 1f)]
+    public float weight;
+    public int capacity;
+    public int population;
+}
+
+[Serializable]
+public struct CommercialPrefab
+{
+    public GameObject prefab;
+    [Range(0f, 1f)]
+    public float weight;
+    public int capacity;
+    public int worker;
 }
