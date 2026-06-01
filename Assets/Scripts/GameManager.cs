@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     {
         uiController.onRoadPlacement += RoadPlacementHandler;
         uiController.onHousePlacement  += HousePlacementHandler;
-        uiController.onSpecialPlacement += SpecialPlacementHandler;
+        //uiController.onSpecialPlacement += SpecialPlacementHandler;
         uiController.onCommercialPlacement += CommercialPlacementHandler;
 
     }
@@ -23,16 +23,16 @@ public class GameManager : MonoBehaviour
     {
         cameraMovement.MoveCamera(new Vector3(inputManager.CameraMovementVector.x, 0, inputManager.CameraMovementVector.y));
     }
-    private void SpecialPlacementHandler()
-    {
-        clearInputActions();
-        inputManager.OnMouseClick += structureManager.placeSpecialStructure;
-    }
+    //private void SpecialPlacementHandler()
+    //{
+    //    clearInputActions();
+    //    inputManager.OnMouseClick += structureManager.placeSpecialStructure;
+    //}
 
     private void HousePlacementHandler()
     {
         clearInputActions();
-        inputManager.OnMouseClick += structureManager.placeHouse;
+        inputManager.OnMouseClick += structureManager.placeResidential;
     }
 
     private void CommercialPlacementHandler()
