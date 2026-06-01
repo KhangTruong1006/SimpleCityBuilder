@@ -6,51 +6,54 @@ using UnityEngine;
 
 public class StructureManager : MonoBehaviour
 {
-    public StructurePrefabWeighted[] housesPrefabs, commercialPrefabs, industrialPrefabs, specialPrefabs;
     public ResidentialPrefab[] residentialPrefabs;
-    public CommercialPrefab[] commercialPrefabs1;
+    public BusinessPrefab[] commercialPrefabs, industrialPrefabs;
 
     public PlacementManager placementManager;
     public PopulationManager populationManager;
 
-    private float[] houseWeights, commercialWeights, industrialWeights, specialWeights;
+    private float[] residentialWeights, commercialWeights, industrialWeights, specialWeights;
     private void Start()
     {
-        houseWeights = housesPrefabs.Select(prefabStats=> prefabStats.weight).ToArray();
+        residentialWeights = residentialPrefabs.Select(prefabStats=> prefabStats.weight).ToArray();
         commercialWeights = commercialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
         industrialWeights = industrialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
-        specialWeights = specialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
+        //specialWeights = specialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
     }
 
-    public void placeHouse(Vector3Int position)
+    public void placeResidential(Vector3Int position)
     {
-        placeStructure(position, housesPrefabs, houseWeights);
+        placeStructure(position, residentialPrefabs, residentialWeights, CellType.Residential, capacity => populationManager.updatePopulationCapacity(capacity));
     }
 
     public void placeCommercial(Vector3Int position)
     {
-        placeStructure(position, commercialPrefabs, commercialWeights);
+        placeStructure(position, commercialPrefabs, commercialWeights, CellType.Commercial, capacity => populationManager.updateNewJobs(capacity));
     }
 
     private void placeIndustrial(Vector3Int position)
     {
-        placeStructure(position, industrialPrefabs, industrialWeights);
-    }
-    public void placeSpecialStructure(Vector3Int position)
-    {
-        placeStructure(position, specialPrefabs, specialWeights);
+        placeStructure(position, industrialPrefabs, industrialWeights, CellType.Industrial, capacity => populationManager.updateNewJobs(capacity));
     }
 
-    private void placeStructure(Vector3Int position, StructurePrefabWeighted[] prefabArray, float[] structureWeights)
+    //public void placeSpecialStructure(Vector3Int position)
+    //{
+    //    placeStructure(position, specialPrefabs, specialWeights);
+    //}
+
+    private void placeStructure<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type,Action<int> action) where T : IStructurePrefab
     {
-        if (checkPositionBeforePlacement(position))
+        if (!checkPositionBeforePlacement(position))
         {
-            int randomIndex = getRandomWeightedIndex(structureWeights);
-            placementManager.placeObjectOnTheMap(position, prefabArray[randomIndex].prefab, CellType.Structure);
-            populationManager.updateCapacity(prefabArray[randomIndex].population);
-            populationManager.updateJobs(prefabArray[randomIndex].job);
-            AudioPlayer.instance.PlayPlacementSound();
-        };
+           return;
+        }
+        int randomIndex = getRandomWeightedIndex(structureWeights);
+        T prefab = prefabArray[randomIndex];
+        
+        placementManager.placeObjectOnTheMap(position, prefab.Prefab, type);
+        AudioPlayer.instance.PlayPlacementSound();
+        
+        action?.Invoke(prefab.Capacity);
     }
 
     private int getRandomWeightedIndex(float[] weights)
@@ -101,43 +104,43 @@ public class StructureManager : MonoBehaviour
     }
 }
 
-[Serializable]
-public struct StructurePrefabWeighted
+public interface IStructurePrefab
 {
-    public GameObject prefab;
-    [Range(0f, 1f)]
-    public float weight;
-    [Min(0)]
-    public int population;
-    [Min(0)]
-    public int job;
-
-    //economy
-    [Min(0)]
-    public int cost;
-    [Min(0)]
-    public int income;
-    [Min(0)]
-    public int spending;
-    [Range(0f, 1f)]
-    public int tax;
-}
-[Serializable]
-public struct ResidentialPrefab
-{
-    public GameObject prefab;
-    [Range(0f, 1f)]
-    public float weight;
-    public int capacity;
-    public int population;
+    public GameObject Prefab { get; }
+    public float Weight { get; }
+    public int Capacity { get; }
 }
 
 [Serializable]
-public struct CommercialPrefab
+public struct ResidentialPrefab : IStructurePrefab
 {
     public GameObject prefab;
-    [Range(0f, 1f)]
+    
+    [Range(0f, 1f)] 
     public float weight;
-    public int capacity;
+    public int populationCapacity;
+    
+    [Min(0)] 
+    public int population;
+
+    public GameObject Prefab => prefab;
+    public float Weight => weight;
+    public int Capacity => populationCapacity;
+}
+
+[Serializable]
+public struct BusinessPrefab : IStructurePrefab
+{
+    public GameObject prefab;
+    [Range(0f, 1f)] 
+    public float weight;
+    public int workerCapacity;
+    
+    [Min(0)] 
     public int worker;
+    
+    public GameObject Prefab => prefab;
+    public float Weight => weight;
+    public int Capacity => workerCapacity;
+    
 }
