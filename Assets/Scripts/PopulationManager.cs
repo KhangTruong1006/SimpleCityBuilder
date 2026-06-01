@@ -31,15 +31,15 @@ public class PopulationManager : MonoBehaviour
     }
     
 
-    public void updateCapacity(int capacityAmount)
+    public void updatePopulationCapacity(int capacity)
     {
-        populationCapacity += capacityAmount;
+        populationCapacity += capacity;
         Debug.Log($"Population capacity updated: {populationCapacity}");
     }
 
-    public void updateJobs(int jobsAmount)
+    public void updateNewJobs(int newJobs)
     {
-        availableJobs += jobsAmount;
+        availableJobs += newJobs;
         Debug.Log($"Jobs updated: {availableJobs}");
     }
 
