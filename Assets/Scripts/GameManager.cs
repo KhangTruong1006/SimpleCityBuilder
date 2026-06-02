@@ -14,10 +14,10 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         uiController.onRoadPlacement += RoadPlacementHandler;
-        uiController.onHousePlacement  += HousePlacementHandler;
+        uiController.onResidentialPlacement  += HousePlacementHandler;
         //uiController.onSpecialPlacement += SpecialPlacementHandler;
         uiController.onCommercialPlacement += CommercialPlacementHandler;
-
+        uiController.onIndustrialPlacement += IndustrialPlacementHandler;
     }
     private void Update()
     {
@@ -39,6 +39,12 @@ public class GameManager : MonoBehaviour
     {
         clearInputActions();
         inputManager.OnMouseClick += structureManager.placeCommercial;
+    }
+
+    private void IndustrialPlacementHandler()
+    {
+        clearInputActions();
+        inputManager.OnMouseClick += structureManager.placeIndustrial;
     }
 
     private void RoadPlacementHandler()
