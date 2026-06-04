@@ -7,8 +7,8 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onSpecialPlacement;
-    public Button placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeSpecialButton;
+    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onSpecialPlacement, onBigStructurePlacement;
+    public Button placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeSpecialButton, placeBigStructureButton;
     public TextMeshProUGUI populationText, budgetText, jobsText, satisfactionText;
 
     public Color outlineColor;
@@ -16,7 +16,7 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
-        buttonList = new List<Button> { placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeSpecialButton };
+        buttonList = new List<Button> { placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeSpecialButton, placeBigStructureButton };
 
         //Road Button
         placeRoadButton.onClick.AddListener(() => handleButtonClick(placeRoadButton, onRoadPlacement));
@@ -29,6 +29,9 @@ public class UIController : MonoBehaviour
 
         //Industrial Button
         placeIndustrialButton.onClick.AddListener(() => handleButtonClick(placeIndustrialButton, onIndustrialPlacement));
+
+        //Big Structure Button (For future extention)
+        placeBigStructureButton.onClick.AddListener(() => handleButtonClick(placeBigStructureButton, onBigStructurePlacement));
 
         //Special Button
         //placeSpecialButton.onClick.AddListener(() => handleButtonClick(placeSpecialButton, onSpecialPlacement));
