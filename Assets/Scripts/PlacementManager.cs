@@ -117,13 +117,19 @@ public class PlacementManager : MonoBehaviour
         temporaryRoadObjects.Clear();
     }
 
-    internal void placeObjectOnTheMap(Vector3Int position, GameObject prefab, CellType type)
+    internal void placeObjectOnTheMap(Vector3Int position, GameObject prefab, CellType type, int width = 1, int height = 1)
     {
-        placementGrid[position.x, position.z] = type;
         StructureModel structure = createNewStructureModel(position, prefab, type);
-        structureDictionary.Add(position, structure);
-
-        destroyNature(position);
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                var newPosition = position + new Vector3Int(i, 0, j);
+                placementGrid[newPosition.x, newPosition.z] = type;
+                structureDictionary.Add(newPosition, structure);
+                destroyNature(newPosition);
+            }
+        }  
     }
 
     private void destroyNature(Vector3Int position)
