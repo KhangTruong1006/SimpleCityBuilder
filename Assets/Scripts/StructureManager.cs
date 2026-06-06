@@ -29,12 +29,12 @@ public class StructureManager : MonoBehaviour
 
     public void placeCommercial(Vector3Int position)
     {
-        placeStructure(position, commercialPrefabs, commercialWeights, CellType.Commercial, capacity => populationManager.updateNewJobs(capacity));
+        placeStructure(position, commercialPrefabs, commercialWeights, CellType.Commercial, capacity => populationManager.updateJobCapacity(capacity));
     }
 
     public void placeIndustrial(Vector3Int position)
     {
-        placeStructure(position, industrialPrefabs, industrialWeights, CellType.Industrial, capacity => populationManager.updateNewJobs(capacity));
+        placeStructure(position, industrialPrefabs, industrialWeights, CellType.Industrial, capacity => populationManager.updateJobCapacity(capacity));
     }
 
     public void placeBigStructure(Vector3Int position)
