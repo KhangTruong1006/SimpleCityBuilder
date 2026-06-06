@@ -7,16 +7,16 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onSpecialPlacement, onBigStructurePlacement;
-    public Button placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeSpecialButton, placeBigStructureButton;
-    public TextMeshProUGUI populationText, budgetText, jobsText, satisfactionText;
+    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement;
+    public Button placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton;
+    public TextMeshProUGUI populationText, budgetText, jobsText;
 
     public Color outlineColor;
     List<Button> buttonList;
 
     private void Start()
     {
-        buttonList = new List<Button> { placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeSpecialButton, placeBigStructureButton };
+        buttonList = new List<Button> { placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton };
 
         //Road Button
         placeRoadButton.onClick.AddListener(() => handleButtonClick(placeRoadButton, onRoadPlacement));
@@ -32,9 +32,6 @@ public class UIController : MonoBehaviour
 
         //Big Structure Button (For future extention)
         placeBigStructureButton.onClick.AddListener(() => handleButtonClick(placeBigStructureButton, onBigStructurePlacement));
-
-        //Special Button
-        //placeSpecialButton.onClick.AddListener(() => handleButtonClick(placeSpecialButton, onSpecialPlacement));
     }
 
 
@@ -51,11 +48,6 @@ public class UIController : MonoBehaviour
     public void displayJobs(int jobs)
     {
         displayStat(jobsText, $"{jobs}");
-    }
-
-    public void displaySatisfaction(float satisfaction)
-    {
-        displayStat(satisfactionText, $"{satisfaction:F1}%");
     }
 
     private void modifyOutline(Button button)
