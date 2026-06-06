@@ -9,16 +9,23 @@ public class PopulationManager : MonoBehaviour
     [Header("Current Statistics")]
     public int population;
     public int populationCapacity;
-    public int availableJobs;
+    public int jobCapacity;
     public int employedPopulation;
 
 
+    private float growthRate;
+    private float precisePopulation = 0f;
+    private float globalFactor;
+
     [Header("Simulation Settings")]
     public float tickRateInSeconds = 2.0f;
-    public float citySatisfaction = 100f; // Scale from 0 to 100
-
     public float tickTimer = 0.0f;
 
+
+    private void Start()
+    {
+        precisePopulation = population;
+    }
 
     void Update()
     {
@@ -29,7 +36,7 @@ public class PopulationManager : MonoBehaviour
             tickTimer = 0.0f;
         }
     }
-    
+
 
     public void updatePopulationCapacity(int capacity)
     {
@@ -37,73 +44,70 @@ public class PopulationManager : MonoBehaviour
         Debug.Log($"Population capacity updated: {populationCapacity}");
     }
 
-    public void updateNewJobs(int newJobs)
+    public void updateJobCapacity(int newJobs)
     {
-        availableJobs += newJobs;
-        Debug.Log($"Jobs updated: {availableJobs}");
+        jobCapacity += newJobs;
+        Debug.Log($"Jobs updated: {jobCapacity}");
     }
 
     private void runSimulationTick()
     {
         calculateEmployment();
-        calculateSatisfaction();
+        calculateGlobalFactor();
         calculatePopulationChange();
 
         uiController.displayPopulation(population);
-        uiController.displayJobs(availableJobs);
-        uiController.displaySatisfaction(citySatisfaction);
+        uiController.displayJobs(jobCapacity);
     }
 
     private void calculateEmployment()
     {
-        employedPopulation = Math.Min(population, availableJobs);
+        if(population <1)
+        {
+            employedPopulation = 0;
+            return;
+        }
+        employedPopulation = Math.Min(population, jobCapacity);
     }
 
-    private void calculateSatisfaction()
-    {
-        float employmentRate = population > 0 ? (float)employedPopulation / population : 1.0f;
-        float housingRate = populationCapacity > 0 ? (float)population / populationCapacity : 0.0f;
-
-        float targetSatisfaction = (employmentRate * 0.5f + housingRate * 0.5f) * 100f;
-        //float targetSatisfaction = 50.0f;
-
-        // If employmen rate is low, satisfaction drops
-        if (employmentRate < 0.7f) 
-        {
-            targetSatisfaction -= 20f;
-        }
-
-        // If housing rate is high (No empty space), satisfaction drops
-        if (housingRate > 0.9f) 
-        {
-            targetSatisfaction -= 15f;
-        }
-        
-        // If employment rate is high and there is still some space for population growth, satisfaction increases
-        if (employmentRate > 0.9f && housingRate < 0.8f) 
-        {
-            targetSatisfaction += 20f;
-        }
-
-        citySatisfaction = Mathf.Lerp(citySatisfaction, targetSatisfaction, 0.1f);
-    }
     private void calculatePopulationChange()
     {
-        //Population increase if thresholds are met
-        if(citySatisfaction > 60.0f && population < populationCapacity)
+        // To handle calculation when population is zero (the start of the game) / Seeding
+        if(precisePopulation <= 0 && populationCapacity >= 0)
         {
-            int growth = Mathf.CeilToInt((populationCapacity - population) * 0.05f);
-            growth = Mathf.Clamp(growth, 1, 100);
-            population = Math.Min(population + growth, populationCapacity);
+            precisePopulation = 0.5f;
+        }
 
-        }
-        //Population decline if thresholds are not met
-        else if (citySatisfaction < 40.0f && population > 0)
+        // Prevent negative population 
+        if(precisePopulation > populationCapacity)
         {
-            int decline = Mathf.CeilToInt(population * 0.03f);
-            decline = Mathf.Clamp(decline, 1, 50);
-            population = Math.Max(population - decline, 0);
+            return;
         }
-        Debug.Log($"Population : {population} Jobs: {availableJobs} Workers: {employedPopulation} Satisfaction: {citySatisfaction}");
+
+        // This method uses Logistic Growth Model based on various factors (metrics)
+        // rate = base * factors point * population * (1 - population / capacity)
+
+        float basedGrowthRate = 0.1f;
+        float growthRate = basedGrowthRate * globalFactor * precisePopulation * (1f - (precisePopulation / populationCapacity));
+
+        precisePopulation += growthRate;
+        population = Mathf.FloorToInt(precisePopulation);
+
+        Debug.Log($"Population : {population} Precise Pop: {precisePopulation} GF: {globalFactor} Jobs: {jobCapacity} Workers: {employedPopulation}");
+    }
+
+    private void calculateGlobalFactor()
+    {
+        // This method calculates the global factor based on various city metrics
+        // Prevent zero division
+        if(population <= 0)
+        {
+            globalFactor = 1.0f;
+            return;
+        }
+        float employmentRate = (float)employedPopulation / (float)population;
+        float housingRate = (float)population / (float)populationCapacity;
+        
+        globalFactor = 0.5f * housingRate + 0.5f * employmentRate;
     }
 }
