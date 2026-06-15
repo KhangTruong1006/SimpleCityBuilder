@@ -19,12 +19,13 @@ public class PopulationManager : MonoBehaviour
 
     [Header("Simulation Settings")]
     public float tickRateInSeconds = 2.0f;
-    public float tickTimer = 0.0f;
+    private float tickTimer = 0.0f;
 
 
     private void Start()
     {
         precisePopulation = population;
+        //DemandManager demandManager = GetComponent<DemandManager>(); //For future expansion
     }
 
     void Update()
@@ -37,21 +38,9 @@ public class PopulationManager : MonoBehaviour
         }
     }
 
-
-    public void updatePopulationCapacity(int capacity)
-    {
-        populationCapacity += capacity;
-        Debug.Log($"Population capacity updated: {populationCapacity}");
-    }
-
-    public void updateJobCapacity(int newJobs)
-    {
-        jobCapacity += newJobs;
-        Debug.Log($"Jobs updated: {jobCapacity}");
-    }
-
     private void runSimulationTick()
     {
+        // Change Employment to Demand
         calculateEmployment();
         calculateGlobalFactor();
         calculatePopulationChange();
@@ -88,12 +77,13 @@ public class PopulationManager : MonoBehaviour
         // rate = base * factors point * population * (1 - population / capacity)
 
         float basedGrowthRate = 0.1f;
-        float growthRate = basedGrowthRate * globalFactor * precisePopulation * (1f - (precisePopulation / populationCapacity));
+        //float growthRate = basedGrowthRate * globalFactor * precisePopulation * (1f - (precisePopulation / populationCapacity));
+        float growthRate = basedGrowthRate * precisePopulation * (1f - (precisePopulation / populationCapacity));
 
         precisePopulation += growthRate;
         population = Mathf.FloorToInt(precisePopulation);
 
-        Debug.Log($"Population : {population} Precise Pop: {precisePopulation} GF: {globalFactor} Jobs: {jobCapacity} Workers: {employedPopulation}");
+        //Debug.Log($"Population : {population} Precise Pop: {precisePopulation} GF: {globalFactor} Jobs: {jobCapacity} Workers: {employedPopulation}");
     }
 
     private void calculateGlobalFactor()
@@ -109,5 +99,17 @@ public class PopulationManager : MonoBehaviour
         float housingRate = (float)population / (float)populationCapacity;
         
         globalFactor = 0.5f * housingRate + 0.5f * employmentRate;
+    }
+
+    public void updatePopulationCapacity(int capacity)
+    {
+        populationCapacity += capacity;
+        //Debug.Log($"Population capacity updated: {populationCapacity}");
+    }
+
+    public void updateJobCapacity(int newJobs)
+    {
+        jobCapacity += newJobs;
+        //Debug.Log($"Jobs updated: {jobCapacity}");
     }
 }
