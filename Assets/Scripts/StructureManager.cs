@@ -7,11 +7,14 @@ using UnityEngine;
 public class StructureManager : MonoBehaviour
 {
     public ResidentialPrefab[] residentialPrefabs;
-    public BusinessPrefab[] commercialPrefabs, industrialPrefabs;
+    public CommericalPrefab[] commercialPrefabs;
+    public IndustrialPrefab[] industrialPrefabs;
     public BigPrefab[] bigPrefabs;
 
     public PlacementManager placementManager;
     public PopulationManager populationManager;
+    public EconomyManager economyManager;
+    public GoodsManager goodsManager;
 
     private float[] residentialWeights, commercialWeights, industrialWeights, bigWeights;
     private void Start()
@@ -37,6 +40,36 @@ public class StructureManager : MonoBehaviour
         placeStructure(position, industrialPrefabs, industrialWeights, CellType.Industrial, capacity => populationManager.updateJobCapacity(capacity));
     }
 
+    private void placeStructure<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type, Action<int> action) where T : IStructurePrefab
+    {
+        if (!isPositionPlacable(position))
+        {
+            return;
+        }
+
+        int randomIndex = getRandomWeightedIndex(structureWeights);
+        T prefab = prefabArray[randomIndex];
+
+        placementManager.placeObjectOnTheMap(position, prefab.Prefab, type);
+        AudioPlayer.instance.PlayPlacementSound();
+
+        action?.Invoke(prefab.Capacity);
+
+        if (prefab is IBusinessPrefab businessPrefab)
+        {
+            goodsManager.updateTotalStorageCapacity(businessPrefab.InventoryCapacity);
+           
+            if(type == CellType.Commercial)
+            {
+                goodsManager.updateSalesRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
+            }
+            if (type == CellType.Industrial)
+            {
+                goodsManager.updateProductionRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
+            }
+        }
+    }
+
     public void placeBigStructure(Vector3Int position)
     {
         int width = 2;
@@ -50,44 +83,6 @@ public class StructureManager : MonoBehaviour
         int randomIndex = getRandomWeightedIndex(bigWeights);
         placementManager.placeObjectOnTheMap(position, bigPrefabs[randomIndex].Prefab, CellType.Structure, width, height);
         AudioPlayer.instance.PlayPlacementSound();
-    }
-
-    private bool isStructureBig(Vector3Int position, int width, int height)
-    {
-        bool nearbyRoad = false;
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                var newPosition = position + new Vector3Int(i, 0, j);
-
-                if (!isPositionInBoundAndFree(newPosition))
-                {
-                    return false;
-                }
-
-                if (!nearbyRoad)
-                {
-                    nearbyRoad = isPositionAdjacentToRoad(newPosition);
-                }
-            }
-        }
-        return nearbyRoad;
-    }
-
-    private void placeStructure<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type,Action<int> action) where T : IStructurePrefab
-    {
-        if (!isPositionPlacable(position))
-        {
-           return;
-        }
-        int randomIndex = getRandomWeightedIndex(structureWeights);
-        T prefab = prefabArray[randomIndex];
-        
-        placementManager.placeObjectOnTheMap(position, prefab.Prefab, type);
-        AudioPlayer.instance.PlayPlacementSound();
-        
-        action?.Invoke(prefab.Capacity);
     }
 
     private int getRandomWeightedIndex(float[] weights)
@@ -112,6 +107,28 @@ public class StructureManager : MonoBehaviour
         return 0; // Fallback, should not reach here if weights are valid
     }
 
+    private bool isStructureBig(Vector3Int position, int width, int height)
+    {
+        bool nearbyRoad = false;
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                var newPosition = position + new Vector3Int(i, 0, j);
+
+                if (!isPositionInBoundAndFree(newPosition))
+                {
+                    return false;
+                }
+
+                if (!nearbyRoad)
+                {
+                    nearbyRoad = isPositionAdjacentToRoad(newPosition);
+                }
+            }
+        }
+        return nearbyRoad;
+    }
     private bool isPositionPlacable(Vector3Int position)
     {
         if (!isPositionInBoundAndFree(position))
@@ -164,6 +181,12 @@ public interface IStructurePrefab
     public int Capacity { get; }
 }
 
+public interface IBusinessPrefab : IStructurePrefab
+{
+    public float InventoryCapacity { get; } // Unit: Tons
+    public float GoodsUnitPerTick { get; } // Commerical: Sales per tick, Industrial: Produced Freight per tick
+}
+
 [Serializable]
 public struct ResidentialPrefab : IStructurePrefab
 {
@@ -173,33 +196,51 @@ public struct ResidentialPrefab : IStructurePrefab
     public float weight;
     public int populationCapacity;
     
-    [Min(0)] 
-    public int population;
-
+    [Range(0f, 1f)]
     public GameObject Prefab => prefab;
     public float Weight => weight;
     public int Capacity => populationCapacity;
 }
 
 [Serializable]
-public struct BusinessPrefab : IStructurePrefab
+public struct IndustrialPrefab : IBusinessPrefab
 {
     public GameObject prefab;
-    [Range(0f, 1f)] 
+    [Range(0f, 1f)]
     public float weight;
     public int workerCapacity;
     
-    [Min(0)] 
-    public int worker;
-    
+    [Min(0f)]
+    public float freightPerTick;
+    public float inventory; // Unit: Tons
+   
     public GameObject Prefab => prefab;
     public float Weight => weight;
     public int Capacity => workerCapacity;
-    
+    public float InventoryCapacity => inventory;
+    public float GoodsUnitPerTick => freightPerTick;
 }
 
 [Serializable]
+public struct CommericalPrefab : IBusinessPrefab
+{
+    public GameObject prefab;
+    [Range(0f, 1f)]
+    public float weight;
+    public int workerCapacity;
+    
+    [Min(0f)]
+    public float salesPerTick;
+    public float inventory; // Unit: Tons
 
+    public GameObject Prefab => prefab;
+    public float Weight => weight;
+    public int Capacity => workerCapacity;
+    public float InventoryCapacity => inventory;
+    public float GoodsUnitPerTick => salesPerTick;
+}
+
+[Serializable]
 public struct BigPrefab: IStructurePrefab
 {
     public GameObject prefab;
