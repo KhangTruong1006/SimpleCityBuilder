@@ -40,9 +40,9 @@ public class UIController : MonoBehaviour
         displayStat(populationText, $"{population}");
     }
 
-    public void displayBudget(int budget)
+    public void displayBudget(float budget)
     {
-        displayStat(budgetText, $"${budget}");
+        displayStat(budgetText, $"{budget}");
     }
 
     public void displayJobs(int jobs)
