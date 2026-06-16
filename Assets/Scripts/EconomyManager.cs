@@ -4,11 +4,16 @@ using UnityEngine;
 public class EconomyManager : MonoBehaviour
 {
     public GoodsManager goodsManager;
+    public UIController uiController;
 
     private float budget;
     public float spending;
     public float income;
     public float tax = 0.1f;
+
+    public float exportRevenuePerUnit = 100f;
+    public float importCostPerUnit = 50f;
+
 
     [Header("Simulation Settings")]
     public float tickRateInSeconds = 2.0f;
@@ -17,6 +22,7 @@ public class EconomyManager : MonoBehaviour
     private void Start()
     {
         budget = 10000f;
+        updateBudget();
     }
 
     private void Update()
@@ -31,9 +37,17 @@ public class EconomyManager : MonoBehaviour
 
     private void runSimulationTick()
     {
-        goodsManager.produceGoods();
-        goodsManager.sellGoods();
-        goodsManager.debugGoods();
+        goodsManager.handleLogistics();
+
+        updateBudget();
     }
 
+    private void updateBudget()
+    {
+        float exportIncome = goodsManager.exportExcessGoods();
+        budget += exportIncome * exportRevenuePerUnit;
+        
+        
+        uiController.displayBudget(budget);
+    }
 }
