@@ -10,47 +10,63 @@ public class GoodsManager : MonoBehaviour
     public float salesRatePerTimeUnit;
 
     public float excessGoods;
+    public float exportRate = 1f;
+    public float importRate;
+
+    public float exportThreshold = 0.5f;
+    public float importThreshold = 0.5f;
 
 
-    public void produceGoods()
+    public void handleLogistics()
+    {
+        produceGoods();
+        sellGoods();
+    }
+
+    private void produceGoods()
     {
         currentStorage += productionRatePerTimeUnit;
         
         if (isStorageFull())
         {
-            excessGoods = currentStorage - totalStorageCapacity;
+            excessGoods += currentStorage - totalStorageCapacity;
             currentStorage = totalStorageCapacity;
+            if (excessGoods > exportThreshold * totalStorageCapacity)
+            {
+                exportExcessGoods();
+            } 
+        }
+    }
+
+    private void sellGoods()
+    {
+        if(currentStorage >= salesRatePerTimeUnit)
+        {
+            currentStorage -= salesRatePerTimeUnit;
             return;
         }
     }
 
-    public void sellGoods()
-    {
-        currentStorage-= salesRatePerTimeUnit;
-        if(currentStorage < 0)
-        {
-            currentStorage = 0;
-        }
-    }
-
-    public bool isStorageFull()
-    {
-        float spaceLeft = totalStorageCapacity - currentStorage;
-        
-        if (spaceLeft <= 0)
+    private bool isStorageFull()
+    {     
+        if (currentStorage >= totalStorageCapacity)
         {
             return true;
         }
         return false;
     }
 
-    // To check storage modify later
-    public void checkStorage()
+
+
+    public float exportExcessGoods()
     {
-        if (isStorageFull())
+        if (excessGoods <= 0)
         {
-            Debug.Log("Storage is full! Consider building more storage or reducing production.");
+            return 0f; // No excess goods to export
         }
+        excessGoods -= exportRate;
+        
+        return exportRate;
     }
 
     public void debugGoods()
