@@ -165,9 +165,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EconomyManager
   goodsManager: {fileID: 3387437}
+  uiController: {fileID: 681313534}
   spending: 0
   income: 0
   tax: 0
+  exportCostPerUnit: 10
   tickRateInSeconds: 2
 --- !u!114 &3387437
 MonoBehaviour:
@@ -186,6 +188,8 @@ MonoBehaviour:
   productionRatePerTimeUnit: 0
   salesRatePerTimeUnit: 0
   excessGoods: 0
+  exportRate: 1
+  importRate: 0
 --- !u!1001 &5793314
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1740,17 +1744,17 @@ MonoBehaviour:
     weight: 1
     workerCapacity: 10
     salesPerTick: 1
-    inventory: 20
+    inventory: 5
   - prefab: {fileID: 3702253504043930072, guid: 5aae5b7bf78f5ce4481f92d2716dbc92, type: 3}
-    weight: 0.25
+    weight: 0
     workerCapacity: 50
     salesPerTick: 1.5
-    inventory: 50
+    inventory: 5
   industrialPrefabs:
   - prefab: {fileID: 3702253504043930072, guid: f9b35d1c64309ca43b126ef7c1cf9bd5, type: 3}
     weight: 1
     workerCapacity: 100
-    freightPerTick: 0.5
+    freightPerTick: 5.5
     inventory: 10
   bigPrefabs:
   - prefab: {fileID: 948695418406959342, guid: b23d8607810fd19468a49ab4b829a8ce, type: 3}
