@@ -3,6 +3,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SettingsManagement;
 using UnityEngine;
 
 namespace SVS
@@ -10,11 +11,13 @@ namespace SVS
 
     public class CameraMovement : MonoBehaviour
     {
+        [SerializeField] private GameSettings settings;
         public Camera gameCamera;
-        public float cameraMovementSpeed = 5;
+        private float cameraMovementSpeed;
 
         private void Start()
         {
+            cameraMovementSpeed = settings.camera.speed;
             gameCamera = GetComponent<Camera>();
         }
         public void MoveCamera(Vector3 inputVector)
