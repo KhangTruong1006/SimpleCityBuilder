@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EconomyManager : MonoBehaviour
@@ -9,10 +10,15 @@ public class EconomyManager : MonoBehaviour
     private float budget;
     public float spending;
     public float income;
+    [Range(0f, 1f)]
     public float tax = 0.1f;
 
-    public float exportRevenuePerUnit = 100f;
-    public float importCostPerUnit = 50f;
+    public float exportRevenuePerUnit = 10f;
+    public float importCostPerUnit = 25f;
+
+    public float productionCostPerUnit = 1f;
+    public float productCostPerUnit = 2f;
+
 
 
     [Header("Simulation Settings")]
@@ -22,7 +28,7 @@ public class EconomyManager : MonoBehaviour
     private void Start()
     {
         budget = 10000f;
-        updateBudget();
+        displayBudget();
     }
 
     private void Update()
@@ -37,17 +43,50 @@ public class EconomyManager : MonoBehaviour
 
     private void runSimulationTick()
     {
-        goodsManager.handleLogistics();
-
-        updateBudget();
+        handleLogistics();
+        
+        calculateIncome();
+        displayBudget();
     }
 
-    private void updateBudget()
+
+    public void handleLogistics()
     {
-        float exportIncome = goodsManager.exportExcessGoods();
-        budget += exportIncome * exportRevenuePerUnit;
+        goodsManager.produceGoods();
+        //goodsManager.sellGoods();
+        //goodsManager.exportExcessGoods();
+
+
+    }
+
+    private void calculateIncome()
+    {
+        float tradeDeficit = calculateExportAndImportDeficit();
+
+       
+        
+        income = tradeDeficit;
         
         
+        budget += income;
+    }
+
+    private float calculateExportAndImportDeficit()
+    {
+        float exportedGoods = goodsManager.exportExcessGoods();
+        float importedGoods = 0;
+        
+        float exportRevenue = exportedGoods * exportRevenuePerUnit;
+        float importCost = importedGoods * importCostPerUnit;
+        
+        float deficit = exportRevenue - importCost;
+
+        return deficit;
+    }
+
+
+    private void displayBudget()
+    {
         uiController.displayBudget(budget);
     }
 }
