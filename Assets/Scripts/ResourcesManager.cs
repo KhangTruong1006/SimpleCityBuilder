@@ -7,43 +7,42 @@ public class GoodsManager : MonoBehaviour
     public float currentStorage;
 
     public float productionRatePerTimeUnit;
-    public float salesRatePerTimeUnit;
+    public float salesRatePerTimeUnit; // Will be replace with Demand when integrate with population
 
+    [Header("Export and Import")]
     public float excessGoods;
-    public float exportRate = 1f;
-    public float importRate;
+    public float exportRate = 50f; // Unit: Tons per time unit
+    public float importRate = 10f;
 
-    public float exportThreshold = 0.5f;
+    [Header("Thresholds")]
+    public float productionThreshold = 0.5f;
+    public float exportThreshold = 0.4f;
     public float importThreshold = 0.5f;
 
 
-    public void handleLogistics()
+    public void produceGoods()
     {
-        produceGoods();
-        sellGoods();
-    }
+        if (isOverProduction())
+        {
+            return;
+        }
 
-    private void produceGoods()
-    {
         currentStorage += productionRatePerTimeUnit;
         
         if (isStorageFull())
         {
             excessGoods += currentStorage - totalStorageCapacity;
             currentStorage = totalStorageCapacity;
-            if (excessGoods > exportThreshold * totalStorageCapacity)
-            {
-                exportExcessGoods();
-            } 
         }
     }
 
-    private void sellGoods()
+    public void sellGoods()
     {
-        if(currentStorage >= salesRatePerTimeUnit)
+        
+        currentStorage -= salesRatePerTimeUnit;
+        if (currentStorage <= 0)
         {
-            currentStorage -= salesRatePerTimeUnit;
-            return;
+            currentStorage = 0;
         }
     }
 
@@ -56,23 +55,30 @@ public class GoodsManager : MonoBehaviour
         return false;
     }
 
-
+    // ADD FUNCTIONS FOR IMPORTING
 
     public float exportExcessGoods()
     {
-        if (excessGoods <= 0)
+        if (!isExportThreshold())
         {
-            return 0f; // No excess goods to export
+            return 0;
         }
+
         excessGoods -= exportRate;
-        
         return exportRate;
     }
 
-    public void debugGoods()
+    private bool isExportThreshold()
     {
-        Debug.Log($"Current Storage: {currentStorage} / {totalStorageCapacity}");
+        return excessGoods >= totalStorageCapacity * exportThreshold;
     }
+
+    private bool isOverProduction()
+    {
+        return excessGoods >= totalStorageCapacity * productionThreshold;
+    }
+
+    // Ignore for now
 
     public void updateTotalStorageCapacity(float change)
     {
