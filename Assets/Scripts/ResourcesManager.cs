@@ -12,13 +12,13 @@ public class GoodsManager : MonoBehaviour
     [Header("Export and Import")]
     public float excessGoods;
     public float exportRate = 50f; // Unit: Tons per time unit
-    public float importRate = 10f;
+    public float importDemand = 0;
 
     [Header("Thresholds")]
     public float productionThreshold = 0.5f;
     public float exportThreshold = 0.4f;
-    public float importThreshold = 0.5f;
 
+    private bool triggeredExport;
 
     public void produceGoods()
     {
@@ -38,14 +38,18 @@ public class GoodsManager : MonoBehaviour
 
     public void sellGoods()
     {
-        
-        currentStorage -= salesRatePerTimeUnit;
         if (currentStorage <= 0)
         {
             currentStorage = 0;
+            return;
         }
+        currentStorage -= salesRatePerTimeUnit;
     }
 
+    public void debugTradeDeficit()
+    {
+        Debug.Log($"E: {exportRate} : I: {importDemand}");
+    }
     private bool isStorageFull()
     {     
         if (currentStorage >= totalStorageCapacity)
@@ -55,22 +59,51 @@ public class GoodsManager : MonoBehaviour
         return false;
     }
 
-    // ADD FUNCTIONS FOR IMPORTING
+    // Import logics
+    public float importGoods()
+    {
+        // Not enough stock and underproduction
+        if (isStockUnderDemand() && isUnderProduction())
+        {
+            importDemand = salesRatePerTimeUnit - productionRatePerTimeUnit;
+            currentStorage += importDemand;
+        }
+        return importDemand;
+    }
 
+    private bool isStockUnderDemand()
+    {
+        return currentStorage < salesRatePerTimeUnit;
+    }
+    private bool isUnderProduction()
+    {
+        return productionRatePerTimeUnit < salesRatePerTimeUnit;
+    }
+
+    //Export logics
+
+    // === FIX THIS EXPORT GOOD TO EMPTY THE ENTIRE EXCESS UNITL 0!
     public float exportExcessGoods()
     {
-        if (!isExportThreshold())
+        if (isExportThreshold())
         {
-            return 0;
+            triggeredExport = true;
         }
 
-        excessGoods -= exportRate;
+        if (triggeredExport) {
+            excessGoods -= exportRate;
+        }    
         return exportRate;
     }
 
     private bool isExportThreshold()
     {
-        return excessGoods >= totalStorageCapacity * exportThreshold;
+        float excessRatio = excessGoods / totalStorageCapacity;
+        if (excessRatio >=  exportThreshold && totalStorageCapacity > 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     private bool isOverProduction()
@@ -78,8 +111,7 @@ public class GoodsManager : MonoBehaviour
         return excessGoods >= totalStorageCapacity * productionThreshold;
     }
 
-    // Ignore for now
-
+    // Update general data
     public void updateTotalStorageCapacity(float change)
     {
         totalStorageCapacity += change;
