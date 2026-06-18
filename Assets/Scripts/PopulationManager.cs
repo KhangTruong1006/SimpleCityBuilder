@@ -14,7 +14,7 @@ public class PopulationManager : MonoBehaviour
 
 
     private float growthRate;
-    private float precisePopulation = 0f;
+    public float precisePopulation = 0f;
     private float globalFactor;
 
     [Header("Simulation Settings")]
