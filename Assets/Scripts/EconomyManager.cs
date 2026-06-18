@@ -19,7 +19,7 @@ public class EconomyManager : MonoBehaviour
     public float productionCostPerUnit = 1f;
     public float productCostPerUnit = 2f;
 
-
+    private float tradeDeficit;
 
     [Header("Simulation Settings")]
     public float tickRateInSeconds = 2.0f;
@@ -44,7 +44,6 @@ public class EconomyManager : MonoBehaviour
     private void runSimulationTick()
     {
         handleLogistics();
-        
         calculateIncome();
         displayBudget();
     }
@@ -53,35 +52,27 @@ public class EconomyManager : MonoBehaviour
     public void handleLogistics()
     {
         goodsManager.produceGoods();
-        //goodsManager.sellGoods();
-        //goodsManager.exportExcessGoods();
+        float exported = goodsManager.exportExcessGoods();
+        float imported = goodsManager.importGoods();
+        goodsManager.sellGoods();
 
-
+        calculateExportAndImportDeficit(exported, imported);
     }
 
     private void calculateIncome()
-    {
-        float tradeDeficit = calculateExportAndImportDeficit();
-
-       
-        
+    { 
         income = tradeDeficit;
         
         
         budget += income;
     }
 
-    private float calculateExportAndImportDeficit()
-    {
-        float exportedGoods = goodsManager.exportExcessGoods();
-        float importedGoods = 0;
+    private void calculateExportAndImportDeficit(float exported, float imported)
+    {   
+        float exportRevenue = exported * exportRevenuePerUnit;
+        float importCost = imported * importCostPerUnit;
         
-        float exportRevenue = exportedGoods * exportRevenuePerUnit;
-        float importCost = importedGoods * importCostPerUnit;
-        
-        float deficit = exportRevenue - importCost;
-
-        return deficit;
+        tradeDeficit = exportRevenue - importCost;
     }
 
 
