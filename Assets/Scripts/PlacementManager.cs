@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class PlacementManager : MonoBehaviour
 {
-    public int width, height;
+    [SerializeField] private GameSettings settings;
     Grid placementGrid;
 
     private Dictionary<Vector3Int,StructureModel> temporaryRoadObjects =new Dictionary<Vector3Int, StructureModel>();
@@ -13,13 +13,13 @@ public class PlacementManager : MonoBehaviour
 
     private void Start()
     {
-        placementGrid = new Grid(width, height);
+        placementGrid = new Grid(settings.gridSettings.width, settings.gridSettings.width);
     }
 
     // check if structure's position is in bound of the map
     internal bool isPositionInBound(Vector3Int position)
     {
-        if(position.x >= 0 && position.x < width && position.z >= 0 && position.z < height)
+        if(position.x >= 0 && position.x < settings.gridSettings.width && position.z >= 0 && position.z < settings.gridSettings.width)
         {
             return true;
         }
