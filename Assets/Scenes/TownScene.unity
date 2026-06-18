@@ -169,7 +169,8 @@ MonoBehaviour:
   spending: 0
   income: 0
   tax: 0
-  exportCostPerUnit: 10
+  exportRevenuePerUnit: 100
+  importCostPerUnit: 50
   tickRateInSeconds: 2
 --- !u!114 &3387437
 MonoBehaviour:
@@ -190,6 +191,8 @@ MonoBehaviour:
   excessGoods: 0
   exportRate: 1
   importRate: 0
+  exportThreshold: 0.5
+  importThreshold: 0.5
 --- !u!1001 &5793314
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13670,8 +13673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42babd098c0d8c4488160464fdbf48a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlacementManager
-  width: 30
-  height: 30
+  settings: {fileID: 11400000, guid: d752f58a8568d894fb7dd43f56985bc0, type: 2}
 --- !u!4 &1173915698
 Transform:
   m_ObjectHideFlags: 0
