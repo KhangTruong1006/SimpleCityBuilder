@@ -19,6 +19,8 @@ public class EconomyManager : MonoBehaviour
     public float productionCostPerUnit = 1f;
     public float productCostPerUnit = 2f;
 
+    float exported = 0;
+    float imported = 0;
     private float tradeDeficit;
 
     [Header("Simulation Settings")]
@@ -51,12 +53,20 @@ public class EconomyManager : MonoBehaviour
 
     public void handleLogistics()
     {
+        // === FIX LOGICS
         goodsManager.produceGoods();
-        float exported = goodsManager.exportExcessGoods();
-        float imported = goodsManager.importGoods();
-        goodsManager.sellGoods();
+        if (goodsManager.isExportThreshold())
+        {
+            
+        }
+        exported = goodsManager.exportExcessGoods();
 
-        calculateExportAndImportDeficit(exported, imported);
+        if (goodsManager.isStockAndProductionUnderDemand()) 
+        {
+            imported = goodsManager.importGoods();
+        }
+        goodsManager.sellGoods();
+        calculateExportAndImportDeficit();
     }
 
     private void calculateIncome()
@@ -67,7 +77,7 @@ public class EconomyManager : MonoBehaviour
         budget += income;
     }
 
-    private void calculateExportAndImportDeficit(float exported, float imported)
+    private void calculateExportAndImportDeficit()
     {   
         float exportRevenue = exported * exportRevenuePerUnit;
         float importCost = imported * importCostPerUnit;
