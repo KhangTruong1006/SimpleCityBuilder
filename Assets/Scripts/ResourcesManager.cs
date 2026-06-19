@@ -18,7 +18,7 @@ public class GoodsManager : MonoBehaviour
     public float productionThreshold = 0.5f;
     public float exportThreshold = 0.4f;
 
-    private bool triggeredExport;
+    private bool isExportTriggered = false;
 
     public void produceGoods()
     {
@@ -60,15 +60,23 @@ public class GoodsManager : MonoBehaviour
     }
 
     // Import logics
+    // === Implement similar logic from export
     public float importGoods()
+    {
+        
+        importDemand = salesRatePerTimeUnit - productionRatePerTimeUnit;
+        currentStorage += importDemand;
+        return importDemand;
+    }
+
+    public bool isStockAndProductionUnderDemand()
     {
         // Not enough stock and underproduction
         if (isStockUnderDemand() && isUnderProduction())
         {
-            importDemand = salesRatePerTimeUnit - productionRatePerTimeUnit;
-            currentStorage += importDemand;
+            return true;
         }
-        return importDemand;
+        return false;
     }
 
     private bool isStockUnderDemand()
@@ -82,21 +90,32 @@ public class GoodsManager : MonoBehaviour
 
     //Export logics
 
-    // === FIX THIS EXPORT GOOD TO EMPTY THE ENTIRE EXCESS UNITL 0!
+    // === FIX THIS TO EXPORT GOODS UNTIL THE ENTIRE EXCESS IS 0! -  #Not finished
+    // === TEST THIS
+    public void triggerExport()
+    {
+        isExportTriggered = true;
+    }
     public float exportExcessGoods()
     {
-        if (isExportThreshold())
+        float exportedGoods;
+        if (excessGoods <= exportRate) // when excess goods is smaller than export speed
         {
-            triggeredExport = true;
+            exportedGoods = excessGoods;
+            excessGoods = 0;
+            isExportTriggered = false;
         }
 
-        if (triggeredExport) {
-            excessGoods -= exportRate;
-        }    
-        return exportRate;
+        else
+        {
+            exportedGoods = exportRate;
+            excessGoods -= exportedGoods;
+        }
+
+        return exportedGoods;
     }
 
-    private bool isExportThreshold()
+    public bool isExportThreshold()
     {
         float excessRatio = excessGoods / totalStorageCapacity;
         if (excessRatio >=  exportThreshold && totalStorageCapacity > 0)
