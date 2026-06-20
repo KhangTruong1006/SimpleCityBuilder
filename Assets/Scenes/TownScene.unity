@@ -164,15 +164,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a67d9fdc95f8c34494d25ec55917d0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EconomyManager
-  goodsManager: {fileID: 3387437}
+  resourcesManager: {fileID: 3387437}
   uiController: {fileID: 681313534}
   spending: 0
   income: 0
   tax: 0
-  exportRevenuePerUnit: 100
-  importCostPerUnit: 50
+  exportRevenuePerUnit: 10
+  importCostPerUnit: 25
   productionCostPerUnit: 1
-  productCostPerUnit: 2
+  salePricePerUnit: 2
   tickRateInSeconds: 2
 --- !u!114 &3387437
 MonoBehaviour:
@@ -190,11 +190,12 @@ MonoBehaviour:
   currentStorage: 0
   productionRatePerTimeUnit: 0
   salesRatePerTimeUnit: 0
-  excessGoods: 0
-  exportRate: 1
+  surplus: 0
+  exportRate: 10
   importDemand: 0
   productionThreshold: 0.5
   exportThreshold: 0.5
+  isExportTriggered: 0
 --- !u!1001 &5793314
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1773,7 +1774,7 @@ MonoBehaviour:
   placementManager: {fileID: 1173915697}
   populationManager: {fileID: 2029635351}
   economyManager: {fileID: 3387436}
-  goodsManager: {fileID: 3387437}
+  resourcesManager: {fileID: 3387437}
 --- !u!4 &188715385
 Transform:
   m_ObjectHideFlags: 0
