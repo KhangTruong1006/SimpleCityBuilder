@@ -14,7 +14,7 @@ public class StructureManager : MonoBehaviour
     public PlacementManager placementManager;
     public PopulationManager populationManager;
     public EconomyManager economyManager;
-    public GoodsManager goodsManager;
+    public ResourcesManager resourcesManager;
 
     private float[] residentialWeights, commercialWeights, industrialWeights, bigWeights;
     private void Start()
@@ -57,15 +57,15 @@ public class StructureManager : MonoBehaviour
 
         if (prefab is IBusinessPrefab businessPrefab)
         {
-            goodsManager.updateTotalStorageCapacity(businessPrefab.InventoryCapacity);
+            resourcesManager.updateTotalStorageCapacity(businessPrefab.InventoryCapacity);
            
             if(type == CellType.Commercial)
             {
-                goodsManager.updateSalesRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
+                resourcesManager.updateSalesRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
             }
             if (type == CellType.Industrial)
             {
-                goodsManager.updateProductionRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
+                resourcesManager.updateProductionRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
             }
         }
     }
