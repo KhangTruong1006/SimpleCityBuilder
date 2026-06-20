@@ -1,10 +1,11 @@
 using System;
+using System.Resources;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class EconomyManager : MonoBehaviour
 {
-    public GoodsManager goodsManager;
+    public ResourcesManager resourcesManager;
     public UIController uiController;
 
     private float budget;
@@ -16,12 +17,16 @@ public class EconomyManager : MonoBehaviour
     public float exportRevenuePerUnit = 10f;
     public float importCostPerUnit = 25f;
 
-    public float productionCostPerUnit = 1f;
-    public float productCostPerUnit = 2f;
+    public float productionCostPerUnit = 2f;
+    public float salePricePerUnit = 3f;
+
+    private float producedGoods;
+    private float saledGoods;
 
     float exported = 0;
     float imported = 0;
-    private float tradeDeficit;
+
+
 
     [Header("Simulation Settings")]
     public float tickRateInSeconds = 2.0f;
@@ -46,43 +51,64 @@ public class EconomyManager : MonoBehaviour
     private void runSimulationTick()
     {
         handleLogistics();
-        calculateIncome();
+        handleEconomy();
+        
         displayBudget();
     }
 
+    private void handleEconomy()
+    {
+        float tradeDeficit = calculateExportAndImportDeficit();
+        float productionCost = calculateProductionCost();
+        float saleRevenue = calculateSaleRevenue();
+        
+        calculateIncome(tradeDeficit, productionCost, saleRevenue);
+    }
 
     public void handleLogistics()
     {
         // === FIX LOGICS
-        goodsManager.produceGoods();
-        if (goodsManager.isExportThreshold())
-        {
-            
-        }
-        exported = goodsManager.exportExcessGoods();
+        producedGoods = resourcesManager.produceGoods();
 
-        if (goodsManager.isStockAndProductionUnderDemand()) 
+        if (resourcesManager.isExportThreshold())
         {
-            imported = goodsManager.importGoods();
+            exported = resourcesManager.exportSurplus();
         }
-        goodsManager.sellGoods();
-        calculateExportAndImportDeficit();
+
+        if (resourcesManager.isStockAndProductionUnderDemand()) 
+        {
+            imported = resourcesManager.importGoods();
+        }
+        
+        saledGoods = resourcesManager.sellGoods();
     }
 
-    private void calculateIncome()
+    private void calculateIncome(float tradeDeficit, float production, float sales)
     { 
-        income = tradeDeficit;
+        income = tradeDeficit + (sales - production);
         
         
         budget += income;
     }
 
-    private void calculateExportAndImportDeficit()
+    private float calculateProductionCost()
+    {
+        return producedGoods * productionCostPerUnit;
+    }
+
+    private float calculateSaleRevenue()
+    {
+        return saledGoods * salePricePerUnit;
+    }
+
+    private float calculateExportAndImportDeficit()
     {   
         float exportRevenue = exported * exportRevenuePerUnit;
         float importCost = imported * importCostPerUnit;
         
-        tradeDeficit = exportRevenue - importCost;
+        float tradeDeficit = exportRevenue - importCost;
+        
+        return tradeDeficit;
     }
 
 

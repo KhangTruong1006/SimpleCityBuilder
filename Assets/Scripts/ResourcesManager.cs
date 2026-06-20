@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GoodsManager : MonoBehaviour
+public class ResourcesManager : MonoBehaviour
 {
     // Unit: Tons
     public float totalStorageCapacity;
@@ -10,7 +10,7 @@ public class GoodsManager : MonoBehaviour
     public float salesRatePerTimeUnit; // Will be replace with Demand when integrate with population
 
     [Header("Export and Import")]
-    public float excessGoods;
+    public float surplus;
     public float exportRate = 50f; // Unit: Tons per time unit
     public float importDemand = 0;
 
@@ -18,32 +18,37 @@ public class GoodsManager : MonoBehaviour
     public float productionThreshold = 0.5f;
     public float exportThreshold = 0.4f;
 
-    private bool isExportTriggered = false;
+    public bool isExportTriggered = false;
 
-    public void produceGoods()
+    public float produceGoods()
     {
         if (isOverProduction())
         {
-            return;
+            return 0;
         }
 
         currentStorage += productionRatePerTimeUnit;
         
         if (isStorageFull())
         {
-            excessGoods += currentStorage - totalStorageCapacity;
+            surplus += currentStorage - totalStorageCapacity;
             currentStorage = totalStorageCapacity;
         }
+
+        return productionRatePerTimeUnit;
     }
 
-    public void sellGoods()
+    public float sellGoods()
     {
-        if (currentStorage <= 0)
+        // When a new city starts
+        if (currentStorage <= 0 && totalStorageCapacity <= 0)
         {
-            currentStorage = 0;
-            return;
+            return 0;
         }
+        
         currentStorage -= salesRatePerTimeUnit;
+        
+        return salesRatePerTimeUnit;
     }
 
     public void debugTradeDeficit()
@@ -63,7 +68,6 @@ public class GoodsManager : MonoBehaviour
     // === Implement similar logic from export
     public float importGoods()
     {
-        
         importDemand = salesRatePerTimeUnit - productionRatePerTimeUnit;
         currentStorage += importDemand;
         return importDemand;
@@ -96,20 +100,20 @@ public class GoodsManager : MonoBehaviour
     {
         isExportTriggered = true;
     }
-    public float exportExcessGoods()
+    public float exportSurplus()
     {
         float exportedGoods;
-        if (excessGoods <= exportRate) // when excess goods is smaller than export speed
+        if (surplus <= exportRate) // when excess goods is smaller than export speed
         {
-            exportedGoods = excessGoods;
-            excessGoods = 0;
-            isExportTriggered = false;
+            exportedGoods = surplus;
+            surplus = 0;
+
         }
 
         else
         {
             exportedGoods = exportRate;
-            excessGoods -= exportedGoods;
+            surplus -= exportedGoods;
         }
 
         return exportedGoods;
@@ -117,7 +121,7 @@ public class GoodsManager : MonoBehaviour
 
     public bool isExportThreshold()
     {
-        float excessRatio = excessGoods / totalStorageCapacity;
+        float excessRatio = surplus / totalStorageCapacity;
         if (excessRatio >=  exportThreshold && totalStorageCapacity > 0)
         {
             return true;
@@ -127,8 +131,9 @@ public class GoodsManager : MonoBehaviour
 
     private bool isOverProduction()
     {
-        return excessGoods >= totalStorageCapacity * productionThreshold;
+        return surplus >= totalStorageCapacity * productionThreshold;
     }
+
 
     // Update general data
     public void updateTotalStorageCapacity(float change)
