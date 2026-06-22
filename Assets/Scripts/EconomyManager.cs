@@ -72,9 +72,15 @@ public class EconomyManager : MonoBehaviour
             triggerExport();
         }
 
+
         if (triggeredExport)
         {
-            return resourcesManager.exportSurplus();
+            if (resourcesManager.isSurplusAvaialbe())
+            {
+                return resourcesManager.exportSurplus();
+            }
+            
+            deactiveExport();
         }
         
         return 0f;
@@ -95,7 +101,7 @@ public class EconomyManager : MonoBehaviour
 
     private void updateBudget()
     {
-        budget += income;
+        budget += (income - spending);
         displayBudget();
     }
 
@@ -142,5 +148,10 @@ public class EconomyManager : MonoBehaviour
     private void triggerExport()
     {
         triggeredExport = true;
+    }
+
+    private void deactiveExport()
+    {
+        triggeredExport = false;
     }
 }
