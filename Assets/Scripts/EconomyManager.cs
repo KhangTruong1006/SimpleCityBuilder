@@ -20,12 +20,7 @@ public class EconomyManager : MonoBehaviour
     public float productionCostPerUnit = 2f;
     public float salePricePerUnit = 3f;
 
-    private float producedGoods;
-    private float saledGoods;
-
-    float exported = 0;
-    float imported = 0;
-
+    private bool triggeredExport = false;
 
 
     [Header("Simulation Settings")]
@@ -51,60 +46,87 @@ public class EconomyManager : MonoBehaviour
     private void runSimulationTick()
     {
         handleLogistics();
-        handleEconomy();
         
+        updateBudget(); 
+    }
+
+
+    private void handleLogistics()
+    {
+
+        float produced = resourcesManager.produceGoods();
+        float sold = resourcesManager.sellGoods();
+
+        resourcesManager.importDemand = 0f;
+        float exported = handleExport();
+        float imported = handleImport(sold, resourcesManager.salesRatePerTimeUnit);
+
+        calculateIncome(produced,sold,exported,imported);
+
+    }
+
+    private float handleExport()
+    {
+        if (resourcesManager.isExportThreshold() && !triggeredExport)
+        {
+            triggerExport();
+        }
+
+        if (triggeredExport)
+        {
+            return resourcesManager.exportSurplus();
+        }
+        
+        return 0f;
+    }
+
+    private float handleImport(float sold, float goodsDemand)
+    {
+        if (!resourcesManager.isSoldUnderDemand(sold))
+        {
+            return 0f;
+        }
+        
+        float demand = goodsDemand - sold;
+        float imported = resourcesManager.importGoods(demand);
+        
+        return imported;
+    }
+
+    private void updateBudget()
+    {
+        budget += income;
         displayBudget();
     }
 
-    private void handleEconomy()
+    private void calculateIncome(float produced, float sold, float exported, float imported)
     {
-        float tradeDeficit = calculateExportAndImportDeficit();
-        float productionCost = calculateProductionCost();
-        float saleRevenue = calculateSaleRevenue();
-        
-        calculateIncome(tradeDeficit, productionCost, saleRevenue);
+        float productionCost = produced * productionCostPerUnit;
+        float salesRevenue = sold * salePricePerUnit;
+        //float exportRevenue = exported * exportRevenuePerUnit;
+        //float importCost = imported * productionCostPerUnit;
+
+        float internalDeficit = calculateInternalDeficit(produced, sold);
+        float tradeDeficit = calculateExportAndImportDeficit(exported, imported);
+
+        //income = tradeDeficit + (salesRevenue - productionCost);
+        income = tradeDeficit + internalDeficit;
     }
 
-    public void handleLogistics()
+    private float calculateInternalDeficit(float produced, float sold)
     {
-        // === FIX LOGICS
-        producedGoods = resourcesManager.produceGoods();
+        float productionCost = produced * productionCostPerUnit;
+        float salesRevenue = sold * salePricePerUnit;
 
-        if (resourcesManager.isExportThreshold())
-        {
-            exported = resourcesManager.exportSurplus();
-        }
+        float deficit = salesRevenue - productionCost;
 
-        if (resourcesManager.isStockAndProductionUnderDemand()) 
-        {
-            imported = resourcesManager.importGoods();
-        }
-        
-        saledGoods = resourcesManager.sellGoods();
+        return deficit;
     }
 
-    private void calculateIncome(float tradeDeficit, float production, float sales)
-    { 
-        income = tradeDeficit + (sales - production);
-        
-        
-        budget += income;
-    }
-
-    private float calculateProductionCost()
-    {
-        return producedGoods * productionCostPerUnit;
-    }
-
-    private float calculateSaleRevenue()
-    {
-        return saledGoods * salePricePerUnit;
-    }
-
-    private float calculateExportAndImportDeficit()
+    private float calculateExportAndImportDeficit(float export, float import)
     {   
-        float exportRevenue = exported * exportRevenuePerUnit;
-        float importCost = imported * importCostPerUnit;
+        float exportRevenue = export * exportRevenuePerUnit;
+        float importCost = import * importCostPerUnit;
         
         float tradeDeficit = exportRevenue - importCost;
         
@@ -115,5 +137,10 @@ public class EconomyManager : MonoBehaviour
     private void displayBudget()
     {
         uiController.displayBudget(budget);
+    }
+
+    private void triggerExport()
+    {
+        triggeredExport = true;
     }
 }
