@@ -191,11 +191,10 @@ MonoBehaviour:
   productionRatePerTimeUnit: 0
   salesRatePerTimeUnit: 0
   surplus: 0
-  exportRate: 10
+  exportRate: 50
   importDemand: 0
   productionThreshold: 0.5
   exportThreshold: 0.5
-  isExportTriggered: 0
 --- !u!1001 &5793314
 PrefabInstance:
   m_ObjectHideFlags: 0
