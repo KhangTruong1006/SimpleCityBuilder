@@ -18,7 +18,6 @@ public class ResourcesManager : MonoBehaviour
     public float productionThreshold = 0.5f;
     public float exportThreshold = 0.4f;
 
-    public bool isExportTriggered = false;
 
     public float produceGoods()
     {
@@ -26,51 +25,46 @@ public class ResourcesManager : MonoBehaviour
         {
             return 0;
         }
+        float availableStorage = calculateAvailableStorage();
+        float actualProduction = Mathf.Min(productionRatePerTimeUnit, availableStorage);
 
-        currentStorage += productionRatePerTimeUnit;
-        
-        if (isStorageFull())
-        {
-            surplus += currentStorage - totalStorageCapacity;
-            currentStorage = totalStorageCapacity;
-        }
+        currentStorage += actualProduction;
 
+        // Surplus
+        surplus += (productionRatePerTimeUnit - actualProduction);
         return productionRatePerTimeUnit;
     }
 
     public float sellGoods()
     {
         // When a new city starts
-        if (currentStorage <= 0 && totalStorageCapacity <= 0)
+        if (currentStorage <= 0)
         {
             return 0;
         }
         
-        currentStorage -= salesRatePerTimeUnit;
+        float actualSales = Mathf.Min(salesRatePerTimeUnit, currentStorage);
+        currentStorage -= actualSales;
         
-        return salesRatePerTimeUnit;
+        return actualSales;
     }
 
     public void debugTradeDeficit()
     {
         Debug.Log($"E: {exportRate} : I: {importDemand}");
     }
-    private bool isStorageFull()
-    {     
-        if (currentStorage >= totalStorageCapacity)
-        {
-            return true;
-        }
-        return false;
-    }
 
     // Import logics
     // === Implement similar logic from export
-    public float importGoods()
+    public float importGoods(float demand)
     {
-        importDemand = salesRatePerTimeUnit - productionRatePerTimeUnit;
-        currentStorage += importDemand;
-        return importDemand;
+        float availableStorage = calculateAvailableStorage();
+        float imported = Mathf.Min(demand, availableStorage); // Import Goods based on available storage
+
+        currentStorage += imported;
+        importDemand = imported;
+        
+        return imported;
     }
 
     public bool isStockAndProductionUnderDemand()
@@ -96,36 +90,28 @@ public class ResourcesManager : MonoBehaviour
 
     // === FIX THIS TO EXPORT GOODS UNTIL THE ENTIRE EXCESS IS 0! -  #Not finished
     // === TEST THIS
-    public void triggerExport()
-    {
-        isExportTriggered = true;
-    }
     public float exportSurplus()
     {
-        float exportedGoods;
-        if (surplus <= exportRate) // when excess goods is smaller than export speed
-        {
-            exportedGoods = surplus;
-            surplus = 0;
+        // exporting rate < surplus -> export = rate
+        // exporting rate > surplus -> empty surplus
+        float exported = Mathf.Min(surplus, exportRate);
+        surplus -= exported;
 
-        }
-
-        else
-        {
-            exportedGoods = exportRate;
-            surplus -= exportedGoods;
-        }
-
-        return exportedGoods;
+        return exported;
     }
 
     public bool isExportThreshold()
     {
-        float excessRatio = surplus / totalStorageCapacity;
-        if (excessRatio >=  exportThreshold && totalStorageCapacity > 0)
+        if (totalStorageCapacity <= 0)
+        {
+            return false;
+        }
+
+        if (surplus/totalStorageCapacity >= exportThreshold)
         {
             return true;
         }
+
         return false;
     }
 
@@ -134,6 +120,10 @@ public class ResourcesManager : MonoBehaviour
         return surplus >= totalStorageCapacity * productionThreshold;
     }
 
+    private float calculateAvailableStorage()
+    {
+        return totalStorageCapacity - currentStorage;
+    }
 
     // Update general data
     public void updateTotalStorageCapacity(float change)
