@@ -26,12 +26,12 @@ public class ResourcesManager : MonoBehaviour
             return 0;
         }
         float availableStorage = calculateAvailableStorage();
-        float actualProduction = Mathf.Min(productionRatePerTimeUnit, availableStorage);
+        float production = Mathf.Min(productionRatePerTimeUnit, availableStorage);
 
-        currentStorage += actualProduction;
+        currentStorage += production;
 
         // Surplus
-        surplus += (productionRatePerTimeUnit - actualProduction);
+        surplus += (productionRatePerTimeUnit - production);
         return productionRatePerTimeUnit;
     }
 
@@ -43,16 +43,12 @@ public class ResourcesManager : MonoBehaviour
             return 0;
         }
         
-        float actualSales = Mathf.Min(salesRatePerTimeUnit, currentStorage);
-        currentStorage -= actualSales;
+        float sold = Mathf.Min(salesRatePerTimeUnit, currentStorage);
+        currentStorage -= sold;
         
-        return actualSales;
+        return sold;
     }
 
-    public void debugTradeDeficit()
-    {
-        Debug.Log($"E: {exportRate} : I: {importDemand}");
-    }
 
     // Import logics
     // === Implement similar logic from export
@@ -62,34 +58,12 @@ public class ResourcesManager : MonoBehaviour
         float imported = Mathf.Min(demand, availableStorage); // Import Goods based on available storage
 
         currentStorage += imported;
-        importDemand = imported;
+        importDemand = imported; // For display in inspector
         
         return imported;
     }
 
-    public bool isStockAndProductionUnderDemand()
-    {
-        // Not enough stock and underproduction
-        if (isStockUnderDemand() && isUnderProduction())
-        {
-            return true;
-        }
-        return false;
-    }
-
-    private bool isStockUnderDemand()
-    {
-        return currentStorage < salesRatePerTimeUnit;
-    }
-    private bool isUnderProduction()
-    {
-        return productionRatePerTimeUnit < salesRatePerTimeUnit;
-    }
-
     //Export logics
-
-    // === FIX THIS TO EXPORT GOODS UNTIL THE ENTIRE EXCESS IS 0! -  #Not finished
-    // === TEST THIS
     public float exportSurplus()
     {
         // exporting rate < surplus -> export = rate
@@ -100,6 +74,14 @@ public class ResourcesManager : MonoBehaviour
         return exported;
     }
 
+    private float calculateAvailableStorage()
+    {
+        return totalStorageCapacity - currentStorage;
+    }
+
+
+
+    // Bool (checiking) functions
     public bool isExportThreshold()
     {
         if (totalStorageCapacity <= 0)
@@ -107,7 +89,7 @@ public class ResourcesManager : MonoBehaviour
             return false;
         }
 
-        if (surplus/totalStorageCapacity >= exportThreshold)
+        if (surplus / totalStorageCapacity >= exportThreshold)
         {
             return true;
         }
@@ -119,10 +101,14 @@ public class ResourcesManager : MonoBehaviour
     {
         return surplus >= totalStorageCapacity * productionThreshold;
     }
-
-    private float calculateAvailableStorage()
+    public bool isSoldUnderDemand(float sold)
     {
-        return totalStorageCapacity - currentStorage;
+        return sold < salesRatePerTimeUnit; //salesRatePerTimeUnit will be replace by demand
+    }
+
+    public bool isSurplusAvaialbe()
+    {
+        return surplus > 0;
     }
 
     // Update general data
@@ -130,6 +116,7 @@ public class ResourcesManager : MonoBehaviour
     {
         totalStorageCapacity += change;
     }
+
     public void updateProductionRatePerTimeUnit(float change)
     {
         productionRatePerTimeUnit += change;
