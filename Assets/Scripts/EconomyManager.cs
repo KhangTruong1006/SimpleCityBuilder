@@ -23,27 +23,13 @@ public class EconomyManager : MonoBehaviour
     private bool triggeredExport = false;
 
 
-    [Header("Simulation Settings")]
-    public float tickRateInSeconds = 2.0f;
-    private float tickTimer = 0.0f;
-
     private void Start()
     {
         budget = 10000f;
         displayBudget();
     }
 
-    private void Update()
-    {
-        tickTimer += Time.deltaTime;
-        if (tickTimer >= tickRateInSeconds)
-        {
-            runSimulationTick();
-            tickTimer = 0.0f;
-        }
-    }
-
-    private void runSimulationTick()
+    public void runSimulationTick()
     {
         handleLogistics();
         

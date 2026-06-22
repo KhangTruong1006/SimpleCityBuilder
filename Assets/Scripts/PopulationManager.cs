@@ -17,10 +17,6 @@ public class PopulationManager : MonoBehaviour
     public float precisePopulation = 0f;
     private float globalFactor;
 
-    [Header("Simulation Settings")]
-    public float tickRateInSeconds = 2.0f;
-    private float tickTimer = 0.0f;
-
 
     private void Start()
     {
@@ -28,17 +24,7 @@ public class PopulationManager : MonoBehaviour
         //DemandManager demandManager = GetComponent<DemandManager>(); //For future expansion
     }
 
-    void Update()
-    {
-        tickTimer += Time.deltaTime;
-        if (tickTimer >= tickRateInSeconds)
-        {
-            runSimulationTick();
-            tickTimer = 0.0f;
-        }
-    }
-
-    private void runSimulationTick()
+    public void runSimulationTick()
     {
         // Change Employment to Demand
         calculateEmployment();

@@ -173,7 +173,6 @@ MonoBehaviour:
   importCostPerUnit: 25
   productionCostPerUnit: 1
   salePricePerUnit: 2
-  tickRateInSeconds: 2
 --- !u!114 &3387437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6569,12 +6568,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1532db21d449527429b15461ab73e8c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  settings: {fileID: 11400000, guid: d752f58a8568d894fb7dd43f56985bc0, type: 2}
   cameraMovement: {fileID: 2044889014}
   roadManager: {fileID: 276638132}
   inputManager: {fileID: 873099251}
   uiController: {fileID: 681313534}
   structureManager: {fileID: 188715384}
   populationManager: {fileID: 2029635351}
+  economyManager: {fileID: 3387436}
+  tickRateInSeconds: 2
 --- !u!4 &600307821
 Transform:
   m_ObjectHideFlags: 0
@@ -23833,7 +23835,6 @@ MonoBehaviour:
   jobCapacity: 0
   employedPopulation: 0
   precisePopulation: 0
-  tickRateInSeconds: 2
 --- !u!4 &2029635352
 Transform:
   m_ObjectHideFlags: 0

@@ -1,15 +1,30 @@
 using SVS;
 using System;
+using System.Resources;
+using Unity.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private GameSettings settings;
+
     public CameraMovement cameraMovement;
     public RoadManager roadManager;
     public InputManager inputManager;
     public UIController uiController;
     public StructureManager structureManager;
     public PopulationManager populationManager;
+    public EconomyManager economyManager;
+
+    [Header("Simulation Settings")]
+    public float tickRateInSeconds;
+    [ReadOnly]
+    public float tickTimer = 0.0f;
+
+    private void Awake()
+    {
+        tickRateInSeconds = settings.masterSettings.tickRateInSeconds;
+    }
 
     private void Start()
     {
@@ -25,6 +40,21 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         cameraMovement.MoveCamera(new Vector3(inputManager.CameraMovementVector.x, 0, inputManager.CameraMovementVector.y));
+        
+        
+        // Central clock
+        tickTimer += Time.deltaTime;
+        if (tickTimer >= tickRateInSeconds)
+        {
+            runSimulationTick();
+            tickTimer = 0.0f;
+        }
+    }
+
+    private void runSimulationTick()
+    {
+        populationManager.runSimulationTick();
+        economyManager.runSimulationTick();
     }
 
     private void HousePlacementHandler()
