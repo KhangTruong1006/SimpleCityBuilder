@@ -165,8 +165,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EconomyManager
   resourcesManager: {fileID: 3387437}
+  populationManager: {fileID: 2029635351}
   uiController: {fileID: 681313534}
-  spending: 0
+  expenses: 0
   income: 0
   tax: 0.1
   exportRevenuePerUnit: 10
@@ -185,10 +186,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ab757dc810f07a48b5efb9312177fa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GoodsManager
+  populationManager: {fileID: 2029635351}
   totalStorageCapacity: 0
   currentStorage: 0
   productionRatePerTimeUnit: 0
-  salesRatePerTimeUnit: 0
+  goodsDemandPerCapita: 0.05
+  dynamicDemand: 0
   surplus: 0
   exportRate: 50
   importDemand: 0
@@ -1758,7 +1761,7 @@ MonoBehaviour:
   - prefab: {fileID: 3702253504043930072, guid: f9b35d1c64309ca43b126ef7c1cf9bd5, type: 3}
     weight: 1
     workerCapacity: 100
-    freightPerTick: 5.5
+    freightPerTick: 5
     inventory: 10
   bigPrefabs:
   - prefab: {fileID: 948695418406959342, guid: b23d8607810fd19468a49ab4b829a8ce, type: 3}
@@ -6577,6 +6580,7 @@ MonoBehaviour:
   populationManager: {fileID: 2029635351}
   economyManager: {fileID: 3387436}
   tickRateInSeconds: 2
+  tickTimer: 0
 --- !u!4 &600307821
 Transform:
   m_ObjectHideFlags: 0
@@ -23834,6 +23838,8 @@ MonoBehaviour:
   populationCapacity: 0
   jobCapacity: 0
   employedPopulation: 0
+  goodsSatisfaction: 1
+  workersThreshold: 0.5
   precisePopulation: 0
 --- !u!4 &2029635352
 Transform:
