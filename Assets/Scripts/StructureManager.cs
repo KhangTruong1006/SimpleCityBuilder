@@ -59,10 +59,6 @@ public class StructureManager : MonoBehaviour
         {
             resourcesManager.updateTotalStorageCapacity(businessPrefab.InventoryCapacity);
            
-            if(type == CellType.Commercial)
-            {
-                resourcesManager.updateSalesRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
-            }
             if (type == CellType.Industrial)
             {
                 resourcesManager.updateProductionRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
