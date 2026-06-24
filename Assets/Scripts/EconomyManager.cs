@@ -6,10 +6,11 @@ using UnityEngine;
 public class EconomyManager : MonoBehaviour
 {
     public ResourcesManager resourcesManager;
+    public PopulationManager populationManager;
     public UIController uiController;
 
     private float budget;
-    public float spending;
+    public float expenses;
     public float income;
     [Range(0f, 1f)]
     public float tax = 0.1f;
@@ -39,16 +40,21 @@ public class EconomyManager : MonoBehaviour
 
     private void handleLogistics()
     {
+        if (!populationManager.haveWorkers()) {
+            return;
+        }
+
+        float currentDemand = resourcesManager.calculateCurrentDemand();
 
         float produced = resourcesManager.produceGoods();
-        float sold = resourcesManager.sellGoods();
+        float sold = resourcesManager.sellGoods(currentDemand);
 
         resourcesManager.importDemand = 0f;
         float exported = handleExport();
-        float imported = handleImport(sold, resourcesManager.salesRatePerTimeUnit);
+        float imported = handleImport(sold, currentDemand);
 
-        calculateIncome(produced,sold,exported,imported);
-
+        calculateExpenses(produced, imported);
+        calculateIncome(sold,exported);
     }
 
     private float handleExport()
@@ -85,46 +91,27 @@ public class EconomyManager : MonoBehaviour
         return imported;
     }
 
+    private void calculateIncome(float sold, float exported)
+    {
+        float salesRevenue = sold * salePricePerUnit;
+        float exportRevenue = exported * exportRevenuePerUnit;
+
+        income = salesRevenue + exportRevenue;
+    }
+
+    public void calculateExpenses(float produced, float imported)
+    {
+        float productionCost = produced * productionCostPerUnit;
+        float importCost = imported * productionCostPerUnit;
+
+        expenses = productionCost + importCost;
+    }
+
     private void updateBudget()
     {
-        budget += (income - spending);
+        budget += (income - expenses);
         displayBudget();
     }
-
-    private void calculateIncome(float produced, float sold, float exported, float imported)
-    {
-        float productionCost = produced * productionCostPerUnit;
-        float salesRevenue = sold * salePricePerUnit;
-        //float exportRevenue = exported * exportRevenuePerUnit;
-        //float importCost = imported * productionCostPerUnit;
-
-        float internalDeficit = calculateInternalDeficit(produced, sold);
-        float tradeDeficit = calculateExportAndImportDeficit(exported, imported);
-
-        //income = tradeDeficit + (salesRevenue - productionCost);
-        income = tradeDeficit + internalDeficit;
-    }
-
-    private float calculateInternalDeficit(float produced, float sold)
-    {
-        float productionCost = produced * productionCostPerUnit;
-        float salesRevenue = sold * salePricePerUnit;
-
-        float deficit = salesRevenue - productionCost;
-
-        return deficit;
-    }
-
-    private float calculateExportAndImportDeficit(float export, float import)
-    {   
-        float exportRevenue = export * exportRevenuePerUnit;
-        float importCost = import * importCostPerUnit;
-        
-        float tradeDeficit = exportRevenue - importCost;
-        
-        return tradeDeficit;
-    }
-
 
     private void displayBudget()
     {

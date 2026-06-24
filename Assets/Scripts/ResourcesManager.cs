@@ -2,12 +2,16 @@ using UnityEngine;
 
 public class ResourcesManager : MonoBehaviour
 {
+    public PopulationManager populationManager;
+
     // Unit: Tons
     public float totalStorageCapacity;
     public float currentStorage;
 
     public float productionRatePerTimeUnit;
-    public float salesRatePerTimeUnit; // Will be replace with Demand when integrate with population
+
+    public float goodsDemandPerCapita = 0.05f;
+    public float dynamicDemand;
 
     [Header("Export and Import")]
     public float surplus;
@@ -35,18 +39,42 @@ public class ResourcesManager : MonoBehaviour
         return productionRatePerTimeUnit;
     }
 
-    public float sellGoods()
+    public float calculateCurrentDemand()
+    {
+        dynamicDemand = populationManager.population * goodsDemandPerCapita;
+        return dynamicDemand;
+    }
+
+    public float sellGoods(float demand)
     {
         // When a new city starts
         if (currentStorage <= 0)
         {
+            // If fail to deliver goods
+            if(populationManager!= null)
+            {
+                populationManager.updateGoodsSatisfaction(0f);
+            }
             return 0;
         }
         
-        float sold = Mathf.Min(salesRatePerTimeUnit, currentStorage);
-        currentStorage -= sold;
         
-        return sold;
+        float sold = Mathf.Min(demand, currentStorage);
+        currentStorage -= sold;
+
+        //Recalculate satisfaction score
+        if (populationManager != null && demand > 0)
+        {
+            float satifaction = sold / demand;
+            populationManager.updateGoodsSatisfaction(satifaction);
+        }
+
+        // In case of population = 0
+        else if (demand == 0) {
+            populationManager.updateGoodsSatisfaction(0f);
+        }
+
+            return sold;
     }
 
 
@@ -103,7 +131,7 @@ public class ResourcesManager : MonoBehaviour
     }
     public bool isSoldUnderDemand(float sold)
     {
-        return sold < salesRatePerTimeUnit; //salesRatePerTimeUnit will be replace by demand
+        return sold < dynamicDemand;
     }
 
     public bool isSurplusAvaialbe()
@@ -120,10 +148,5 @@ public class ResourcesManager : MonoBehaviour
     public void updateProductionRatePerTimeUnit(float change)
     {
         productionRatePerTimeUnit += change;
-    }
-
-    public void updateSalesRatePerTimeUnit(float change)
-    {
-        salesRatePerTimeUnit += change;
     }
 }

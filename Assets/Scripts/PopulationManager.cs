@@ -12,6 +12,10 @@ public class PopulationManager : MonoBehaviour
     public int jobCapacity;
     public int employedPopulation;
 
+    [Range(0.0f, 1.0f)]
+    public float goodsSatisfaction = 1.0f;
+    [Range(0.0f, 1.0f)]
+    public float workersThreshold = 0.25f;
 
     private float growthRate;
     public float precisePopulation = 0f;
@@ -63,8 +67,8 @@ public class PopulationManager : MonoBehaviour
         // rate = base * factors point * population * (1 - population / capacity)
 
         float basedGrowthRate = 0.1f;
-        //float growthRate = basedGrowthRate * globalFactor * precisePopulation * (1f - (precisePopulation / populationCapacity));
-        float growthRate = basedGrowthRate * precisePopulation * (1f - (precisePopulation / populationCapacity));
+        float growthRate = basedGrowthRate * globalFactor * precisePopulation * (1f - (precisePopulation / populationCapacity));
+        //float growthRate = basedGrowthRate * precisePopulation * (1f - (precisePopulation / populationCapacity));
 
         precisePopulation += growthRate;
         population = Mathf.FloorToInt(precisePopulation);
@@ -84,8 +88,20 @@ public class PopulationManager : MonoBehaviour
         float employmentRate = (float)employedPopulation / (float)population;
         float housingRate = (float)population / (float)populationCapacity;
         
-        globalFactor = 0.5f * housingRate + 0.5f * employmentRate;
+        globalFactor = 0.3f * housingRate + 0.4f * employmentRate + 0.3f * (float)goodsSatisfaction;
     }
+    
+    public void updateGoodsSatisfaction(float change)
+    {
+        goodsSatisfaction = change;
+    }
+
+    public bool haveWorkers()
+    {
+        return employedPopulation > 0;
+    }
+
+    
 
     public void updatePopulationCapacity(int capacity)
     {
