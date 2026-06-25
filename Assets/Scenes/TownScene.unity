@@ -23883,6 +23883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 375867406ed37004786154bede333376, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PopulationManager
+  settings: {fileID: 11400000, guid: d752f58a8568d894fb7dd43f56985bc0, type: 2}
   demandController: {fileID: 1857436886}
   uiController: {fileID: 681313534}
   population: 0
