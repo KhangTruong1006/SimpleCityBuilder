@@ -6,6 +6,7 @@ public class GameSettings : ScriptableObject
     public MasterSettings masterSettings;
     public Camera camera;
     public GridSettings gridSettings;
+    public Population population;
 
 
     [System.Serializable]
@@ -13,6 +14,9 @@ public class GameSettings : ScriptableObject
     {
         // Game speed (second)
         public float tickRateInSeconds = 2.0f;
+        public float speed_1;
+        public float speed_2;
+        public float speed_3 = 1.0f;
     }
 
     [System.Serializable]
@@ -27,5 +31,10 @@ public class GameSettings : ScriptableObject
     {
         public int width;
         public int height;
+    }
+
+    [System.Serializable]
+    public class Population {
+        public float seedingPop = 0.5f;
     }
 }
