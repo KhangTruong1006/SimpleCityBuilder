@@ -37,6 +37,7 @@ public class DemandController : MonoBehaviour
         if (PopulationManager.population > 5)
         {
             isInitialSeeding = false;
+            return;
         }
 
         else
