@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PopulationManager : MonoBehaviour
 {
+    [SerializeField] private GameSettings settings;
     public DemandController demandController;
     public UIController uiController;
 
@@ -60,7 +61,7 @@ public class PopulationManager : MonoBehaviour
         // To handle calculation when population is zero (the start of the game) / Seeding
         if(precisePopulation <= 0 && populationCapacity >= 0)
         {
-            precisePopulation = 0.5f;
+            precisePopulation = settings.population.seedingPop;
         }
 
         // Prevent negative population 
