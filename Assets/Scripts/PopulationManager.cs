@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PopulationManager : MonoBehaviour
 {
+    public DemandController demandController;
     public UIController uiController;
 
 
@@ -32,6 +33,11 @@ public class PopulationManager : MonoBehaviour
     {
         // Change Employment to Demand
         calculateEmployment();
+
+        if (demandController != null) {
+            demandController.updateDemand();
+        }
+
         calculateGlobalFactor();
         calculatePopulationChange();
 
@@ -66,7 +72,7 @@ public class PopulationManager : MonoBehaviour
         // This method uses Logistic Growth Model based on various factors (metrics)
         // rate = base * factors point * population * (1 - population / capacity)
 
-        float basedGrowthRate = 0.1f;
+        float basedGrowthRate = 0.5f;
         float growthRate = basedGrowthRate * globalFactor * precisePopulation * (1f - (precisePopulation / populationCapacity));
         //float growthRate = basedGrowthRate * precisePopulation * (1f - (precisePopulation / populationCapacity));
 
@@ -88,7 +94,7 @@ public class PopulationManager : MonoBehaviour
         float employmentRate = (float)employedPopulation / (float)population;
         float housingRate = (float)population / (float)populationCapacity;
         
-        globalFactor = 0.3f * housingRate + 0.4f * employmentRate + 0.3f * (float)goodsSatisfaction;
+        globalFactor = 0.4f * housingRate + 0.3f * employmentRate + 0.3f * (float)goodsSatisfaction;
     }
     
     public void updateGoodsSatisfaction(float change)
