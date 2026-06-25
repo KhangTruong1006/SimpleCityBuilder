@@ -63,6 +63,8 @@ public class DemandController : MonoBehaviour
         residentialDemand = Mathf.Clamp01(rawDemand);
     }
 
+    
+
     private float calculateHousingVacancy(int population, int capcity)
     {
         // New city - prevent 0 division
