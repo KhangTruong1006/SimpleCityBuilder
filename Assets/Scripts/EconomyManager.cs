@@ -26,7 +26,7 @@ public class EconomyManager : MonoBehaviour
 
     private void Start()
     {
-        budget = 10000f;
+        budget = 1000f;
         displayBudget();
     }
 
