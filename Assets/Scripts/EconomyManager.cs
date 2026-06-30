@@ -23,7 +23,10 @@ public class EconomyManager : MonoBehaviour
 
     private bool triggeredExport = false;
 
-
+    private void Awake()
+    {
+        resourcesManager = GetComponent<ResourcesManager>();
+    }
     private void Start()
     {
         budget = 1000f;
