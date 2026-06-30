@@ -19,19 +19,16 @@ public class RoadManager : MonoBehaviour
     {
        roadFixer = GetComponent<RoadFixer>();
     }
-
+    
     public void PlaceRoad(Vector3Int position)
     {
-        if(placementManager.isPositionInBound(position) == false)
+
+        if (!isPositionInBoundOrFree(position))
         {
             return;
         }
-        
-        if(placementManager.isPositionFree(position) == false) {
-            return;
-        }
 
-        if (placementMode == false)
+        if (!placementMode)
         {
             temporaryPlacementPositions.Clear();
             roadPositionsToRecheck.Clear();
@@ -48,10 +45,8 @@ public class RoadManager : MonoBehaviour
             placementManager.removeAllTemporaryStructures();
             temporaryPlacementPositions.Clear();
 
-            foreach (var positionToFix in roadPositionsToRecheck)
-            {
-                roadFixer.fixRoadAtPosition(placementManager, positionToFix);
-            }
+
+            fixSurrondingPositions();
 
             roadPositionsToRecheck.Clear();
 
@@ -59,13 +54,14 @@ public class RoadManager : MonoBehaviour
 
             foreach (var temporaryPosition in temporaryPlacementPositions)
             {
-                if (placementManager.isPositionFree(temporaryPosition) == false)
+                if (!placementManager.isPositionFree(temporaryPosition))
                 {
                     continue;
                 }
                 placementManager.placeTemporaryStructure(temporaryPosition, roadFixer.deadEnd, CellType.Road);
             }
         }
+        
         fixRoadPrefabs();
     }
 
@@ -75,29 +71,42 @@ public class RoadManager : MonoBehaviour
         {
             roadFixer.fixRoadAtPosition(placementManager, temporaryPosition);
             var neighbours = placementManager.getNeighbourOfTypesFor(temporaryPosition, CellType.Road);
+            
             foreach (var roadPosition in neighbours)
             {
-                if(roadPositionsToRecheck.Contains(roadPosition) == false)
+                if(!roadPositionsToRecheck.Contains(roadPosition))
                 {
                     roadPositionsToRecheck.Add(roadPosition);
                 }
             }
         }
 
-        foreach (var positionToFix in roadPositionsToRecheck)
+        fixSurrondingPositions();
+    }
+
+    private void fixSurrondingPositions()
+    {
+        foreach (var position in roadPositionsToRecheck)
         {
-            roadFixer.fixRoadAtPosition(placementManager, positionToFix);
+            roadFixer.fixRoadAtPosition(placementManager, position);
         }
+    }
+
+    private bool isPositionInBoundOrFree(Vector3Int position)
+    {
+        return placementManager.isPositionInBound(position) && placementManager.isPositionFree(position);
     }
 
     public void finishPlacingRoad()
     {
         placementMode = false;
         placementManager.addTemporaryStructuresToStructureDictionary();
+        
         if(temporaryPlacementPositions.Count > 0)
         {
             AudioPlayer.instance.PlayPlacementSound();
         }
+        
         temporaryPlacementPositions.Clear();
         startPosition = Vector3Int.zero;
     }
