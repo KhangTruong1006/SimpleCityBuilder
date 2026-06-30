@@ -47,49 +47,52 @@ public class RoadFixer : MonoBehaviour
     //[left, up, right, down] - [0, 1, 2, 3]
     private void createThreeWay(PlacementManager placementManager, CellType[] result, Vector3Int position)
     {
-        if (result[1] == CellType.Road && result[2] == CellType.Road && result[3] == CellType.Road)
+
+        if (checkThreeSurroundingStreets(result, 1,2,3))
         {
             rotationDegree = 0;
         }
-        
-        else if (result[2] == CellType.Road && result[3] == CellType.Road && result[0] == CellType.Road)
+
+        else if (checkThreeSurroundingStreets(result, 2, 3, 0))
         {
             rotationDegree = 90;
         }
 
-        else if (result[3] == CellType.Road && result[0] == CellType.Road && result[1] == CellType.Road)
+        else if (checkThreeSurroundingStreets(result, 3, 0, 1))
         {
             rotationDegree = 180;
         }
 
-        else if (result[0] == CellType.Road && result[1] == CellType.Road && result[2] == CellType.Road)
+        else if (checkThreeSurroundingStreets(result, 0, 1, 2))
         {
             rotationDegree = 270;
         }
+
 
         placementManager.modifyStructureModel(position, threeWay, Quaternion.Euler(0, rotationDegree, 0));
     }
 
 
+
     //[left, up, right, down] - [0, 1, 2, 3]
     private void createCorner(PlacementManager placementManager, CellType[] result, Vector3Int position)
     {
-        if (result[1] == CellType.Road && result[2] == CellType.Road )
+        if (checkTwoSurroundinglStreets(result,1,2))
         {
             rotationDegree = 90;
         }
 
-        else if (result[2] == CellType.Road && result[3] == CellType.Road )
+        else if (checkTwoSurroundinglStreets(result, 2, 3))
         {
             rotationDegree = 180;
         }
 
-        else if (result[3] == CellType.Road && result[0] == CellType.Road)
+        else if (checkTwoSurroundinglStreets(result, 3, 0))
         {
             rotationDegree = 270;
         }
 
-        else if (result[0] == CellType.Road && result[1] == CellType.Road)
+        else if (checkTwoSurroundinglStreets(result, 0, 1))
         {
             rotationDegree = 0;
         }
@@ -100,13 +103,13 @@ public class RoadFixer : MonoBehaviour
     //[left, up, right, down] - [0, 1, 2, 3]
     private bool createStraightRoad(PlacementManager placementManager, CellType[] result, Vector3Int position)
     {
-        if (result[0] == CellType.Road && result[2] == CellType.Road)
+        if (checkTwoSurroundinglStreets(result, 0, 2))
         {
             placementManager.modifyStructureModel(position, roadStraight, Quaternion.identity);
             return true;
         }
 
-        else if (result[1] == CellType.Road && result[3] == CellType.Road)
+        else if (checkTwoSurroundinglStreets(result, 1, 3))
         {
             placementManager.modifyStructureModel(position, roadStraight, Quaternion.Euler(0,90,0));
             return true;
@@ -119,26 +122,44 @@ public class RoadFixer : MonoBehaviour
     private void createDeadEnd(PlacementManager placementManager, CellType[] result, Vector3Int position)
     {
         
-        if (result[1] == CellType.Road)
+        if (checkSurroundingStreet(result,1))
         {
             rotationDegree = 270;
         }
 
-        else if (result[2] == CellType.Road)
+        else if (checkSurroundingStreet(result, 2))
         {
             rotationDegree = 0;
         }
 
-        else if (result[3] == CellType.Road)
+        else if (checkSurroundingStreet(result, 3))
         {
             rotationDegree = 90;
         }
 
-        else if (result[0] == CellType.Road)
+        else if (checkSurroundingStreet(result, 0))
         {
             rotationDegree = 180;
         }
 
         placementManager.modifyStructureModel(position, deadEnd, Quaternion.Euler(0, rotationDegree, 0));
+    }
+
+
+    // d -> direction
+    //[left, up, right, down] - [0, 1, 2, 3]
+    private bool checkThreeSurroundingStreets(CellType[] result, int d1, int d2, int d3)
+    {
+        return result[d1] == CellType.Road && result[d2] == CellType.Road && result[d3] == CellType.Road;
+    }
+
+    private bool checkTwoSurroundinglStreets(CellType[] result, int d1, int d2)
+    {
+        return result[d1] == CellType.Road && result[d2] == CellType.Road;
+    }
+
+    private bool checkSurroundingStreet(CellType[] result, int direction)
+    {
+        return result[direction] == CellType.Road;
     }
 }
