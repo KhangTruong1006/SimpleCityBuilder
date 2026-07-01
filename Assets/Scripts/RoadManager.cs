@@ -23,7 +23,7 @@ public class RoadManager : MonoBehaviour
     public void PlaceRoad(Vector3Int position)
     {
 
-        if (!isPositionInBoundOrFree(position))
+        if (!isPositionPlacable(position))
         {
             return;
         }
@@ -92,7 +92,7 @@ public class RoadManager : MonoBehaviour
         }
     }
 
-    private bool isPositionInBoundOrFree(Vector3Int position)
+    private bool isPositionPlacable(Vector3Int position)
     {
         return placementManager.isPositionInBound(position) && placementManager.isPositionFree(position);
     }
