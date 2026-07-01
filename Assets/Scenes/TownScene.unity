@@ -23864,6 +23864,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2029635352}
   - component: {fileID: 2029635351}
+  - component: {fileID: 2029635353}
   m_Layer: 0
   m_Name: PopulationManager
   m_TagString: Untagged
@@ -23885,6 +23886,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PopulationManager
   settings: {fileID: 11400000, guid: d752f58a8568d894fb7dd43f56985bc0, type: 2}
   demandController: {fileID: 1857436886}
+  demographicsManager: {fileID: 2029635353}
   uiController: {fileID: 681313534}
   population: 0
   populationCapacity: 0
@@ -23908,6 +23910,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2029635353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2029635350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5332c6508affe7d4db0d05f24c719f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DemographicsManager
+  children: 0
+  youngAdults: 0
+  adults: 0
+  seniors: 0
+  birthRate: 0.02
+  agingRate: 0.05
+  deathRate: 0.05
 --- !u!1001 &2031651835
 PrefabInstance:
   m_ObjectHideFlags: 0
