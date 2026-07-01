@@ -5,6 +5,7 @@ public class PopulationManager : MonoBehaviour
 {
     [SerializeField] private GameSettings settings;
     public DemandController demandController;
+    public DemographicsManager demographicsManager;
     public UIController uiController;
 
 
@@ -23,11 +24,15 @@ public class PopulationManager : MonoBehaviour
     public float precisePopulation = 0f;
     private float globalFactor;
 
+    private void Awake()
+    {
+        demandController = GetComponent<DemandController>();
+        demographicsManager = GetComponent<DemographicsManager>();
+    }
 
     private void Start()
     {
         precisePopulation = population;
-        //DemandManager demandManager = GetComponent<DemandManager>(); //For future expansion
     }
 
     public void runSimulationTick()
