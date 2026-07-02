@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ResourcesManager : MonoBehaviour
 {
+    [SerializeField] private GameSettings settings;
     public PopulationManager populationManager;
 
     // Unit: Tons
@@ -19,9 +20,14 @@ public class ResourcesManager : MonoBehaviour
     public float importDemand = 0;
 
     [Header("Thresholds")]
-    public float productionThreshold = 0.5f;
-    public float exportThreshold = 0.4f;
+    public float productionThreshold;
+    public float exportThreshold;
 
+    private void Start()
+    {
+        productionThreshold = settings.threshold.productionThreshold;
+        exportThreshold = settings.threshold.exportThreshold;
+    }
 
     public float produceGoods()
     {
