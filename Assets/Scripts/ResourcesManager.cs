@@ -38,6 +38,7 @@ public class ResourcesManager : MonoBehaviour
         float availableStorage = calculateAvailableStorage();
         float production = Mathf.Min(productionRatePerTimeUnit, availableStorage);
 
+
         currentStorage += production;
 
         // Surplus
@@ -115,7 +116,7 @@ public class ResourcesManager : MonoBehaviour
 
 
 
-    // Bool (checiking) functions
+    // Bool (checking) functions
     public bool isExportThreshold()
     {
         if (totalStorageCapacity <= 0)
