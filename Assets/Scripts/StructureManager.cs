@@ -6,10 +6,8 @@ using UnityEngine;
 
 public class StructureManager : MonoBehaviour
 {
-    public ResidentialPrefab[] residentialPrefabs;
-    public CommericalPrefab[] commercialPrefabs;
-    public IndustrialPrefab[] industrialPrefabs;
-    public BigPrefab[] bigPrefabs;
+    [SerializeField] private GameSettings settings;
+    [SerializeField] private StructurePrefab structurePrefab;
 
     public PlacementManager placementManager;
     public PopulationManager populationManager;
@@ -19,25 +17,25 @@ public class StructureManager : MonoBehaviour
     private float[] residentialWeights, commercialWeights, industrialWeights, bigWeights;
     private void Start()
     {
-        residentialWeights = residentialPrefabs.Select(prefabStats=> prefabStats.weight).ToArray();
-        commercialWeights = commercialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
-        industrialWeights = industrialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
-        bigWeights = bigPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
+        residentialWeights = structurePrefab.residentialPrefabs.Select(prefabStats=> prefabStats.weight).ToArray();
+        commercialWeights = structurePrefab.commercialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
+        industrialWeights = structurePrefab.industrialPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
+        bigWeights = structurePrefab.bigPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
     }
 
     public void placeResidential(Vector3Int position)
     {
-        placeStructure(position, residentialPrefabs, residentialWeights, CellType.Residential, capacity => populationManager.updatePopulationCapacity(capacity));
+        placeStructure(position, structurePrefab.residentialPrefabs, residentialWeights, CellType.Residential, capacity => populationManager.updatePopulationCapacity(capacity));
     }
 
     public void placeCommercial(Vector3Int position)
     {
-        placeStructure(position, commercialPrefabs, commercialWeights, CellType.Commercial, capacity => populationManager.updateJobCapacity(capacity));
+        placeStructure(position, structurePrefab.commercialPrefabs, commercialWeights, CellType.Commercial, capacity => populationManager.updateJobCapacity(capacity));
     }
 
     public void placeIndustrial(Vector3Int position)
     {
-        placeStructure(position, industrialPrefabs, industrialWeights, CellType.Industrial, capacity => populationManager.updateJobCapacity(capacity));
+        placeStructure(position, structurePrefab.industrialPrefabs, industrialWeights, CellType.Industrial, capacity => populationManager.updateJobCapacity(capacity));
     }
 
     private void placeStructure<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type, Action<int> action) where T : IStructurePrefab
@@ -55,10 +53,16 @@ public class StructureManager : MonoBehaviour
 
         action?.Invoke(prefab.Capacity);
 
+        checkBusinessPrefab((IBusinessPrefab)prefab, type);
+
+    }
+
+    private void checkBusinessPrefab(IBusinessPrefab prefab, CellType type)
+    {
         if (prefab is IBusinessPrefab businessPrefab)
         {
             resourcesManager.updateTotalStorageCapacity(businessPrefab.InventoryCapacity);
-           
+
             if (type == CellType.Industrial)
             {
                 resourcesManager.updateProductionRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
@@ -77,7 +81,7 @@ public class StructureManager : MonoBehaviour
         }
 
         int randomIndex = getRandomWeightedIndex(bigWeights);
-        placementManager.placeObjectOnTheMap(position, bigPrefabs[randomIndex].Prefab, CellType.Structure, width, height);
+        placementManager.placeObjectOnTheMap(position, structurePrefab.bigPrefabs[randomIndex].Prefab, CellType.Structure, width, height);
         AudioPlayer.instance.PlayPlacementSound();
     }
 
@@ -167,87 +171,6 @@ public class StructureManager : MonoBehaviour
         
         return true;
     }
-    
 }
 
-public interface IStructurePrefab
-{
-    public GameObject Prefab { get; }
-    public float Weight { get; }
-    public int Capacity { get; }
-}
 
-public interface IBusinessPrefab : IStructurePrefab
-{
-    public float InventoryCapacity { get; } // Unit: Tons
-    public float GoodsUnitPerTick { get; } // Commerical: Sales per tick, Industrial: Produced Freight per tick
-}
-
-[Serializable]
-public struct ResidentialPrefab : IStructurePrefab
-{
-    public GameObject prefab;
-    
-    [Range(0f, 1f)] 
-    public float weight;
-    public int populationCapacity;
-    
-    [Range(0f, 1f)]
-    public GameObject Prefab => prefab;
-    public float Weight => weight;
-    public int Capacity => populationCapacity;
-}
-
-[Serializable]
-public struct IndustrialPrefab : IBusinessPrefab
-{
-    public GameObject prefab;
-    [Range(0f, 1f)]
-    public float weight;
-    public int workerCapacity;
-    
-    [Min(0f)]
-    public float freightPerTick;
-    public float inventory; // Unit: Tons
-   
-    public GameObject Prefab => prefab;
-    public float Weight => weight;
-    public int Capacity => workerCapacity;
-    public float InventoryCapacity => inventory;
-    public float GoodsUnitPerTick => freightPerTick;
-}
-
-[Serializable]
-public struct CommericalPrefab : IBusinessPrefab
-{
-    public GameObject prefab;
-    [Range(0f, 1f)]
-    public float weight;
-    public int workerCapacity;
-    
-    [Min(0f)]
-    public float salesPerTick;
-    public float inventory; // Unit: Tons
-
-    public GameObject Prefab => prefab;
-    public float Weight => weight;
-    public int Capacity => workerCapacity;
-    public float InventoryCapacity => inventory;
-    public float GoodsUnitPerTick => salesPerTick;
-}
-
-[Serializable]
-public struct BigPrefab: IStructurePrefab
-{
-    public GameObject prefab;
-    [Range(0f, 1f)]
-    public float weight;
-    public int workerCapacity;
-
-    [Min(0)]
-    public int worker;
-
-    public GameObject Prefab => prefab;
-    public float Weight => weight;
-    public int Capacity => workerCapacity;
-}
