@@ -164,6 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a67d9fdc95f8c34494d25ec55917d0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EconomyManager
+  settings: {fileID: 11400000, guid: d752f58a8568d894fb7dd43f56985bc0, type: 2}
   resourcesManager: {fileID: 3387437}
   populationManager: {fileID: 2029635351}
   uiController: {fileID: 681313534}
@@ -186,6 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ab757dc810f07a48b5efb9312177fa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GoodsManager
+  settings: {fileID: 11400000, guid: d752f58a8568d894fb7dd43f56985bc0, type: 2}
   populationManager: {fileID: 2029635351}
   totalStorageCapacity: 0
   currentStorage: 0
@@ -1732,23 +1734,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StructureManager
   settings: {fileID: 11400000, guid: d752f58a8568d894fb7dd43f56985bc0, type: 2}
   structurePrefab: {fileID: 11400000, guid: 510850277493dcc448ac444fd869a72b, type: 2}
-  residentialPrefabs:
-  - prefab: {fileID: 2769822920355022703, guid: 7102e40a9ba863a44838c4fd828cc22b, type: 3}
-    weight: 1
-    populationCapacity: 10
-  commercialPrefabs:
-  - prefab: {fileID: 3702253504043930072, guid: 838f9b485bb510747a4b89e3cb91e1bd, type: 3}
-    weight: 1
-    workerCapacity: 10
-    salesPerTick: 0
-    inventory: 10
-  industrialPrefabs:
-  - prefab: {fileID: 3702253504043930072, guid: f9b35d1c64309ca43b126ef7c1cf9bd5, type: 3}
-    weight: 1
-    workerCapacity: 20
-    freightPerTick: 10
-    inventory: 50
-  bigPrefabs: []
   placementManager: {fileID: 1173915697}
   populationManager: {fileID: 2029635351}
   economyManager: {fileID: 3387436}
@@ -23904,10 +23889,6 @@ MonoBehaviour:
   youngAdults: 0
   adults: 0
   seniors: 0
-  preciseChildren: 0
-  preciseYoungAdults: 0
-  preciseAdults: 0
-  preciseSeniors: 0
   birthRate: 0.02
   agingRate: 0.05
   deathRate: 0.05
