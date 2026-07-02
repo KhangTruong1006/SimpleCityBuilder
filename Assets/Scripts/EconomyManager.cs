@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class EconomyManager : MonoBehaviour
 {
+    public GameSettings settings;
+
     public ResourcesManager resourcesManager;
     public PopulationManager populationManager;
     public UIController uiController;
@@ -13,13 +15,13 @@ public class EconomyManager : MonoBehaviour
     public float expenses;
     public float income;
     [Range(0f, 1f)]
-    public float tax = 0.1f;
+    public float tax;
 
-    public float exportRevenuePerUnit = 10f;
-    public float importCostPerUnit = 25f;
+    public float exportRevenuePerUnit;
+    public float importCostPerUnit;
 
-    public float productionCostPerUnit = 2f;
-    public float salePricePerUnit = 3f;
+    public float productionCostPerUnit;
+    public float salePricePerUnit;
 
     private bool triggeredExport = false;
 
@@ -29,7 +31,13 @@ public class EconomyManager : MonoBehaviour
     }
     private void Start()
     {
-        budget = 1000f;
+        exportRevenuePerUnit = settings.economy.exportRevenuePerUnit;
+        importCostPerUnit = settings.economy.importCostPerUnit;
+        productionCostPerUnit = settings.economy.productionCostPerUnit;
+        salePricePerUnit = settings.economy.salePricePerUnit;
+
+        tax = settings.economy.taxRate;
+        budget = settings.economy.initialBudget;
         displayBudget();
     }
 
@@ -99,7 +107,7 @@ public class EconomyManager : MonoBehaviour
         float salesRevenue = sold * salePricePerUnit;
         float exportRevenue = exported * exportRevenuePerUnit;
 
-        income = salesRevenue + exportRevenue;
+        income = (salesRevenue + exportRevenue) * tax;
     }
 
     public void calculateExpenses(float produced, float imported)
@@ -129,5 +137,11 @@ public class EconomyManager : MonoBehaviour
     private void deactiveExport()
     {
         triggeredExport = false;
+    }
+
+    private void substractConstructionCost(float cost)
+    {
+        budget -= cost;
+        displayBudget();
     }
 }
