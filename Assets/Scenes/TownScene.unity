@@ -1730,48 +1730,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b4c079eb11ad43428eb4bfcbadb9b59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StructureManager
+  settings: {fileID: 11400000, guid: d752f58a8568d894fb7dd43f56985bc0, type: 2}
+  structurePrefab: {fileID: 11400000, guid: 510850277493dcc448ac444fd869a72b, type: 2}
   residentialPrefabs:
   - prefab: {fileID: 2769822920355022703, guid: 7102e40a9ba863a44838c4fd828cc22b, type: 3}
     weight: 1
     populationCapacity: 10
-  - prefab: {fileID: 801535651834448878, guid: 3240703552f47d04d9bf7207ca5bfa85, type: 3}
-    weight: 0.8
-    populationCapacity: 20
-  - prefab: {fileID: 8067785501733222628, guid: 4617fd335db984f4bb34f5eb561fd82b, type: 3}
-    weight: 0.75
-    populationCapacity: 30
-  - prefab: {fileID: 7864668269691680764, guid: 44c75b500bfebf84993deb17f38a98f6, type: 3}
-    weight: 0.25
-    populationCapacity: 100
-  - prefab: {fileID: 8172496117335426106, guid: 3527735cc30c8554aadd1222f91bf61f, type: 3}
-    weight: 0.25
-    populationCapacity: 100
   commercialPrefabs:
   - prefab: {fileID: 3702253504043930072, guid: 838f9b485bb510747a4b89e3cb91e1bd, type: 3}
     weight: 1
     workerCapacity: 10
-    salesPerTick: 1
-    inventory: 5
-  - prefab: {fileID: 3702253504043930072, guid: 5aae5b7bf78f5ce4481f92d2716dbc92, type: 3}
-    weight: 0
-    workerCapacity: 50
-    salesPerTick: 1.5
-    inventory: 5
+    salesPerTick: 0
+    inventory: 10
   industrialPrefabs:
   - prefab: {fileID: 3702253504043930072, guid: f9b35d1c64309ca43b126ef7c1cf9bd5, type: 3}
     weight: 1
-    workerCapacity: 100
-    freightPerTick: 5
-    inventory: 10
-  bigPrefabs:
-  - prefab: {fileID: 948695418406959342, guid: b23d8607810fd19468a49ab4b829a8ce, type: 3}
-    weight: 0.5
-    workerCapacity: 0
-    worker: 0
-  - prefab: {fileID: 2315885335286750609, guid: dec092f7a8e04ce4a9b2a6eb1ff0cc4e, type: 3}
-    weight: 0.75
-    workerCapacity: 0
-    worker: 0
+    workerCapacity: 20
+    freightPerTick: 10
+    inventory: 50
+  bigPrefabs: []
   placementManager: {fileID: 1173915697}
   populationManager: {fileID: 2029635351}
   economyManager: {fileID: 3387436}
@@ -23895,6 +23872,7 @@ MonoBehaviour:
   goodsSatisfaction: 1
   workersThreshold: 0.5
   precisePopulation: 0
+  globalFactor: 0
 --- !u!4 &2029635352
 Transform:
   m_ObjectHideFlags: 0
@@ -23926,6 +23904,10 @@ MonoBehaviour:
   youngAdults: 0
   adults: 0
   seniors: 0
+  preciseChildren: 0
+  preciseYoungAdults: 0
+  preciseAdults: 0
+  preciseSeniors: 0
   birthRate: 0.02
   agingRate: 0.05
   deathRate: 0.05
