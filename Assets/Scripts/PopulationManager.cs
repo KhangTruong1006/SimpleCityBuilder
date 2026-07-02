@@ -4,6 +4,7 @@ using UnityEngine;
 public class PopulationManager : MonoBehaviour
 {
     [SerializeField] private GameSettings settings;
+
     public DemandController demandController;
     public DemographicsManager demographicsManager;
     public UIController uiController;
@@ -18,21 +19,24 @@ public class PopulationManager : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float goodsSatisfaction = 1.0f;
     [Range(0.0f, 1.0f)]
-    public float workersThreshold = 0.25f;
+    public float workersThreshold;
 
     private float growthRate;
     public float precisePopulation = 0f;
-    private float globalFactor;
+    public float globalFactor;
 
     private void Awake()
     {
-        demandController = GetComponent<DemandController>();
+        //demandController = GetComponent<DemandController>();
         demographicsManager = GetComponent<DemographicsManager>();
     }
 
     private void Start()
     {
+        workersThreshold = settings.threshold.workersThreshold;
+
         precisePopulation = population;
+        initializeDemographicDistribution(population); // If the city starts with a population, initialize the demographics distribution
     }
 
     public void runSimulationTick()
@@ -53,12 +57,14 @@ public class PopulationManager : MonoBehaviour
 
     private void calculateEmployment()
     {
-        if(population <1)
+        int availableWorkers = demographicsManager.getWorkForce();
+        
+        if (availableWorkers < 1)
         {
             employedPopulation = 0;
             return;
         }
-        employedPopulation = Math.Min(population, jobCapacity);
+        employedPopulation = Math.Min(availableWorkers, jobCapacity);
     }
 
     private void calculatePopulationChange()
@@ -67,9 +73,10 @@ public class PopulationManager : MonoBehaviour
         if(precisePopulation <= 0 && populationCapacity >= 0)
         {
             precisePopulation = settings.population.seedingPop;
+            initializeDemographicDistribution((int)precisePopulation);
         }
 
-        // Prevent negative population 
+        // Prevent negative/over population 
         if(precisePopulation > populationCapacity)
         {
             return;
@@ -78,13 +85,14 @@ public class PopulationManager : MonoBehaviour
         // This method uses Logistic Growth Model based on various factors (metrics)
         // rate = base * factors point * population * (1 - population / capacity)
 
-        float basedGrowthRate = 0.5f;
+        float basedGrowthRate = settings.population.basedGrowthRate;
         float growthRate = basedGrowthRate * globalFactor * precisePopulation * (1f - (precisePopulation / populationCapacity));
         //float growthRate = basedGrowthRate * precisePopulation * (1f - (precisePopulation / populationCapacity));
 
-        precisePopulation += growthRate;
-        population = Mathf.FloorToInt(precisePopulation);
-
+        int updatedPopulation = demographicsManager.updateDemographics(growthRate, populationCapacity);
+        population = Mathf.Min(updatedPopulation, populationCapacity);
+        precisePopulation = population;
+        
         //Debug.Log($"Population : {population} Precise Pop: {precisePopulation} GF: {globalFactor} Jobs: {jobCapacity} Workers: {employedPopulation}");
     }
 
@@ -97,7 +105,8 @@ public class PopulationManager : MonoBehaviour
             globalFactor = 1.0f;
             return;
         }
-        float employmentRate = (float)employedPopulation / (float)population;
+        float availableWorkers = demographicsManager.getWorkForce();
+        float employmentRate = (availableWorkers > 0) ? (float)employedPopulation / (float)availableWorkers : 0f;
         float housingRate = (float)population / (float)populationCapacity;
         
         globalFactor = 0.4f * housingRate + 0.3f * employmentRate + 0.3f * (float)goodsSatisfaction;
@@ -113,8 +122,6 @@ public class PopulationManager : MonoBehaviour
         return employedPopulation > 0;
     }
 
-    
-
     public void updatePopulationCapacity(int capacity)
     {
         populationCapacity += capacity;
@@ -125,5 +132,13 @@ public class PopulationManager : MonoBehaviour
     {
         jobCapacity += newJobs;
         //Debug.Log($"Jobs updated: {jobCapacity}");
+    }
+
+    private void initializeDemographicDistribution(int pop)
+    {
+        if(population > 0)
+        {
+            demographicsManager.initializeDemographics(pop);
+        }
     }
 }

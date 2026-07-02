@@ -29,7 +29,7 @@ public class DemographicsManager : MonoBehaviour
     }
 
 
-    public int handleDemographics(float globalFactors, int populationCap)
+    public int updateDemographics(float growthRate, int populationCap)
     {
         int currentPopulation = getTotalPopulation();
 
@@ -40,16 +40,16 @@ public class DemographicsManager : MonoBehaviour
 
 
         // Immegration and Emigration
-        if (globalFactors > 0f && currentPopulation < populationCap)
+        if (growthRate > 0f && currentPopulation < populationCap)
         {
-            preciseYoungAdults += globalFactors * 0.6f;
-            preciseAdults += globalFactors * 0.4f;
+            preciseYoungAdults += growthRate * 0.6f;
+            preciseAdults += growthRate * 0.4f;
         }
 
         // Leaving when the city is in poor conditions
-        else if (globalFactors < 0f)
+        else if (growthRate < 0f)
         {
-            float negativeFactor = globalFactors / Mathf.Max(1, currentPopulation);
+            float negativeFactor = growthRate / Mathf.Max(1, currentPopulation);
             
             float childrenChange = preciseChildren * negativeFactor;
             float youngAdultsChange = preciseYoungAdults * negativeFactor;
@@ -60,16 +60,21 @@ public class DemographicsManager : MonoBehaviour
         }
 
         // Prevent negative population values
-        preciseChildren = Mathf.Max(0f, preciseChildren);
-        preciseYoungAdults = Mathf.Max(0f, preciseYoungAdults);
-        preciseAdults = Mathf.Max(0f, preciseAdults);
-        preciseSeniors = Mathf.Max(0f, preciseSeniors);
+        clampPrecisePopulation();
 
         updatePopulationValues();
 
         return getTotalPopulation();
     }
 
+
+    private void clampPrecisePopulation()
+    {
+        preciseChildren = restrictValueRange(preciseChildren);
+        preciseYoungAdults = restrictValueRange(preciseYoungAdults);
+        preciseAdults = restrictValueRange(preciseAdults);
+        preciseSeniors = restrictValueRange(preciseSeniors);
+    }
 
     private void calculatePreciseAgeChanges(float births, float deaths)
     {
@@ -108,6 +113,11 @@ public class DemographicsManager : MonoBehaviour
     private int convertFloatToInt(float value)
     {
         return Mathf.FloorToInt(value);
+    }
+
+    private float restrictValueRange(float value)
+    {
+        return Mathf.Max(0f, value);
     }
 
     private float calculateMovingAgeGroup(float preciseNum)
