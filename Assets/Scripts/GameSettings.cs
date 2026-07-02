@@ -6,6 +6,7 @@ public class GameSettings : ScriptableObject
     public MasterSettings masterSettings;
     public Camera camera;
     public GridSettings gridSettings;
+    public Threshold threshold;
     public Population population;
 
 
@@ -36,5 +37,14 @@ public class GameSettings : ScriptableObject
     [System.Serializable]
     public class Population {
         public float seedingPop = 0.5f;
+        public float basedGrowthRate = 0.5f;
+    }
+
+    [System.Serializable]
+    public class Threshold 
+    {
+        public float workersThreshold = 0.25f;
+        public float productionThreshold = 0.5f;
+        public float exportThreshold = 0.4f;
     }
 }

@@ -12,6 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59d5dbe9f32851848a5430673be120f2, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: Assembly-CSharp::GameSettings
+  masterSettings:
+    tickRateInSeconds: 2
+    speed_1: 3
+    speed_2: 2
+    speed_3: 1
+  camera:
+    speed: 5
   gridSettings:
     width: 30
     height: 30
+  population:
+    seedingPop: 2
+    basedGrowthRate: 0.5
