@@ -25,20 +25,20 @@ public class StructureManager : MonoBehaviour
 
     public void placeResidential(Vector3Int position)
     {
-        placeStructure(position, structurePrefab.residentialPrefabs, residentialWeights, CellType.Residential, capacity => populationManager.updatePopulationCapacity(capacity));
+        placeStructure(position, structurePrefab.residentialPrefabs, residentialWeights, CellType.Residential);
     }
 
     public void placeCommercial(Vector3Int position)
     {
-        placeStructure(position, structurePrefab.commercialPrefabs, commercialWeights, CellType.Commercial, capacity => populationManager.updateJobCapacity(capacity));
+        placeStructure(position, structurePrefab.commercialPrefabs, commercialWeights, CellType.Commercial);
     }
 
     public void placeIndustrial(Vector3Int position)
     {
-        placeStructure(position, structurePrefab.industrialPrefabs, industrialWeights, CellType.Industrial, capacity => populationManager.updateJobCapacity(capacity));
+        placeStructure(position, structurePrefab.industrialPrefabs, industrialWeights, CellType.Industrial);
     }
 
-    private void placeStructure<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type, Action<int> action) where T : IStructurePrefab
+    private void placeStructure<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type) where T : IStructurePrefab
     {
         if (!isPositionPlacable(position))
         {
@@ -51,10 +51,32 @@ public class StructureManager : MonoBehaviour
         placementManager.placeObjectOnTheMap(position, prefab.Prefab, type);
         AudioPlayer.instance.PlayPlacementSound();
 
-        action?.Invoke(prefab.Capacity);
+        //action?.Invoke(prefab.Capacity);s
 
-        checkBusinessPrefab((IBusinessPrefab)prefab, type);
+        updateCapacity(prefab, type);
 
+        //checkBusinessPrefab((IBusinessPrefab)prefab, type);
+
+    }
+
+    private void updateCapacity(IStructurePrefab prefab, CellType type)
+    {
+        if (prefab is IBusinessPrefab businessPrefab)
+        {
+            populationManager.updateJobCapacity(businessPrefab.Capacity);
+            resourcesManager.updateTotalStorageCapacity(businessPrefab.InventoryCapacity);
+            
+            if (type == CellType.Industrial)
+            {
+                resourcesManager.updateProductionRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
+            }
+            return;
+        }
+
+        else
+        {
+            populationManager.updatePopulationCapacity(prefab.Capacity);
+        }   
     }
 
     private void checkBusinessPrefab(IBusinessPrefab prefab, CellType type)
