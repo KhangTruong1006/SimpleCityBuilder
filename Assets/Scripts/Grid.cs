@@ -55,6 +55,7 @@ public enum CellType
     Residential,
     Commercial,
     Industrial,
+    Service,
     None
 }
 
