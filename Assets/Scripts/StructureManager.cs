@@ -14,7 +14,7 @@ public class StructureManager : MonoBehaviour
     public EconomyManager economyManager;
     public ResourcesManager resourcesManager;
 
-    private float[] residentialWeights, commercialWeights, industrialWeights, bigWeights;
+    private float[] residentialWeights, commercialWeights, industrialWeights, serivceWeight, bigWeights;
     private void Start()
     {
         residentialWeights = structurePrefab.residentialPrefabs.Select(prefabStats=> prefabStats.weight).ToArray();
@@ -38,6 +38,7 @@ public class StructureManager : MonoBehaviour
         placeStructure(position, structurePrefab.industrialPrefabs, industrialWeights, CellType.Industrial);
     }
 
+    // ===== REMEMBER TO FIX THE SERVICE STRUCTURE PLACEMENT =====
     private void placeStructure<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type) where T : IStructurePrefab
     {
         if (!isPositionPlacable(position))
@@ -51,12 +52,9 @@ public class StructureManager : MonoBehaviour
         placementManager.placeObjectOnTheMap(position, prefab.Prefab, type);
         AudioPlayer.instance.PlayPlacementSound();
 
-        //action?.Invoke(prefab.Capacity);s
-
+        economyManager.substractConstructionCost(prefab.Cost);
+        
         updateCapacity(prefab, type);
-
-        //checkBusinessPrefab((IBusinessPrefab)prefab, type);
-
     }
 
     private void updateCapacity(IStructurePrefab prefab, CellType type)
@@ -77,19 +75,6 @@ public class StructureManager : MonoBehaviour
         {
             populationManager.updatePopulationCapacity(prefab.Capacity);
         }   
-    }
-
-    private void checkBusinessPrefab(IBusinessPrefab prefab, CellType type)
-    {
-        if (prefab is IBusinessPrefab businessPrefab)
-        {
-            resourcesManager.updateTotalStorageCapacity(businessPrefab.InventoryCapacity);
-
-            if (type == CellType.Industrial)
-            {
-                resourcesManager.updateProductionRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
-            }
-        }
     }
 
     public void placeBigStructure(Vector3Int position)
