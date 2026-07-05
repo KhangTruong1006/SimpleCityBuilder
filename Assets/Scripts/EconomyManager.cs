@@ -48,7 +48,19 @@ public class EconomyManager : MonoBehaviour
         updateBudget(); 
     }
 
+    public void substractConstructionCost(float cost)
+    {
+        budget -= cost;
+        displayBudget();
+    }
 
+    //!!! CHECK AND FIX LOGIC FOR CALCULATING EXPENSES AND INCOME
+    public void addExpenseBudge(float newExpense)
+    {
+        expenses += newExpense;
+    }
+
+    // === Logistics Handling ===`
     private void handleLogistics()
     {
         if (!populationManager.haveWorkers()) {
@@ -102,6 +114,7 @@ public class EconomyManager : MonoBehaviour
         return imported;
     }
 
+    // === Budget Calculation ===
     private void calculateIncome(float sold, float exported)
     {
         float salesRevenue = sold * salePricePerUnit;
@@ -110,7 +123,7 @@ public class EconomyManager : MonoBehaviour
         income = (salesRevenue + exportRevenue) * tax;
     }
 
-    public void calculateExpenses(float produced, float imported)
+    private void calculateExpenses(float produced, float imported)
     {
         float productionCost = produced * productionCostPerUnit;
         float importCost = imported * productionCostPerUnit;
@@ -118,6 +131,8 @@ public class EconomyManager : MonoBehaviour
         expenses = productionCost + importCost;
     }
 
+
+    // Helpers
     private void updateBudget()
     {
         budget += (income - expenses);
@@ -139,9 +154,4 @@ public class EconomyManager : MonoBehaviour
         triggeredExport = false;
     }
 
-    private void substractConstructionCost(float cost)
-    {
-        budget -= cost;
-        displayBudget();
-    }
 }
