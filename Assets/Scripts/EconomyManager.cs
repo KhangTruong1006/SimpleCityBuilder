@@ -69,7 +69,7 @@ public class EconomyManager : MonoBehaviour
 
         float currentDemand = resourcesManager.calculateCurrentDemand();
 
-        float produced = resourcesManager.produceGoods();
+        float produced = resourcesManager.produceGoods(populationManager.getEmploymentRate());
         float sold = resourcesManager.sellGoods(currentDemand);
 
         resourcesManager.importDemand = 0f;

@@ -122,6 +122,11 @@ public class PopulationManager : MonoBehaviour
         return employedPopulation > 0;
     }
 
+    public float getEmploymentRate()
+    {
+        return employedPopulation / jobCapacity;
+    }
+
     public void updatePopulationCapacity(int capacity)
     {
         populationCapacity += capacity;

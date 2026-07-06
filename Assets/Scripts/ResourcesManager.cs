@@ -29,14 +29,15 @@ public class ResourcesManager : MonoBehaviour
         exportThreshold = settings.threshold.exportThreshold;
     }
 
-    public float produceGoods()
+    public float produceGoods(float employmentRate)
     {
         if (isOverProduction())
         {
             return 0;
         }
         float availableStorage = calculateAvailableStorage();
-        float production = Mathf.Min(productionRatePerTimeUnit, availableStorage);
+        float actualProductionRate = productionRatePerTimeUnit * employmentRate;
+        float production = Mathf.Min(actualProductionRate, availableStorage);
 
 
         currentStorage += production;
