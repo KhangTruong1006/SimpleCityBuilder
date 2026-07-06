@@ -8,7 +8,8 @@ public class StructurePrefab : ScriptableObject
     public CommericalPrefab[] commercialPrefabs;
     public IndustrialPrefab[] industrialPrefabs;
     public BigPrefab[] bigPrefabs;
-    public ServicePrefab[] servicePrefabs;
+    public PowerPrefab powerPrefabs;
+    public WaterPrefab waterPrefabs;
 }
 
 // === Interface ===
@@ -18,10 +19,11 @@ public interface IStructurePrefab
     public float Weight { get; }
     public int Capacity { get; }
 
-    public int Cost { get; }
+    public float WaterConsumptionPerTick { get; } 
+    public float PowerConsumptionPerTick { get; } 
 }
-
-public interface IBusinessPrefab : IStructurePrefab
+ 
+public interface IBusinessPrefab
 {
     public float InventoryCapacity { get; } // Unit: Tons
     public float GoodsUnitPerTick { get; } // Commerical: Sales per tick, Industrial: Produced Freight per tick
@@ -40,25 +42,27 @@ public interface IServicesPrefab
 public struct ResidentialPrefab : IStructurePrefab
 {
     public GameObject prefab;
-    public int cost;
 
     [Range(0f, 1f)]
     public float weight;
     public int populationCapacity;
+
+    public int waterConsumption;
+    public int powerConsumption;
 
 
     [Range(0f, 1f)]
     public GameObject Prefab => prefab;
     public float Weight => weight;
     public int Capacity => populationCapacity;
-    public int Cost => cost;
+    public float WaterConsumptionPerTick => waterConsumption;
+    public float PowerConsumptionPerTick => powerConsumption;
 }
 
 [Serializable]
-public struct IndustrialPrefab : IBusinessPrefab
+public struct IndustrialPrefab : IStructurePrefab, IBusinessPrefab
 {
     public GameObject prefab;
-    public int cost;
     [Range(0f, 1f)]
     public float weight;
     public int workerCapacity;
@@ -67,19 +71,23 @@ public struct IndustrialPrefab : IBusinessPrefab
     public float freightPerTick;
     public float inventory; // Unit: Tons
 
+    public int waterConsumption;
+    public int powerConsumption;
+
     public GameObject Prefab => prefab;
     public float Weight => weight;
     public int Capacity => workerCapacity;
     public float InventoryCapacity => inventory;
     public float GoodsUnitPerTick => freightPerTick;
-    public int Cost => cost;
+
+    public float WaterConsumptionPerTick => waterConsumption;
+    public float PowerConsumptionPerTick => powerConsumption;
 }
 
 [Serializable]
-public struct CommericalPrefab : IBusinessPrefab
+public struct CommericalPrefab : IStructurePrefab, IBusinessPrefab
 {
     public GameObject prefab;
-    public int cost;
     [Range(0f, 1f)]
     public float weight;
     public int workerCapacity;
@@ -88,12 +96,16 @@ public struct CommericalPrefab : IBusinessPrefab
     public float salesPerTick;
     public float inventory; // Unit: Tons
 
+    public int waterConsumption;
+    public int powerConsumption;
+
     public GameObject Prefab => prefab;
     public float Weight => weight;
     public int Capacity => workerCapacity;
     public float InventoryCapacity => inventory;
     public float GoodsUnitPerTick => salesPerTick;
-    public int Cost => cost;   
+    public float WaterConsumptionPerTick => waterConsumption;
+    public float PowerConsumptionPerTick => powerConsumption;
 }
 
 [Serializable]
@@ -104,6 +116,8 @@ public struct BigPrefab : IStructurePrefab
     [Range(0f, 1f)]
     public float weight;
     public int workerCapacity;
+    public int waterConsumption;
+    public int powerConsumption;
 
     [Min(0)]
     public int worker;
@@ -112,16 +126,34 @@ public struct BigPrefab : IStructurePrefab
     public float Weight => weight;
     public int Capacity => workerCapacity;
     public int Cost => cost;
+    public float WaterConsumptionPerTick => waterConsumption;
+    public float PowerConsumptionPerTick => powerConsumption;
 }
 
 [Serializable]
-public struct ServicePrefab : IServicesPrefab
+public struct PowerPrefab : IServicesPrefab
 {
     public GameObject prefab;
     public int cost;
     [Min(0f)]
     public float expensePerTick;
 
+    public float powerGeneration;
+
+    public GameObject Prefab => prefab;
+    public float ExpensePerTick => expensePerTick;
+    public int Cost => cost;
+}
+
+[Serializable]
+public struct WaterPrefab : IServicesPrefab
+{
+    public GameObject prefab;
+    public int cost;
+    [Min(0f)]
+    public float expensePerTick;
+
+    public float waterGeneration;
 
     public GameObject Prefab => prefab;
     public float ExpensePerTick => expensePerTick;

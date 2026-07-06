@@ -52,7 +52,7 @@ public class StructureManager : MonoBehaviour
         placementManager.placeObjectOnTheMap(position, prefab.Prefab, type);
         AudioPlayer.instance.PlayPlacementSound();
 
-        economyManager.substractConstructionCost(prefab.Cost);
+        //economyManager.substractConstructionCost(prefab.Cost);
         
         updateCapacity(prefab, type);
     }
@@ -61,7 +61,7 @@ public class StructureManager : MonoBehaviour
     {
         if (prefab is IBusinessPrefab businessPrefab)
         {
-            populationManager.updateJobCapacity(businessPrefab.Capacity);
+            populationManager.updateJobCapacity(prefab.Capacity);
             resourcesManager.updateTotalStorageCapacity(businessPrefab.InventoryCapacity);
             
             if (type == CellType.Industrial)
