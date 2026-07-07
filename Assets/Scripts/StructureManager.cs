@@ -14,7 +14,7 @@ public class StructureManager : MonoBehaviour
     public EconomyManager economyManager;
     public ResourcesManager resourcesManager;
 
-    private float[] residentialWeights, commercialWeights, industrialWeights, serivceWeight, bigWeights;
+    private float[] residentialWeights, commercialWeights, industrialWeights, bigWeights;
     private void Start()
     {
         residentialWeights = structurePrefab.residentialPrefabs.Select(prefabStats=> prefabStats.weight).ToArray();
@@ -25,36 +25,65 @@ public class StructureManager : MonoBehaviour
 
     public void placeResidential(Vector3Int position)
     {
-        placeStructure(position, structurePrefab.residentialPrefabs, residentialWeights, CellType.Residential);
+        placeStructureOnWeight(position, structurePrefab.residentialPrefabs, residentialWeights, CellType.Residential);
     }
 
     public void placeCommercial(Vector3Int position)
     {
-        placeStructure(position, structurePrefab.commercialPrefabs, commercialWeights, CellType.Commercial);
+        placeStructureOnWeight(position, structurePrefab.commercialPrefabs, commercialWeights, CellType.Commercial);
     }
 
     public void placeIndustrial(Vector3Int position)
     {
-        placeStructure(position, structurePrefab.industrialPrefabs, industrialWeights, CellType.Industrial);
+        placeStructureOnWeight(position, structurePrefab.industrialPrefabs, industrialWeights, CellType.Industrial);
+    }
+
+    public void placeWaterPlant(Vector3Int position)
+    {
+        placeServiceStructure(position, structurePrefab.waterPrefabs);
+    }
+
+    public void placeSewagePlant(Vector3Int position)
+    {
+        placeServiceStructure(position, structurePrefab.waterPrefabs);
+    }
+
+    public void placePowerPlant(Vector3Int position)
+    {
+        placeServiceStructure(position, structurePrefab.powerPrefabs);
     }
 
     // ===== REMEMBER TO FIX THE SERVICE STRUCTURE PLACEMENT =====
-    private void placeStructure<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type) where T : IStructurePrefab
+    private void placeStructureOnWeight<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type) where T : IStructurePrefab
     {
         if (!isPositionPlacable(position))
         {
             return;
         }
 
+        // Get a random prefab based on the weights
         int randomIndex = getRandomWeightedIndex(structureWeights);
         T prefab = prefabArray[randomIndex];
 
         placementManager.placeObjectOnTheMap(position, prefab.Prefab, type);
         AudioPlayer.instance.PlayPlacementSound();
 
-        //economyManager.substractConstructionCost(prefab.Cost);
         
         updateCapacity(prefab, type);
+    }
+
+    private void placeServiceStructure(Vector3Int position, IServicesPrefab prefab)
+    {
+        if (!isPositionPlacable(position))
+        {
+            return;
+        }
+
+        placementManager.placeObjectOnTheMap(position, prefab.Prefab, CellType.Service);
+        AudioPlayer.instance.PlayPlacementSound();
+
+        //economyManager.substractConstructionCost(prefab.Cost);
+        
     }
 
     private void updateCapacity(IStructurePrefab prefab, CellType type)
