@@ -159,3 +159,18 @@ public struct WaterPrefab : IServicesPrefab
     public float ExpensePerTick => expensePerTick;
     public int Cost => cost;
 }
+
+[Serializable]
+public struct SewagePrefab : IServicesPrefab
+{
+    public GameObject prefab;
+    public int cost;
+    [Min(0f)]
+    public float expensePerTick;
+
+    public float sewageProcessing;
+
+    public GameObject Prefab => prefab;
+    public float ExpensePerTick => expensePerTick;
+    public int Cost => cost;
+}
