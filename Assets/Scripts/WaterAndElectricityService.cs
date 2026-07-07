@@ -2,20 +2,26 @@ using UnityEngine;
 
 public class WaterAndElectricityService : MonoBehaviour
 {
-    public float waterSupplyCapacity;
-    public float sewageCapacity; // Sewage capacity depends on water treatment to process
+    [Header("Electricity")]
     public float electricitySupplyCapacity;
-    
-    public float electricityCurrentConsumption;
-    public float waterCurrentConsumption;
-    public float sewageCurrentAmount;
+    public float electricityCurrentUsage;
+
+    [Header("Water")]
+    public float waterSupplyCapacity;
+    public float waterCurrentUsage;
+
+    [Header("Sewage")]
+    public float sewageProcessingCapacity; // Sewage capacity depends on water treatment to process
+    public float sewageCurrentUsage;
 
 
+
+    // ===== Update methods =====
     public void updateConsumptions(float electric = 0, float water = 0)
     {
-        electricityCurrentConsumption += electric;
-        waterCurrentConsumption += water;
-        sewageCapacity = waterCurrentConsumption;
+        electricityCurrentUsage += electric;
+        waterCurrentUsage += water;
+        sewageProcessingCapacity = waterCurrentUsage;
     }
 
     public void updateWaterSupply(float newSupply)
@@ -28,12 +34,27 @@ public class WaterAndElectricityService : MonoBehaviour
         electricitySupplyCapacity += newSupply;
     }
 
-    public float calulateWaterSupplyRate()
+    public void updateSewageProcessingCapacity(float newCapacity)
+    {
+        sewageProcessingCapacity += newCapacity;
+    }
+
+
+    // ===== Calculate methods =====
+    public float calulateWaterConsumptionRate()
     {
         if (waterSupplyCapacity <= 0)
         {
             return 0f; 
         }
-        return waterCurrentConsumption / waterSupplyCapacity;
+        return waterCurrentUsage / waterSupplyCapacity;
+    }
+
+    public float calulateElectricityConsumptionRate() {
+        if (electricitySupplyCapacity <= 0)
+        {
+            return 0f; 
+        }
+        return electricityCurrentUsage / electricitySupplyCapacity;
     }
 }
