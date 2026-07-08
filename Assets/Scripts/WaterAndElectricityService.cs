@@ -15,21 +15,25 @@ public class WaterAndElectricityService : MonoBehaviour
     public float sewageCurrentUsage;
 
 
+    public void runSimulationTick()
+    {
+
+    }
 
     // ===== Update methods =====
     public void updateConsumptions(float electric = 0, float water = 0)
     {
         electricityCurrentUsage += electric;
         waterCurrentUsage += water;
-        sewageProcessingCapacity = waterCurrentUsage;
+        sewageCurrentUsage = waterCurrentUsage;
     }
 
-    public void updateWaterSupply(float newSupply)
+    public void updateWaterSupplyCapacity(float newSupply)
     {
         waterSupplyCapacity += newSupply;
     }
 
-    public void updateElectricitySupply(float newSupply)
+    public void updateElectricitySupplyCapacity(float newSupply)
     {
         electricitySupplyCapacity += newSupply;
     }
