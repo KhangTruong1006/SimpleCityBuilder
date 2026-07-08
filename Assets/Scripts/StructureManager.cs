@@ -13,6 +13,7 @@ public class StructureManager : MonoBehaviour
     public PopulationManager populationManager;
     public EconomyManager economyManager;
     public ResourcesManager resourcesManager;
+    public WaterAndElectricityService waterAndElectricityService;
 
     private float[] residentialWeights, commercialWeights, industrialWeights, bigWeights;
     private void Start()
