@@ -9,7 +9,7 @@ public class UIController : MonoBehaviour
 {
     public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement, onWaterPlantPlacment;
     public Button placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton;
-    public TextMeshProUGUI populationText, budgetText, jobsText;
+    public TextMeshProUGUI populationText, budgetText;
 
     public Color outlineColor;
     List<Button> buttonList;
@@ -45,11 +45,6 @@ public class UIController : MonoBehaviour
     public void displayBudget(float budget)
     {
         displayStat(budgetText, $"{budget}");
-    }
-
-    public void displayJobs(int jobs)
-    {
-        displayStat(jobsText, $"{jobs}");
     }
 
     private void modifyOutline(Button button)

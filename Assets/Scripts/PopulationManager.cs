@@ -52,7 +52,6 @@ public class PopulationManager : MonoBehaviour
         calculatePopulationChange();
 
         uiController.displayPopulation(population);
-        uiController.displayJobs(jobCapacity);
     }
 
     private void calculateEmployment()
