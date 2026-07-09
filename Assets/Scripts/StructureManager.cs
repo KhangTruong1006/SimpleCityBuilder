@@ -24,21 +24,31 @@ public class StructureManager : MonoBehaviour
         bigWeights = structurePrefab.bigPrefabs.Select(prefabStats => prefabStats.weight).ToArray();
     }
 
+    // Zoning Structures
     public void placeResidential(Vector3Int position)
     {
-        placeStructureOnWeight(position, structurePrefab.residentialPrefabs, residentialWeights, CellType.Residential);
+        IStructurePrefab prefab = placeStructureOnWeight(position, structurePrefab.residentialPrefabs, residentialWeights, CellType.Residential);
+        
+        updatePopulationCapacity(prefab);
     }
 
     public void placeCommercial(Vector3Int position)
     {
-        placeStructureOnWeight(position, structurePrefab.commercialPrefabs, commercialWeights, CellType.Commercial);
+        IBusinessPrefab prefab = placeStructureOnWeight(position, structurePrefab.commercialPrefabs, commercialWeights, CellType.Commercial);
+        
+        updateJobAndStorageCapacity(prefab);
     }
 
     public void placeIndustrial(Vector3Int position)
     {
-        placeStructureOnWeight(position, structurePrefab.industrialPrefabs, industrialWeights, CellType.Industrial);
+        IBusinessPrefab prefab = placeStructureOnWeight(position, structurePrefab.industrialPrefabs, industrialWeights, CellType.Industrial);
+        
+        updateJobAndStorageCapacity(prefab);
+        updateProductionRate(prefab);
     }
 
+
+    // Service Structures
     public void placeWaterPlant(Vector3Int position)
     {
         placeServiceStructure(position, structurePrefab.waterPrefabs);
@@ -54,12 +64,12 @@ public class StructureManager : MonoBehaviour
         placeServiceStructure(position, structurePrefab.powerPrefabs);
     }
 
-    // ===== REMEMBER TO FIX THE SERVICE STRUCTURE PLACEMENT =====
-    private void placeStructureOnWeight<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type) where T : IStructurePrefab
+
+    private T placeStructureOnWeight<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type) where T : IStructurePrefab
     {
         if (!isPositionPlacable(position))
         {
-            return;
+            return default(T);
         }
 
         // Get a random prefab based on the weights
@@ -69,8 +79,7 @@ public class StructureManager : MonoBehaviour
         placementManager.placeObjectOnTheMap(position, prefab.Prefab, type);
         AudioPlayer.instance.PlayPlacementSound();
 
-        
-        updateCapacity(prefab, type);
+        return prefab;
     }
 
     private void placeServiceStructure(Vector3Int position, IServicesPrefab prefab)
@@ -87,24 +96,20 @@ public class StructureManager : MonoBehaviour
         
     }
 
-    private void updateCapacity(IStructurePrefab prefab, CellType type)
+    private void updateJobAndStorageCapacity(IBusinessPrefab prefab)
     {
-        if (prefab is IBusinessPrefab businessPrefab)
-        {
-            populationManager.updateJobCapacity(prefab.Capacity);
-            resourcesManager.updateTotalStorageCapacity(businessPrefab.InventoryCapacity);
-            
-            if (type == CellType.Industrial)
-            {
-                resourcesManager.updateProductionRatePerTimeUnit(businessPrefab.GoodsUnitPerTick);
-            }
-            return;
-        }
+        populationManager.updateJobCapacity(prefab.Capacity);
+        resourcesManager.updateTotalStorageCapacity(prefab.InventoryCapacity);
+    }
 
-        else
-        {
-            populationManager.updatePopulationCapacity(prefab.Capacity);
-        }   
+    private void updateProductionRate(IBusinessPrefab prefab)
+    {
+        resourcesManager.updateProductionRatePerTimeUnit(prefab.GoodsUnitPerTick);
+    }
+
+    private void updatePopulationCapacity(IStructurePrefab prefab)
+    {
+        populationManager.updatePopulationCapacity(prefab.Capacity);
     }
 
     public void placeBigStructure(Vector3Int position)
