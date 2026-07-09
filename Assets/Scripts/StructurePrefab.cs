@@ -10,6 +10,7 @@ public class StructurePrefab : ScriptableObject
     public BigPrefab[] bigPrefabs;
     public PowerPrefab powerPrefabs;
     public WaterPrefab waterPrefabs;
+    public SewagePrefab SewagePrefab;
 }
 
 // === Interface ===
@@ -23,7 +24,7 @@ public interface IStructurePrefab
     public float PowerConsumptionPerTick { get; } 
 }
  
-public interface IBusinessPrefab
+public interface IBusinessPrefab : IStructurePrefab
 {
     public float InventoryCapacity { get; } // Unit: Tons
     public float GoodsUnitPerTick { get; } // Commerical: Sales per tick, Industrial: Produced Freight per tick
@@ -60,7 +61,7 @@ public struct ResidentialPrefab : IStructurePrefab
 }
 
 [Serializable]
-public struct IndustrialPrefab : IStructurePrefab, IBusinessPrefab
+public struct IndustrialPrefab : IBusinessPrefab
 {
     public GameObject prefab;
     [Range(0f, 1f)]
@@ -85,7 +86,7 @@ public struct IndustrialPrefab : IStructurePrefab, IBusinessPrefab
 }
 
 [Serializable]
-public struct CommericalPrefab : IStructurePrefab, IBusinessPrefab
+public struct CommericalPrefab : IBusinessPrefab
 {
     public GameObject prefab;
     [Range(0f, 1f)]
