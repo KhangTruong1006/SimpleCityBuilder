@@ -59,11 +59,11 @@ MonoBehaviour:
     powerGeneration: 100
   waterPrefabs:
     prefab: {fileID: 3702253504043930072, guid: 73d45a49ecaa5ae478427c3735eaacbc, type: 3}
-    cost: 0
+    cost: 10
     expensePerTick: 50
     waterGeneration: 100
   SewagePrefab:
     prefab: {fileID: 3702253504043930072, guid: f602db7a18cf73848a47a49fb5e77574, type: 3}
-    cost: 0
+    cost: 10
     expensePerTick: 50
     sewageProcessing: 100
