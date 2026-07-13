@@ -13,7 +13,7 @@ public class StructureManager : MonoBehaviour
     public PopulationManager populationManager;
     public EconomyManager economyManager;
     public ResourcesManager resourcesManager;
-    public WaterAndElectricityService waterAndElectricityService;
+    public WaterAndPowerService waterAndPowerService;
 
     private float[] residentialWeights, commercialWeights, industrialWeights, bigWeights;
     private void Start()
@@ -79,6 +79,8 @@ public class StructureManager : MonoBehaviour
         placementManager.placeObjectOnTheMap(position, prefab.Prefab, type);
         AudioPlayer.instance.PlayPlacementSound();
 
+        updateWaterAndPowerConsumption(prefab.PowerConsumptionPerTick, prefab.WaterConsumptionPerTick);
+
         return prefab;
     }
 
@@ -92,8 +94,13 @@ public class StructureManager : MonoBehaviour
         placementManager.placeObjectOnTheMap(position, prefab.Prefab, CellType.Service);
         AudioPlayer.instance.PlayPlacementSound();
 
-        //economyManager.substractConstructionCost(prefab.Cost);
-        
+        economyManager.substractConstructionCost(prefab.Cost);
+
+    }
+
+    private void updateWaterAndPowerConsumption(float power, float water)
+    {
+        waterAndPowerService.updateConsumptions(power, water);
     }
 
     private void updateJobAndStorageCapacity(IBusinessPrefab prefab)

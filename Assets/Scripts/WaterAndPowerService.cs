@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class WaterAndElectricityService : MonoBehaviour
+public class WaterAndPowerService : MonoBehaviour
 {
-    [Header("Electricity")]
-    public float electricitySupplyCapacity;
-    public float electricityCurrentUsage;
+    [Header("Power")]
+    public float powerSupplyCapacity;
+    public float powerCurrentUsage;
 
     [Header("Water")]
     public float waterSupplyCapacity;
@@ -14,16 +14,20 @@ public class WaterAndElectricityService : MonoBehaviour
     public float sewageProcessingCapacity; // Sewage capacity depends on water treatment to process
     public float sewageCurrentUsage;
 
-
+    
     public void runSimulationTick()
     {
+        float electricityConsumptionRate = calulateElectricityConsumptionRate();
+        float waterConsumptionRate = calulateWaterConsumptionRate();
+        float sewageProcessingeRate = calulateSewageProcessingRate();
+
 
     }
 
     // ===== Update methods =====
-    public void updateConsumptions(float electric = 0, float water = 0)
+    public void updateConsumptions(float power = 0, float water = 0)
     {
-        electricityCurrentUsage += electric;
+        powerCurrentUsage += power;
         waterCurrentUsage += water;
         sewageCurrentUsage = waterCurrentUsage;
     }
@@ -35,7 +39,7 @@ public class WaterAndElectricityService : MonoBehaviour
 
     public void updateElectricitySupplyCapacity(float newSupply)
     {
-        electricitySupplyCapacity += newSupply;
+        powerSupplyCapacity += newSupply;
     }
 
     public void updateSewageProcessingCapacity(float newCapacity)
@@ -55,10 +59,18 @@ public class WaterAndElectricityService : MonoBehaviour
     }
 
     public float calulateElectricityConsumptionRate() {
-        if (electricitySupplyCapacity <= 0)
+        if (powerSupplyCapacity <= 0)
         {
             return 0f; 
         }
-        return electricityCurrentUsage / electricitySupplyCapacity;
+        return powerCurrentUsage / powerSupplyCapacity;
+    }
+
+    public float calulateSewageProcessingRate() {
+        if (sewageProcessingCapacity <= 0)
+        {
+            return 0f; 
+        }
+        return sewageCurrentUsage / sewageProcessingCapacity;
     }
 }
