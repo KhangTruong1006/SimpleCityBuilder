@@ -35,10 +35,11 @@ public interface IServicesPrefab
     public GameObject Prefab { get; }
     public int Cost { get; }
     public float ExpensePerTick { get; } // Unit: Money per tick
+    public float GeneratingCapacityPerTick { get; } // Unit: Water/Power/Sewage per tick
 }
 
 // === Struct ===
-
+// Residential Prefab
 [Serializable]
 public struct ResidentialPrefab : IStructurePrefab
 {
@@ -60,6 +61,7 @@ public struct ResidentialPrefab : IStructurePrefab
     public float PowerConsumptionPerTick => powerConsumption;
 }
 
+// Business Prefab
 [Serializable]
 public struct IndustrialPrefab : IBusinessPrefab
 {
@@ -109,6 +111,7 @@ public struct CommericalPrefab : IBusinessPrefab
     public float PowerConsumptionPerTick => powerConsumption;
 }
 
+// Big Structure Prefab
 [Serializable]
 public struct BigPrefab : IStructurePrefab
 {
@@ -131,6 +134,7 @@ public struct BigPrefab : IStructurePrefab
     public float PowerConsumptionPerTick => powerConsumption;
 }
 
+// Services Prefab
 [Serializable]
 public struct PowerPrefab : IServicesPrefab
 {
@@ -144,6 +148,7 @@ public struct PowerPrefab : IServicesPrefab
     public GameObject Prefab => prefab;
     public float ExpensePerTick => expensePerTick;
     public int Cost => cost;
+    public float GeneratingCapacityPerTick => powerGeneration;
 }
 
 [Serializable]
@@ -159,6 +164,7 @@ public struct WaterPrefab : IServicesPrefab
     public GameObject Prefab => prefab;
     public float ExpensePerTick => expensePerTick;
     public int Cost => cost;
+    public float GeneratingCapacityPerTick => waterGeneration;
 }
 
 [Serializable]
@@ -174,4 +180,5 @@ public struct SewagePrefab : IServicesPrefab
     public GameObject Prefab => prefab;
     public float ExpensePerTick => expensePerTick;
     public int Cost => cost;
+    public float GeneratingCapacityPerTick => sewageProcessing;
 }
