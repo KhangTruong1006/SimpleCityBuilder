@@ -51,20 +51,26 @@ public class StructureManager : MonoBehaviour
     // Service Structures
     public void placeWaterPlant(Vector3Int position)
     {
-        placeServiceStructure(position, structurePrefab.waterPrefabs);
+        IServicesPrefab prefab = placeServiceStructure(position, structurePrefab.waterPrefabs);
+        waterAndPowerService.updateWaterSupplyCapacity(prefab.GeneratingCapacityPerTick);
+
     }
 
     public void placeSewagePlant(Vector3Int position)
     {
-        placeServiceStructure(position, structurePrefab.waterPrefabs);
+        IServicesPrefab prefab = placeServiceStructure(position, structurePrefab.waterPrefabs);
+        waterAndPowerService.updateSewageProcessingCapacity(prefab.GeneratingCapacityPerTick);
     }
 
     public void placePowerPlant(Vector3Int position)
     {
-        placeServiceStructure(position, structurePrefab.powerPrefabs);
+        IServicesPrefab prefab = placeServiceStructure(position, structurePrefab.powerPrefabs);
+        waterAndPowerService.updateElectricitySupplyCapacity(prefab.GeneratingCapacityPerTick);
     }
 
 
+
+    // ===== General Placement Methods =====
     private T placeStructureOnWeight<T>(Vector3Int position, T[] prefabArray, float[] structureWeights, CellType type) where T : IStructurePrefab
     {
         if (!isPositionPlacable(position))
@@ -84,39 +90,19 @@ public class StructureManager : MonoBehaviour
         return prefab;
     }
 
-    private void placeServiceStructure(Vector3Int position, IServicesPrefab prefab)
+    private IServicesPrefab placeServiceStructure(Vector3Int position, IServicesPrefab prefab)
     {
         if (!isPositionPlacable(position))
         {
-            return;
+            return null;
         }
 
         placementManager.placeObjectOnTheMap(position, prefab.Prefab, CellType.Service);
         AudioPlayer.instance.PlayPlacementSound();
 
+
         economyManager.substractConstructionCost(prefab.Cost);
-
-    }
-
-    private void updateWaterAndPowerConsumption(float power, float water)
-    {
-        waterAndPowerService.updateConsumptions(power, water);
-    }
-
-    private void updateJobAndStorageCapacity(IBusinessPrefab prefab)
-    {
-        populationManager.updateJobCapacity(prefab.Capacity);
-        resourcesManager.updateTotalStorageCapacity(prefab.InventoryCapacity);
-    }
-
-    private void updateProductionRate(IBusinessPrefab prefab)
-    {
-        resourcesManager.updateProductionRatePerTimeUnit(prefab.GoodsUnitPerTick);
-    }
-
-    private void updatePopulationCapacity(IStructurePrefab prefab)
-    {
-        populationManager.updatePopulationCapacity(prefab.Capacity);
+        return prefab;
     }
 
     public void placeBigStructure(Vector3Int position)
@@ -124,7 +110,7 @@ public class StructureManager : MonoBehaviour
         int width = 2;
         int height = 2;
 
-        if(!isStructureBig(position, width, height))
+        if (!isStructureBig(position, width, height))
         {
             return;
         }
@@ -137,7 +123,7 @@ public class StructureManager : MonoBehaviour
     private int getRandomWeightedIndex(float[] weights)
     {
         float sum = 0f;
-        for(int i = 0; i < weights.Length; i++)
+        for (int i = 0; i < weights.Length; i++)
         {
             sum += weights[i];
         }
@@ -156,6 +142,31 @@ public class StructureManager : MonoBehaviour
         return 0; // Fallback, should not reach here if weights are valid
     }
 
+
+    // ===== Update Methods =====
+    private void updateJobAndStorageCapacity(IBusinessPrefab prefab)
+    {
+        populationManager.updateJobCapacity(prefab.Capacity);
+        resourcesManager.updateTotalStorageCapacity(prefab.InventoryCapacity);
+    }
+
+    private void updateProductionRate(IBusinessPrefab prefab)
+    {
+        resourcesManager.updateProductionRatePerTimeUnit(prefab.GoodsUnitPerTick);
+    }
+
+    private void updatePopulationCapacity(IStructurePrefab prefab)
+    {
+        populationManager.updatePopulationCapacity(prefab.Capacity);
+    }
+
+    private void updateWaterAndPowerConsumption(float power, float water)
+    {
+        waterAndPowerService.updateConsumptions(power, water);
+    }
+
+
+    // ===== Validation Methods =====
     private bool isStructureBig(Vector3Int position, int width, int height)
     {
         bool nearbyRoad = false;
@@ -180,16 +191,7 @@ public class StructureManager : MonoBehaviour
     }
     private bool isPositionPlacable(Vector3Int position)
     {
-        if (!isPositionInBoundAndFree(position))
-        {
-            return false;
-        }
-        // Check if the position is adjacent to a road
-        if (!isPositionAdjacentToRoad(position))
-        {
-            return false;
-        }
-        return true;
+        return isPositionInBoundAndFree(position) && isPositionAdjacentToRoad(position);
     }
 
     private bool isPositionAdjacentToRoad(Vector3Int position)
@@ -205,14 +207,14 @@ public class StructureManager : MonoBehaviour
     private bool isPositionInBoundAndFree(Vector3Int position)
     {
         // Check if the position is within bounds
-        if (placementManager.isPositionInBound(position) == false)
+        if (!placementManager.isPositionInBound(position))
         {
             Debug.Log("Position is out of bound, cannot place structure here.");
             return false;
         }
 
         // Check if the position is free
-        if (placementManager.isPositionFree(position) == false)
+        if (!placementManager.isPositionFree(position))
         {
             Debug.Log("Position is occupied, cannot place structure here.");
             return false;
