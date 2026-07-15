@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class WaterAndPowerService : MonoBehaviour
 {
+    [SerializeField] private GameSettings settings;
+
     [Header("Power")]
     public float powerSupplyCapacity;
     public float powerCurrentUsage;
@@ -14,14 +16,54 @@ public class WaterAndPowerService : MonoBehaviour
     public float sewageProcessingCapacity; // Sewage capacity depends on water treatment to process
     public float sewageCurrentUsage;
 
-    
+    private float powerActualCurrentUsage;
+    private float sewageActualCurrentUsage;
+    private float waterActualCurrentUsage;
+
+    private bool isPowerShortage = false;
+    private bool isWaterShortage = false;
+    private bool isSewageShortage = false;
+
+
     public void runSimulationTick()
     {
-        float electricityConsumptionRate = calulateElectricityConsumptionRate();
+        checkShortages();
+
+        if (isShortage())
+        {
+            applyPenalties();
+        }
+    }
+
+
+    private void checkShortages()
+    {
+        float powerConsumptionRate = calulateElectricityConsumptionRate();
         float waterConsumptionRate = calulateWaterConsumptionRate();
         float sewageProcessingeRate = calulateSewageProcessingRate();
 
+        isPowerShortage = checkSupplyThreshold(powerConsumptionRate, powerSupplyCapacity);
+        isWaterShortage = checkSupplyThreshold(waterConsumptionRate, waterSupplyCapacity);
+        isSewageShortage = checkSupplyThreshold(sewageProcessingeRate, sewageProcessingCapacity); 
+    }
 
+    
+    private bool checkSupplyThreshold(float consumptionRate, float supply)
+    {
+        // Return true if the consumption rate exceeds the supply threshold or if the supply is zero or negative
+        return consumptionRate > settings.service.supplyThreshold || supply <= 0;
+    }
+
+    private bool isShortage()
+    {
+        return isPowerShortage || isWaterShortage || isSewageShortage;
+    }
+
+
+    private void applyPenalties()
+    {
+        Debug.Log("Applying penalties due to shortages.");
+        // REMEMBER: Implement the logic to apply penalties to the city based on shortages. This could involve reducing population growth, decreasing satisfaction, or other game mechanics.
     }
 
     // ===== Update methods =====
