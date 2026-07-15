@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public StructureManager structureManager;
     public PopulationManager populationManager;
     public EconomyManager economyManager;
+    public WaterAndPowerService waterAndPowerService;
 
     [Header("Simulation Settings")]
     public float tickRateInSeconds;
@@ -56,6 +57,7 @@ public class GameManager : MonoBehaviour
 
     private void runSimulationTick()
     {
+        waterAndPowerService.runSimulationTick();
         populationManager.runSimulationTick();
         economyManager.runSimulationTick();
     }
