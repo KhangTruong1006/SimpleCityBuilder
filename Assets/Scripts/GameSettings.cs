@@ -9,6 +9,7 @@ public class GameSettings : ScriptableObject
     public Threshold threshold;
     public Population population;
     public Economy economy;
+    public Service service;
 
 
     [System.Serializable]
@@ -59,5 +60,12 @@ public class GameSettings : ScriptableObject
         public float importCostPerUnit = 25f;
         public float productionCostPerUnit = 2f;
         public float salePricePerUnit = 3f;
+    }
+
+    [System.Serializable]
+    public class Service
+    {
+        public float supplyThreshold = 1.0f;
+
     }
 }
