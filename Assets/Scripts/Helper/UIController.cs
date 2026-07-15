@@ -7,8 +7,8 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement, onWaterPlantPlacment;
-    public Button placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton;
+    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement, onWaterPlantPlacement, onSewagePlacement, onPowerPlacement;
+    public Button placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton;
     public TextMeshProUGUI populationText, budgetText;
 
     public Color outlineColor;
@@ -16,7 +16,7 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
-        buttonList = new List<Button> { placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton };
+        buttonList = new List<Button> { placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton };
 
         //Road Button
         placeRoadButton.onClick.AddListener(() => handleButtonClick(placeRoadButton, onRoadPlacement));
@@ -33,7 +33,11 @@ public class UIController : MonoBehaviour
         //Big Structure Button (For future extention)
         placeBigStructureButton.onClick.AddListener(() => handleButtonClick(placeBigStructureButton, onBigStructurePlacement));
 
-        placeWaterPlantButton.onClick.AddListener(() => handleButtonClick(placeWaterPlantButton, onWaterPlantPlacment));
+        placeWaterPlantButton.onClick.AddListener(() => handleButtonClick(placeWaterPlantButton, onWaterPlantPlacement));
+
+        placeSewagePlantButton.onClick.AddListener(() => handleButtonClick(placeSewagePlantButton, onSewagePlacement));
+
+        placePowerPlantButton.onClick.AddListener(() => handleButtonClick(placePowerPlantButton, onPowerPlacement));
     }
 
 
