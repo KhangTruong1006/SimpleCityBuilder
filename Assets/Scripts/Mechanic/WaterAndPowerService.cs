@@ -4,6 +4,8 @@ public class WaterAndPowerService : MonoBehaviour
 {
     [SerializeField] private GameSettings settings;
 
+    public PopulationManager populationManager;
+
     [Header("Power")]
     public float powerSupplyCapacity;
     public float powerCurrentUsage;
@@ -27,6 +29,12 @@ public class WaterAndPowerService : MonoBehaviour
 
     public void runSimulationTick()
     {
+        // When starts a new city
+        if(populationManager.population < 1)
+        {
+            return;
+        }
+
         checkShortages();
 
         if (isShortage())
@@ -63,7 +71,9 @@ public class WaterAndPowerService : MonoBehaviour
     private void applyPenalties()
     {
         Debug.Log("Applying penalties due to shortages.");
-        // REMEMBER: Implement the logic to apply penalties to the city based on shortages. This could involve reducing population growth, decreasing satisfaction, or other game mechanics.
+        // REMEMBER:
+        // - Implement the logic to apply penalties to the city based on shortages. This could involve reducing population growth, decreasing satisfaction, or other game mechanics.
+        // - Implemnent when there is a shortage, all production, selling, and population growth will be affected. The penalty can be a percentage reduction in these activities.
     }
 
     // ===== Update methods =====
