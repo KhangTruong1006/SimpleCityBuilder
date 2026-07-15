@@ -4,6 +4,7 @@ public class ResourcesManager : MonoBehaviour
 {
     [SerializeField] private GameSettings settings;
     public PopulationManager populationManager;
+    public WaterAndPowerService waterAndPowerService;
 
     // Unit: Tons
     public float totalStorageCapacity;
