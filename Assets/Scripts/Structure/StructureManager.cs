@@ -52,20 +52,28 @@ public class StructureManager : MonoBehaviour
     public void placeWaterPlant(Vector3Int position)
     {
         IServicesPrefab prefab = placeServiceStructure(position, structurePrefab.waterPrefabs);
-        waterAndPowerService.updateWaterSupplyCapacity(prefab.GeneratingCapacityPerTick);
-
+        if(prefab != null) 
+        { 
+            waterAndPowerService.updateWaterSupplyCapacity(prefab.GeneratingCapacityPerTick);
+        }
     }
 
     public void placeSewagePlant(Vector3Int position)
     {
         IServicesPrefab prefab = placeServiceStructure(position, structurePrefab.sewagePrefab);
-        waterAndPowerService.updateSewageProcessingCapacity(prefab.GeneratingCapacityPerTick);
+        if (prefab != null)
+        {
+            waterAndPowerService.updateSewageProcessingCapacity(prefab.GeneratingCapacityPerTick);
+        }
     }
 
     public void placePowerPlant(Vector3Int position)
     {
         IServicesPrefab prefab = placeServiceStructure(position, structurePrefab.powerPrefabs);
-        waterAndPowerService.updateElectricitySupplyCapacity(prefab.GeneratingCapacityPerTick);
+        if (prefab != null) 
+        { 
+            waterAndPowerService.updateElectricitySupplyCapacity(prefab.GeneratingCapacityPerTick);
+        }
     }
 
 
