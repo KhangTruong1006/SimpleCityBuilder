@@ -10,7 +10,7 @@ public class StructurePrefab : ScriptableObject
     public BigPrefab[] bigPrefabs;
     public PowerPrefab powerPrefabs;
     public WaterPrefab waterPrefabs;
-    public SewagePrefab SewagePrefab;
+    public SewagePrefab sewagePrefab;
 }
 
 // === Interface ===
