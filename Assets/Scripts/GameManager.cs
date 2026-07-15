@@ -34,7 +34,9 @@ public class GameManager : MonoBehaviour
         uiController.onIndustrialPlacement += IndustrialPlacementHandler;
 
         uiController.onBigStructurePlacement += BigStructureHandler;
-        uiController.onWaterPlantPlacment += WaterPlantPlacementHandler;
+        uiController.onWaterPlantPlacement += WaterPlantPlacementHandler;
+        uiController.onSewagePlacement += SewagePlantPlacementHandler;
+        uiController.onPowerPlacement += PowerPlantPlacementHandler;
     }
 
     
@@ -86,6 +88,18 @@ public class GameManager : MonoBehaviour
     {
         clearInputActions();
         inputManager.OnMouseClick += structureManager.placeWaterPlant;
+    }
+
+    private void PowerPlantPlacementHandler()
+    {
+        clearInputActions();
+        inputManager.OnMouseClick += structureManager.placePowerPlant;
+    }
+
+    private void SewagePlantPlacementHandler()
+    {
+        clearInputActions();
+        inputManager.OnMouseClick += structureManager.placeSewagePlant;
     }
 
     private void RoadPlacementHandler()
