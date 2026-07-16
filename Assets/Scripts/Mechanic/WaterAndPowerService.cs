@@ -36,8 +36,11 @@ public class WaterAndPowerService : MonoBehaviour
         }
 
         checkShortages();
-        messageShortage();
 
+        if (isShortage())
+        {
+            applyPenalties();
+        }
     }
 
 
@@ -49,9 +52,7 @@ public class WaterAndPowerService : MonoBehaviour
 
         isPowerShortage = checkSupplyThreshold(powerConsumptionRate, powerSupplyCapacity);
         isWaterShortage = checkSupplyThreshold(waterConsumptionRate, waterSupplyCapacity);
-        isSewageShortage = checkSupplyThreshold(sewageProcessingeRate, sewageProcessingCapacity);
-
-        
+        isSewageShortage = checkSupplyThreshold(sewageProcessingeRate, sewageProcessingCapacity); 
     }
 
     
@@ -61,27 +62,18 @@ public class WaterAndPowerService : MonoBehaviour
         return consumptionRate > settings.service.supplyThreshold || supply <= 0;
     }
 
-    public bool haveShortages()
+    private bool isShortage()
     {
         return isPowerShortage || isWaterShortage || isSewageShortage;
     }
 
-    private void messageShortage()
-    {
-        if (haveShortages())
-        {
-            messageShortageType(isPowerShortage, "Power");
-            messageShortageType(isWaterShortage, "Water");
-            messageShortageType(isSewageShortage, "Sewage");
-        }
-    }
 
-    private void messageShortageType(bool shortage, string resourceType)
+    private void applyPenalties()
     {
-        if (shortage)
-        {
-            Debug.Log($"Warning: {resourceType} shortage detected!");
-        }
+        Debug.Log("Applying penalties due to shortages.");
+        // REMEMBER:
+        // - Implement the logic to apply penalties to the city based on shortages. This could involve reducing population growth, decreasing satisfaction, or other game mechanics.
+        // - Implemnent when there is a shortage, all production, selling, and population growth will be affected. The penalty can be a percentage reduction in these activities.
     }
 
     // ===== Update methods =====
