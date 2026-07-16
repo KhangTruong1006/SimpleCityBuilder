@@ -32,7 +32,7 @@ public class ResourcesManager : MonoBehaviour
 
     public float produceGoods(float employmentRate)
     {
-        if (isOverProduction())
+        if (isOverProduction() || waterAndPowerService.haveShortages())
         {
             return 0;
         }
@@ -56,8 +56,8 @@ public class ResourcesManager : MonoBehaviour
 
     public float sellGoods(float demand)
     {
-        // When a new city starts
-        if (currentStorage <= 0)
+        // When a new city starts or have shortages in water, sewage, or power
+        if (currentStorage <= 0 || waterAndPowerService.haveShortages())
         {
             // If fail to deliver goods
             if(populationManager!= null)
@@ -66,8 +66,9 @@ public class ResourcesManager : MonoBehaviour
             }
             return 0;
         }
-        
-        
+
+        // If demand > current storage, sell all current storage
+        // If demand < current storage, sell based on demand
         float sold = Mathf.Min(demand, currentStorage);
         currentStorage -= sold;
 
