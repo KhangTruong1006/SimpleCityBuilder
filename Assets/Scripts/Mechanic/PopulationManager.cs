@@ -44,7 +44,8 @@ public class PopulationManager : MonoBehaviour
         // Change Employment to Demand
         calculateEmployment();
 
-        if (demandController != null) {
+        if (demandController != null)
+        {
             demandController.updateDemand();
         }
 
@@ -57,7 +58,7 @@ public class PopulationManager : MonoBehaviour
     private void calculateEmployment()
     {
         int availableWorkers = demographicsManager.getWorkForce();
-        
+
         if (availableWorkers < 1)
         {
             employedPopulation = 0;
@@ -69,14 +70,14 @@ public class PopulationManager : MonoBehaviour
     private void calculatePopulationChange()
     {
         // To handle calculation when population is zero (the start of the game) / Seeding
-        if(precisePopulation <= 0 && populationCapacity >= 0)
+        if (precisePopulation <= 0 && populationCapacity >= 0)
         {
             precisePopulation = settings.population.seedingPop;
             initializeDemographicDistribution((int)precisePopulation);
         }
 
         // Prevent negative/over population 
-        if(precisePopulation > populationCapacity)
+        if (precisePopulation > populationCapacity)
         {
             return;
         }
@@ -91,7 +92,7 @@ public class PopulationManager : MonoBehaviour
         int updatedPopulation = demographicsManager.updateDemographics(growthRate, populationCapacity);
         population = Mathf.Min(updatedPopulation, populationCapacity);
         precisePopulation = population;
-        
+
         //Debug.Log($"Population : {population} Precise Pop: {precisePopulation} GF: {globalFactor} Jobs: {jobCapacity} Workers: {employedPopulation}");
     }
 
@@ -99,7 +100,7 @@ public class PopulationManager : MonoBehaviour
     {
         // This method calculates the global factor based on various city metrics
         // Prevent zero division
-        if(population <= 0)
+        if (population <= 0)
         {
             globalFactor = 1.0f;
             return;
@@ -107,10 +108,10 @@ public class PopulationManager : MonoBehaviour
         float availableWorkers = demographicsManager.getWorkForce();
         float employmentRate = (availableWorkers > 0) ? (float)employedPopulation / (float)availableWorkers : 0f;
         float housingRate = (float)population / (float)populationCapacity;
-        
+
         globalFactor = 0.4f * housingRate + 0.3f * employmentRate + 0.3f * (float)goodsSatisfaction;
     }
-    
+
     public void updateGoodsSatisfaction(float change)
     {
         goodsSatisfaction = change;
@@ -144,5 +145,10 @@ public class PopulationManager : MonoBehaviour
         {
             demographicsManager.initializeDemographics(pop);
         }
+    }
+
+    public float getCurrentPopulationRate()
+    {
+        return population / populationCapacity;
     }
 }
