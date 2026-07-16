@@ -108,8 +108,9 @@ public class StructureManager : MonoBehaviour
         placementManager.placeObjectOnTheMap(position, prefab.Prefab, CellType.Service);
         AudioPlayer.instance.PlayPlacementSound();
 
-
+        
         economyManager.substractConstructionCost(prefab.Cost);
+        economyManager.addMaintenanceSpending(prefab.ExpensePerTimeUnit);
         return prefab;
     }
 
