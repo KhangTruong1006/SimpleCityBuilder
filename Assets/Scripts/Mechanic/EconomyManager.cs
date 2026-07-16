@@ -25,6 +25,14 @@ public class EconomyManager : MonoBehaviour
 
     private bool triggeredExport = false;
 
+    private float exported;
+    private float imported;
+    private float produced;
+    private float sold;
+
+    private float servicesMaintenanceSpending;
+    
+
     private void Awake()
     {
         resourcesManager = GetComponent<ResourcesManager>();
@@ -44,7 +52,8 @@ public class EconomyManager : MonoBehaviour
     public void runSimulationTick()
     {
         handleLogistics();
-        
+        calculateIncome();
+        calculateExpenses();
         updateBudget(); 
     }
 
@@ -55,11 +64,6 @@ public class EconomyManager : MonoBehaviour
     }
 
     //!!! CHECK AND FIX LOGIC FOR CALCULATING EXPENSES AND INCOME
-    public void addExpenseBudge(float newExpense)
-    {
-        expenses += newExpense;
-    }
-
     // === Logistics Handling ===`
     private void handleLogistics()
     {
@@ -69,15 +73,16 @@ public class EconomyManager : MonoBehaviour
 
         float currentDemand = resourcesManager.calculateCurrentDemand();
 
-        float produced = resourcesManager.produceGoods(populationManager.getEmploymentRate());
-        float sold = resourcesManager.sellGoods(currentDemand);
+        produced = resourcesManager.produceGoods(populationManager.getEmploymentRate());
+        sold = resourcesManager.sellGoods(currentDemand);
 
-        resourcesManager.importDemand = 0f;
-        float exported = handleExport();
-        float imported = handleImport(sold, currentDemand);
+        //resourcesManager.importDemand = 0f;
 
-        calculateExpenses(produced, imported);
-        calculateIncome(sold,exported);
+        exported = handleExport();
+        imported = handleImport(sold, currentDemand);
+
+        //calculateExpenses(produced, imported);
+        //calculateIncome(sold,exported);
     }
 
     private float handleExport()
@@ -101,6 +106,11 @@ public class EconomyManager : MonoBehaviour
         return 0f;
     }
 
+    public void addMaintenanceSpending(float cost)
+    {
+        servicesMaintenanceSpending += cost;
+    }
+
     private float handleImport(float sold, float goodsDemand)
     {
         if (!resourcesManager.isSoldUnderDemand(sold))
@@ -115,7 +125,7 @@ public class EconomyManager : MonoBehaviour
     }
 
     // === Budget Calculation ===
-    private void calculateIncome(float sold, float exported)
+    private void calculateIncome()
     {
         float salesRevenue = sold * salePricePerUnit;
         float exportRevenue = exported * exportRevenuePerUnit;
@@ -123,12 +133,12 @@ public class EconomyManager : MonoBehaviour
         income = (salesRevenue + exportRevenue) * tax;
     }
 
-    private void calculateExpenses(float produced, float imported)
+    private void calculateExpenses()
     {
         float productionCost = produced * productionCostPerUnit;
-        float importCost = imported * productionCostPerUnit;
+        float importCost = imported * importCostPerUnit;
 
-        expenses = productionCost + importCost;
+        expenses = productionCost + importCost + servicesMaintenanceSpending;
     }
 
 
@@ -153,5 +163,4 @@ public class EconomyManager : MonoBehaviour
     {
         triggeredExport = false;
     }
-
 }
