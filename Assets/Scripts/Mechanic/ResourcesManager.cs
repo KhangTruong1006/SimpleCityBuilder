@@ -57,14 +57,14 @@ public class ResourcesManager : MonoBehaviour
     public float sellGoods(float demand)
     {
         // When a new city starts or have shortages in water, sewage, or power
-        if (currentStorage <= 0 || waterAndPowerService.haveShortages())
+        if (currentStorage <= 0)
         {
             // If fail to deliver goods
             if (populationManager != null)
             {
                 populationManager.updateGoodsSatisfaction(0f);
             }
-            return 0;
+            return 0f;
         }
 
         // If demand > current storage, sell all current storage
