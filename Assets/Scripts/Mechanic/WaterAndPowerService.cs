@@ -30,17 +30,14 @@ public class WaterAndPowerService : MonoBehaviour
     public void runSimulationTick()
     {
         // When starts a new city
-        if(populationManager.population < 1)
+        if (populationManager.population < 1)
         {
             return;
         }
 
         checkShortages();
+        messageShortage();
 
-        if (isShortage())
-        {
-            applyPenalties();
-        }
     }
 
 
@@ -52,28 +49,37 @@ public class WaterAndPowerService : MonoBehaviour
 
         isPowerShortage = checkSupplyThreshold(powerConsumptionRate, powerSupplyCapacity);
         isWaterShortage = checkSupplyThreshold(waterConsumptionRate, waterSupplyCapacity);
-        isSewageShortage = checkSupplyThreshold(sewageProcessingeRate, sewageProcessingCapacity); 
+        isSewageShortage = checkSupplyThreshold(sewageProcessingeRate, sewageProcessingCapacity);
     }
 
-    
+
     private bool checkSupplyThreshold(float consumptionRate, float supply)
     {
-        // Return true if the consumption rate exceeds the supply threshold or if the supply is zero or negative.
+        // Return true if the consumption rate exceeds the supply threshold or if the supply is zero or negative
         return consumptionRate > settings.service.supplyThreshold || supply <= 0;
     }
 
-    private bool isShortage()
+    public bool haveShortages()
     {
         return isPowerShortage || isWaterShortage || isSewageShortage;
     }
 
-
-    private void applyPenalties()
+    private void messageShortage()
     {
-        Debug.Log("Applying penalties due to shortages.");
-        // REMEMBER:
-        // - Implement the logic to apply penalties to the city based on shortages. This could involve reducing population growth, decreasing satisfaction, or other game mechanics.
-        // - Implemnent when there is a shortage, all production, selling, and population growth will be affected. The penalty can be a percentage reduction in these activities.
+        if (haveShortages())
+        {
+            messageShortageType(isPowerShortage, "Power");
+            messageShortageType(isWaterShortage, "Water");
+            messageShortageType(isSewageShortage, "Sewage");
+        }
+    }
+
+    private void messageShortageType(bool shortage, string resourceType)
+    {
+        if (shortage)
+        {
+            Debug.Log($"Warning: {resourceType} shortage detected!");
+        }
     }
 
     // ===== Update methods =====
@@ -105,23 +111,25 @@ public class WaterAndPowerService : MonoBehaviour
     {
         if (waterSupplyCapacity <= 0)
         {
-            return 0f; 
+            return 0f;
         }
         return waterCurrentUsage / waterSupplyCapacity;
     }
 
-    public float calulateElectricityConsumptionRate() {
+    public float calulateElectricityConsumptionRate()
+    {
         if (powerSupplyCapacity <= 0)
         {
-            return 0f; 
+            return 0f;
         }
         return powerCurrentUsage / powerSupplyCapacity;
     }
 
-    public float calulateSewageProcessingRate() {
+    public float calulateSewageProcessingRate()
+    {
         if (sewageProcessingCapacity <= 0)
         {
-            return 0f; 
+            return 0f;
         }
         return sewageCurrentUsage / sewageProcessingCapacity;
     }
