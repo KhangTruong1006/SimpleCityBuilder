@@ -18,7 +18,7 @@ public class ResourcesManager : MonoBehaviour
     [Header("Export and Import")]
     public float surplus;
     public float exportRate = 50f; // Unit: Tons per time unit
-    public float importDemand = 0;
+    public float importDemand = 0; // Delete laters
 
     [Header("Thresholds")]
     public float productionThreshold;
