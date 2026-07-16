@@ -58,7 +58,7 @@ public class WaterAndPowerService : MonoBehaviour
     
     private bool checkSupplyThreshold(float consumptionRate, float supply)
     {
-        // Return true if the consumption rate exceeds the supply threshold or if the supply is zero or negative
+        // Return true if the consumption rate exceeds the supply threshold or if the supply is zero or negative.
         return consumptionRate > settings.service.supplyThreshold || supply <= 0;
     }
 
