@@ -20,6 +20,11 @@ public class GameManager : MonoBehaviour
     [Header("Simulation Settings")]
     public float tickRateInSeconds;
     public int counter;
+
+    public int hour;
+    public int day;
+
+
     [ReadOnly]
     public float tickTimer = 0.0f;
 
@@ -48,7 +53,7 @@ public class GameManager : MonoBehaviour
         
         
         // Central clock
-        // 1 day in game = 24 mins
+        // 1 day in game = 24 mins (24 hours in game)
         // 1 mins = 20 counters ( 1 per 3 seconds (speed 1))
         
         // REMEMBER TO UPDATE COUNTER
@@ -56,14 +61,15 @@ public class GameManager : MonoBehaviour
 
         if (tickTimer >= tickRateInSeconds)
         {
-            counter += 1;
+            //counter += 1;
 
-            runSimulationTick(counter);
+            //runSimulationTick(counter);
+            runSimulationTick();
             tickTimer = 0.0f;
         }
     }
 
-    private void runSimulationTick(int counter)
+    private void runSimulationTick()
     {
         waterAndPowerService.runSimulationTick();
         populationManager.runSimulationTick();
