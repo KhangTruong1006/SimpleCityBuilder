@@ -34,7 +34,7 @@ public interface IServicesPrefab
 {
     public GameObject Prefab { get; }
     public int Cost { get; }
-    public float ExpensePerTick { get; } // Unit: Money per tick
+    public float ExpensePerTimeUnit { get; } // Unit: Money per week
     public float GeneratingCapacityPerTick { get; } // Unit: Water/Power/Sewage per tick
 }
 
@@ -141,12 +141,12 @@ public struct PowerPrefab : IServicesPrefab
     public GameObject prefab;
     public int cost;
     [Min(0f)]
-    public float expensePerTick;
+    public float expensePerTimeUnit;
 
     public float powerGeneration;
 
     public GameObject Prefab => prefab;
-    public float ExpensePerTick => expensePerTick;
+    public float ExpensePerTimeUnit => expensePerTimeUnit;
     public int Cost => cost;
     public float GeneratingCapacityPerTick => powerGeneration;
 }
@@ -157,12 +157,12 @@ public struct WaterPrefab : IServicesPrefab
     public GameObject prefab;
     public int cost;
     [Min(0f)]
-    public float expensePerTick;
+    public float expensePerTimeUnit;
 
     public float waterGeneration;
 
     public GameObject Prefab => prefab;
-    public float ExpensePerTick => expensePerTick;
+    public float ExpensePerTimeUnit => expensePerTimeUnit;
     public int Cost => cost;
     public float GeneratingCapacityPerTick => waterGeneration;
 }
@@ -173,12 +173,12 @@ public struct SewagePrefab : IServicesPrefab
     public GameObject prefab;
     public int cost;
     [Min(0f)]
-    public float expensePerTick;
+    public float expensePerTimeUnit;
 
     public float sewageProcessing;
 
     public GameObject Prefab => prefab;
-    public float ExpensePerTick => expensePerTick;
+    public float ExpensePerTimeUnit => expensePerTimeUnit;
     public int Cost => cost;
     public float GeneratingCapacityPerTick => sewageProcessing;
 }
