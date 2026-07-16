@@ -37,7 +37,6 @@ public class WaterAndPowerService : MonoBehaviour
 
         checkShortages();
         messageShortage();
-
     }
 
 
