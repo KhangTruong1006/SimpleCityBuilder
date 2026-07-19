@@ -6,6 +6,7 @@ public class GameSettings : ScriptableObject
     public MasterSettings masterSettings;
     public Camera camera;
     public GridSettings gridSettings;
+    public Timers timers;
     public Threshold threshold;
     public Population population;
     public Economy economy;
@@ -17,8 +18,8 @@ public class GameSettings : ScriptableObject
     {
         // Game speed (second)
         public float tickRateInSeconds = 2.0f;
-        public float speed_1;
-        public float speed_2;
+        public float speed_1 = 3.0f;
+        public float speed_2 = 2.0f;
         public float speed_3 = 1.0f;
     }
 
@@ -28,6 +29,12 @@ public class GameSettings : ScriptableObject
         public float speed = 5.0f;
     }
 
+    [System.Serializable]
+    public class Timers
+    {
+        public int countsToHour = 20; // 20 counts = 1 in-game hour (1 min)
+        public int hoursToDay = 24; // 24 mins = 1 in-game day
+    }
 
     [System.Serializable]
     public class GridSettings
@@ -54,6 +61,7 @@ public class GameSettings : ScriptableObject
     public class Economy
     {
         public float initialBudget = 1000f;
+        [Range(0f, 1f)]
         public float taxRate = 0.1f;
 
         public float exportRevenuePerUnit = 10f;
