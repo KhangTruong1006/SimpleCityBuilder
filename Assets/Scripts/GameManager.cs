@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        tickRateInSeconds = settings.masterSettings.tickRateInSeconds;
+        tickRateInSeconds = settings.masterSettings.speed_3;
     }
 
     private void Start()
@@ -53,8 +53,8 @@ public class GameManager : MonoBehaviour
         
         
         // Central clock
-        // 1 day in game = 24 mins (24 hours in game)
-        // 1 mins = 20 counters ( 1 per 3 seconds (speed 1))
+        // 1 day in game = 24 mins (24 in-games hours)
+        // 1 mins (1 in-game hour) = 20 counters ( 1 per 3 seconds (speed 1))
         
         // REMEMBER TO UPDATE COUNTER
         tickTimer += Time.deltaTime;
@@ -62,9 +62,13 @@ public class GameManager : MonoBehaviour
         if (tickTimer >= tickRateInSeconds)
         {
             //counter += 1;
-
             //runSimulationTick(counter);
-            runSimulationTick();
+            //runSimulationTick();
+
+            updateCounter();
+            updateHour();
+            updateDay();
+            
             tickTimer = 0.0f;
         }
     }
@@ -76,6 +80,32 @@ public class GameManager : MonoBehaviour
         economyManager.runSimulationTick();
     }
 
+    // Timer Functions
+    private void updateCounter()
+    {
+        counter += 1;
+    }
+
+    private void updateHour()
+    {
+        if (counter == settings.timers.countsToHour)
+        {
+            hour += 1;
+            counter = 0;
+        }
+    }
+
+    private void updateDay()
+    {
+        if (hour == settings.timers.hoursToDay)
+        {
+            day += 1;
+            hour = 0;
+            counter = 0;
+        }
+    }
+
+    // Handler Functions
     private void HousePlacementHandler()
     {
         clearInputActions();
@@ -127,6 +157,7 @@ public class GameManager : MonoBehaviour
         inputManager.OnMouseUp += roadManager.finishPlacingRoad;
     }
 
+    // Other
     private void clearInputActions()
     {
         inputManager.OnMouseClick = null ;
