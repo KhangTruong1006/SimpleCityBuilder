@@ -36,11 +36,14 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         uiController.onRoadPlacement += RoadPlacementHandler;
+        uiController.onBigStructurePlacement += BigStructureHandler;
+
+        // Zones
         uiController.onResidentialPlacement  += HousePlacementHandler;
         uiController.onCommercialPlacement += CommercialPlacementHandler;
         uiController.onIndustrialPlacement += IndustrialPlacementHandler;
 
-        uiController.onBigStructurePlacement += BigStructureHandler;
+        // Services    
         uiController.onWaterPlantPlacement += WaterPlantPlacementHandler;
         uiController.onSewagePlacement += SewagePlantPlacementHandler;
         uiController.onPowerPlacement += PowerPlantPlacementHandler;
@@ -105,47 +108,51 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Handler Functions
-    private void HousePlacementHandler()
+    // General Hanlder Function
+    private void PlacmentHandler(Action<Vector3Int> action)
     {
         clearInputActions();
-        inputManager.OnMouseClick += structureManager.placeResidential;
+        inputManager.OnMouseClick += action;
     }
 
-    private void BigStructureHandler()
+    // ===== Handler Functions
+    // Zones
+    private void HousePlacementHandler()
     {
-        clearInputActions();
-        inputManager.OnMouseClick += structureManager.placeBigStructure;
+        PlacmentHandler(structureManager.placeResidential);
     }
+
 
     private void CommercialPlacementHandler()
     {
-        clearInputActions();
-        inputManager.OnMouseClick += structureManager.placeCommercial;
+        PlacmentHandler(structureManager.placeCommercial);
     }
 
     private void IndustrialPlacementHandler()
     {
-        clearInputActions();
-        inputManager.OnMouseClick += structureManager.placeIndustrial;
+        PlacmentHandler(structureManager.placeIndustrial);
     }
 
+    // Services
     private void WaterPlantPlacementHandler()
     {
-        clearInputActions();
-        inputManager.OnMouseClick += structureManager.placeWaterPlant;
+        PlacmentHandler(structureManager.placeWaterPlant);
     }
 
     private void PowerPlantPlacementHandler()
     {
-        clearInputActions();
-        inputManager.OnMouseClick += structureManager.placePowerPlant;
+        PlacmentHandler(structureManager.placePowerPlant);
     }
 
     private void SewagePlantPlacementHandler()
     {
-        clearInputActions();
-        inputManager.OnMouseClick += structureManager.placeSewagePlant;
+        PlacmentHandler(structureManager.placeSewagePlant);
+    }
+
+    // Others
+    private void BigStructureHandler()
+    {
+        PlacmentHandler(structureManager.placeBigStructure);
     }
 
     private void RoadPlacementHandler()
