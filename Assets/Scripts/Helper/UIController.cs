@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
     public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement, onWaterPlantPlacement, onSewagePlacement, onPowerPlacement;
-    public Button placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton;
+    public Button placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton;
     public TextMeshProUGUI populationText, budgetText;
 
     public Color outlineColor;
@@ -16,27 +16,21 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
-        buttonList = new List<Button> { placeRoadButton, placeHouseButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton };
+        buttonList = new List<Button> { placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton };
 
-        //Road Button
         placeRoadButton.onClick.AddListener(() => handleButtonClick(placeRoadButton, onRoadPlacement));
 
-        //House Button
-        placeHouseButton.onClick.AddListener(() => handleButtonClick(placeHouseButton, onResidentialPlacement));
-
-        // Commercial Button
+        // Zones
+        placeResidentialButton.onClick.AddListener(() => handleButtonClick(placeResidentialButton, onResidentialPlacement));
         placeCommercialButton.onClick.AddListener(() => handleButtonClick(placeCommercialButton, onCommercialPlacement));
-
-        //Industrial Button
         placeIndustrialButton.onClick.AddListener(() => handleButtonClick(placeIndustrialButton, onIndustrialPlacement));
 
-        //Big Structure Button (For future extention)
+        //Big Structure Button (Remove Later)
         placeBigStructureButton.onClick.AddListener(() => handleButtonClick(placeBigStructureButton, onBigStructurePlacement));
 
+        // Service
         placeWaterPlantButton.onClick.AddListener(() => handleButtonClick(placeWaterPlantButton, onWaterPlantPlacement));
-
         placeSewagePlantButton.onClick.AddListener(() => handleButtonClick(placeSewagePlantButton, onSewagePlacement));
-
         placePowerPlantButton.onClick.AddListener(() => handleButtonClick(placePowerPlantButton, onPowerPlacement));
     }
 
@@ -58,7 +52,7 @@ public class UIController : MonoBehaviour
         outline.enabled = true;
     }
 
-    private void resetButtonColor()
+    public void resetButtonColor()
     {
         foreach(var button in buttonList)
         {
