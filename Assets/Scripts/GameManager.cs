@@ -11,11 +11,15 @@ public class GameManager : MonoBehaviour
     public CameraMovement cameraMovement;
     public RoadManager roadManager;
     public InputManager inputManager;
-    public UIController uiController;
+    
     public StructureManager structureManager;
     public PopulationManager populationManager;
     public EconomyManager economyManager;
     public WaterAndPowerService waterAndPowerService;
+
+    public UIController uiController;
+    public PanelController panelController;
+    public SliderController sliderController;
 
     [Header("Simulation Settings")]
     public float tickRateInSeconds;
@@ -39,7 +43,7 @@ public class GameManager : MonoBehaviour
         uiController.onBigStructurePlacement += BigStructureHandler;
 
         // Zones
-        uiController.onResidentialPlacement  += HousePlacementHandler;
+        uiController.onResidentialPlacement  += ResidentialPlacementHandler;
         uiController.onCommercialPlacement += CommercialPlacementHandler;
         uiController.onIndustrialPlacement += IndustrialPlacementHandler;
 
@@ -117,11 +121,10 @@ public class GameManager : MonoBehaviour
 
     // ===== Handler Functions
     // Zones
-    private void HousePlacementHandler()
+    private void ResidentialPlacementHandler()
     {
         PlacmentHandler(structureManager.placeResidential);
     }
-
 
     private void CommercialPlacementHandler()
     {
@@ -157,6 +160,7 @@ public class GameManager : MonoBehaviour
 
     private void RoadPlacementHandler()
     {
+        panelController.closeAllPanel();
         clearInputActions();
 
         inputManager.OnMouseClick += roadManager.PlaceRoad;
