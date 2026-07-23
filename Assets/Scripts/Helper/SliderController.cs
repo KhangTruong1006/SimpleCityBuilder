@@ -12,24 +12,46 @@ public class SliderController : MonoBehaviour
     [Header("Text")]
     public TextMeshProUGUI taxTMP;
 
+
     private void Start()
     {
-        taxSlider.onValueChanged.AddListener((value)=> updateTaxOnSlider(value));
+        taxSlider.onValueChanged.AddListener((value) => updateTaxOnSlider(value));
     }
 
 
     public void updateTaxOnSlider(float value)
     {
-        economyManager.updateTax(value/100);
-        OnSliderChanged(taxTMP, value, "%");
+        economyManager.updateTax(value / 100);
+        updateTextOnSliderChanged(taxTMP, value, "%");
     }
 
-    public void OnSliderChanged(TextMeshProUGUI text, float value, string textString) {
+    public void fillTimerBar(float tickTimer)
+    {
+        fillSliderBasedOnValue(timerSlider, tickTimer);
+    }
+
+    // Udpate sliders
+    public void updateTimerBarMaxValue(float value)
+    {
+        timerSlider.maxValue = value;
+    }
+
+    public void updateZoneDemandBars(float residential, float commercial, float industrial)
+    {
+        fillSliderBasedOnValue(residentialSlider, residential);
+        fillSliderBasedOnValue(commercialSlider, commercial);
+        fillSliderBasedOnValue(industrialSlider, industrial);
+    }
+
+
+    // Helpers
+    private void updateTextOnSliderChanged(TextMeshProUGUI text, float value, string textString)
+    {
         text.text = value.ToString() + textString;
     }
 
-    public void updateProgress(Slider slider, float progress)
+    public void fillSliderBasedOnValue(Slider slider, float value)
     {
-        slider.value = progress;
+        slider.value = value;
     }
 }
