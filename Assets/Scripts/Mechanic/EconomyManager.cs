@@ -163,4 +163,8 @@ public class EconomyManager : MonoBehaviour
     {
         triggeredExport = false;
     }
+
+    public void updateTax(float newTax) {
+        tax = newTax;
+    }
 }
