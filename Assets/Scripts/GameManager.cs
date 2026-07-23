@@ -3,6 +3,7 @@ using System;
 using System.Resources;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class GameManager : MonoBehaviour
 {
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         tickRateInSeconds = settings.masterSettings.speed_3;
+        sliderController.updateTimerBarMaxValue(tickRateInSeconds);
     }
 
     private void Start()
@@ -50,7 +52,7 @@ public class GameManager : MonoBehaviour
         // Services    
         uiController.onWaterPlantPlacement += WaterPlantPlacementHandler;
         uiController.onSewagePlacement += SewagePlantPlacementHandler;
-        uiController.onPowerPlacement += PowerPlantPlacementHandler;
+        uiController.onPowerPlacement += PowerPlantPlacementHandler;       
     }
 
     
@@ -65,12 +67,10 @@ public class GameManager : MonoBehaviour
         
         // REMEMBER TO UPDATE COUNTER
         tickTimer += Time.deltaTime;
+        sliderController.fillTimerBar(tickTimer);
 
         if (tickTimer >= tickRateInSeconds)
         {
-            //counter += 1;
-            //runSimulationTick(counter);
-            //runSimulationTick();
 
             updateCounter();
             updateHour();
@@ -99,6 +99,8 @@ public class GameManager : MonoBehaviour
         {
             hour += 1;
             counter = 0;
+
+            uiController.updateHourText(hour);
         }
     }
 
@@ -109,6 +111,9 @@ public class GameManager : MonoBehaviour
             day += 1;
             hour = 0;
             counter = 0;
+
+            uiController.updateHourText(hour);
+            uiController.updateDayText(day);
         }
     }
 
