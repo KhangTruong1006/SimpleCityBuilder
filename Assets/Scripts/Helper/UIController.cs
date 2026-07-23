@@ -9,7 +9,7 @@ public class UIController : MonoBehaviour
 {
     public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement, onWaterPlantPlacement, onSewagePlacement, onPowerPlacement;
     public Button placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton;
-    public TextMeshProUGUI populationText, budgetText;
+    public TextMeshProUGUI populationText, budgetText, dayText, hourText;
 
     public Color outlineColor;
     List<Button> buttonList;
@@ -66,6 +66,22 @@ public class UIController : MonoBehaviour
         resetButtonColor();
         modifyOutline(button);
         action?.Invoke();
+    }
+
+    // UPDATE CHANGING GAME SPEED FUNCTION
+    private void changeGameSpeed()
+    {
+        
+    }
+
+    public void updateHourText(int hour)
+    {
+        displayStat(hourText, $"{hour} : 00");
+    }
+
+    public void updateDayText(int day)
+    {
+        displayStat(dayText, $"Day:{day}");
     }
 
     private void displayStat(TextMeshProUGUI textElement, string text)
