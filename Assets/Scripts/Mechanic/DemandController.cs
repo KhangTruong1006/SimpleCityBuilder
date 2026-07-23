@@ -7,12 +7,18 @@ public class DemandController : MonoBehaviour
     public EconomyManager EconomyManager;
     public ResourcesManager ResourcesManager;
 
+    public SliderController SliderController;
+
     public float residentialDemand = 1.0f;
     public float commercialDemand = 0.0f;
     public float industrialDemand = 0.0f;
 
     private bool isInitialSeeding = true;
 
+    private void Start()
+    {
+        SliderController.updateZoneDemandBars(residentialDemand, commercialDemand, industrialDemand);
+    }
 
     public void updateDemand()
     {
@@ -29,6 +35,8 @@ public class DemandController : MonoBehaviour
         updateResidentialDemand(population, populationCapacity, employedPopulation, jobCapacity);
         updateCommercialDemand(population);
         updateIndustrialDemand(population, employedPopulation, jobCapacity);
+
+        SliderController.updateZoneDemandBars(residentialDemand, commercialDemand, industrialDemand);
     }
 
 
