@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public PopulationManager populationManager;
     public EconomyManager economyManager;
     public WaterAndPowerService waterAndPowerService;
+    public DemandController demandController;
 
     public UIController uiController;
     public PanelController panelController;
@@ -75,6 +76,8 @@ public class GameManager : MonoBehaviour
             updateCounter();
             updateHour();
             updateDay();
+
+            runSimulationTick();
             
             tickTimer = 0.0f;
         }
@@ -82,9 +85,13 @@ public class GameManager : MonoBehaviour
 
     private void runSimulationTick()
     {
-        waterAndPowerService.runSimulationTick();
-        populationManager.runSimulationTick();
-        economyManager.runSimulationTick();
+        if(counter == 5)
+        {   
+            waterAndPowerService.runSimulationTick();
+            populationManager.runSimulationTick();
+            economyManager.runSimulationTick();
+            demandController.runSimulationTick();
+        }
     }
 
     // Timer Functions
@@ -101,6 +108,8 @@ public class GameManager : MonoBehaviour
             counter = 0;
 
             uiController.updateHourText(hour);
+
+            runSimulationTick();
         }
     }
 

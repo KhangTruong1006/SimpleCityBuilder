@@ -43,12 +43,6 @@ public class PopulationManager : MonoBehaviour
     {
         // Change Employment to Demand
         calculateEmployment();
-
-        if (demandController != null)
-        {
-            demandController.updateDemand();
-        }
-
         calculateGlobalFactor();
         calculatePopulationChange();
 
