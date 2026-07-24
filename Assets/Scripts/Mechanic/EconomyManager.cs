@@ -138,7 +138,8 @@ public class EconomyManager : MonoBehaviour
         float productionCost = produced * productionCostPerUnit;
         float importCost = imported * importCostPerUnit;
 
-        expenses = productionCost + importCost + servicesMaintenanceSpending;
+        expenses = productionCost + importCost;
+        //expenses = productionCost + importCost + servicesMaintenanceSpending;
     }
 
 
