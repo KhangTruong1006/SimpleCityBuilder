@@ -20,6 +20,12 @@ public class DemandController : MonoBehaviour
         SliderController.updateZoneDemandBars(residentialDemand, commercialDemand, industrialDemand);
     }
 
+    public void runSimulationTick()
+    {
+        updateDemand();
+        SliderController.updateZoneDemandBars(residentialDemand, commercialDemand, industrialDemand);
+    }
+
     public void updateDemand()
     {
         if (isInitialSeeding)
@@ -34,9 +40,7 @@ public class DemandController : MonoBehaviour
 
         updateResidentialDemand(population, populationCapacity, employedPopulation, jobCapacity);
         updateCommercialDemand(population);
-        updateIndustrialDemand(population, employedPopulation, jobCapacity);
-
-        SliderController.updateZoneDemandBars(residentialDemand, commercialDemand, industrialDemand);
+        updateIndustrialDemand(population, employedPopulation, jobCapacity);       
     }
 
 
@@ -56,9 +60,8 @@ public class DemandController : MonoBehaviour
         }
     }
 
-
-    
-    // Residential Demand
+  
+    // Demands Methods
     private void updateResidentialDemand(int population, int capcity, int employedPopulation, int jobCapacity)
     {
         float housingVacancy = calculateHousingVacancy(population, capcity);
@@ -66,26 +69,10 @@ public class DemandController : MonoBehaviour
 
         // High when housing vacancy is low and available jobs are high
         // Low when housing vacancy is high
-        float rawDemand = (1.0f - housingVacancy) + jobVacancy;
+        float rawDemand =  0.8f * (1.0f - housingVacancy) + (0.2f * (1.0f - jobVacancy));
         
-        residentialDemand = Mathf.Clamp01(rawDemand);
+        residentialDemand = clampDemand(rawDemand);
     }
-
-    
-
-    private float calculateHousingVacancy(int population, int capcity)
-    {
-        // New city - prevent 0 division
-        if(capcity <= 0)
-        {
-            return 0f;
-        }
-
-        float vancancyRate = 1.0f - ((float)population / capcity);
-        return vancancyRate;
-    }
-
-    // Commercial Demand
     private void updateCommercialDemand(int population)
     {
         if(population <= 0)
@@ -97,22 +84,9 @@ public class DemandController : MonoBehaviour
         float goodsDeficit = 1f - PopulationManager.goodsSatisfaction;
         float rawDemand = (population * 0.05f) + goodsDeficit;
 
-        commercialDemand = Mathf.Clamp01(rawDemand);
-
+        commercialDemand = clampDemand(rawDemand);
     }
-
-    private float calculateJobVacancy(int employedPopulation, int jobCapacity)
-    {
-        // New city - prevent 0 division
-        if (jobCapacity <= 0)
-        {
-            return 0f;
-        }
-        float vancancyRate = 1.0f - ((float)employedPopulation / jobCapacity);
-        return vancancyRate;
-    }
-
-    // Industrial Demand
+    
     private void updateIndustrialDemand(int population, int employedPopulation, int jobCapacity)
     {
         float unemploymentRate = calculateUnemploymentRate(population, employedPopulation);
@@ -121,7 +95,27 @@ public class DemandController : MonoBehaviour
 
         float rawDemand = unemploymentRate + importReliance;
 
-        industrialDemand = Mathf.Clamp01(rawDemand);
+        industrialDemand = clampDemand(rawDemand);
+    }
+    private float calculateHousingVacancy(int population, int capcity)
+    {
+        // New city - prevent 0 division
+        if (capcity <= 0)
+        {
+            return 0f;
+        }
+
+        float vancancyRate = 1.0f - ((float)population / capcity);
+        return vancancyRate;
+    }
+
+
+    // Industrial Demand
+
+
+    private float clampDemand(float rawDemand)
+    {
+        return Mathf.Clamp(rawDemand, 0f, 1f);
     }
 
     private float calculateImportReliance(float currentDemand)
@@ -135,6 +129,16 @@ public class DemandController : MonoBehaviour
         return importReliance;
     }
 
+    private float calculateJobVacancy(int employedPopulation, int jobCapacity)
+    {
+        // New city - prevent 0 division
+        if (jobCapacity <= 0)
+        {
+            return 0f;
+        }
+        float vancancyRate = 1.0f - ((float)employedPopulation / jobCapacity);
+        return vancancyRate;
+    }
 
     private float calculateUnemploymentRate (int population, int employedPopulation)
     {
