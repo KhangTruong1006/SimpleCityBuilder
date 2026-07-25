@@ -93,7 +93,7 @@ public class DemandController : MonoBehaviour
         float currentDemand = ResourcesManager.dynamicDemand;
         float importReliance = calculateImportReliance(currentDemand);
 
-        float rawDemand = unemploymentRate + importReliance;
+        float rawDemand = 0.2f * unemploymentRate + 0.8f * importReliance;
 
         industrialDemand = clampDemand(rawDemand);
     }
