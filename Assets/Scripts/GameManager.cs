@@ -33,10 +33,20 @@ public class GameManager : MonoBehaviour
 
     [ReadOnly]
     public float tickTimer = 0.0f;
+    private bool paused = false;
+
+    private float gameSpeed_1;
+    private float gameSpeed_2;
+    private float gameSpeed_3;
+    private int currentSpeedMode = 0;
 
     private void Awake()
     {
-        tickRateInSeconds = settings.masterSettings.speed_3;
+        gameSpeed_1 = settings.masterSettings.speed_1;
+        gameSpeed_2 = settings.masterSettings.speed_2;
+        gameSpeed_3 = settings.masterSettings.speed_3;
+
+        tickRateInSeconds = gameSpeed_3;
         sliderController.updateTimerBarMaxValue(tickRateInSeconds);
     }
 
@@ -44,6 +54,7 @@ public class GameManager : MonoBehaviour
     {
         uiController.onRoadPlacement += RoadPlacementHandler;
         uiController.onBigStructurePlacement += BigStructureHandler;
+        uiController.changeSpeed += changeGameSpeed;
 
         // Zones
         uiController.onResidentialPlacement  += ResidentialPlacementHandler;
@@ -60,12 +71,16 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         cameraMovement.MoveCamera(new Vector3(inputManager.CameraMovementVector.x, 0, inputManager.CameraMovementVector.y));
-        
-        
+
+
         // Central clock
         // 1 day in game = 24 mins (24 in-games hours)
         // 1 mins (1 in-game hour) = 20 counters ( 1 per 3 seconds (speed 1))
-        
+
+        if (paused) { 
+            return;
+        }
+
         // REMEMBER TO UPDATE COUNTER
         tickTimer += Time.deltaTime;
         sliderController.fillTimerBar(tickTimer);
@@ -182,7 +197,34 @@ public class GameManager : MonoBehaviour
         inputManager.OnMouseUp += roadManager.finishPlacingRoad;
     }
 
-    // Other
+    private void changeGameSpeed()
+    {
+        currentSpeedMode += 1;
+
+        if (currentSpeedMode > 2) { 
+            currentSpeedMode = 0;
+        }
+
+        switch (currentSpeedMode) { 
+            case 0:
+                changeTickRateInSecond(gameSpeed_1);
+                break;
+            case 1:
+                changeTickRateInSecond(gameSpeed_2);
+                break;
+            case 2:
+                changeTickRateInSecond(gameSpeed_3);
+                break;
+        }
+    }
+
+    private void changeTickRateInSecond(float gameSpeed)
+    {
+        tickRateInSeconds = gameSpeed;
+        sliderController.updateTimerBarMaxValue(tickRateInSeconds);
+    }
+
+    // ===== Other
     private void clearInputActions()
     {
         inputManager.OnMouseClick = null ;

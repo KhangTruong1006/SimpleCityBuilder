@@ -7,8 +7,8 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement, onWaterPlantPlacement, onSewagePlacement, onPowerPlacement;
-    public Button placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton;
+    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement, onWaterPlantPlacement, onSewagePlacement, onPowerPlacement, changeSpeed;
+    public Button placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton, speedButton;
     public TextMeshProUGUI populationText, budgetText, dayText, hourText;
 
     public Color outlineColor;
@@ -19,6 +19,7 @@ public class UIController : MonoBehaviour
         buttonList = new List<Button> { placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton };
 
         placeRoadButton.onClick.AddListener(() => handleButtonClick(placeRoadButton, onRoadPlacement));
+        speedButton.onClick.AddListener(() => changeGameSpeed(changeSpeed));
 
         // Zones
         placeResidentialButton.onClick.AddListener(() => handleButtonClick(placeResidentialButton, onResidentialPlacement));
@@ -69,9 +70,9 @@ public class UIController : MonoBehaviour
     }
 
     // UPDATE CHANGING GAME SPEED FUNCTION
-    private void changeGameSpeed()
+    private void changeGameSpeed(System.Action action)
     {
-        
+        action?.Invoke();
     }
 
     public void updateHourText(int hour)
