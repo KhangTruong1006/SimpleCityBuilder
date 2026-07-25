@@ -16,6 +16,9 @@ public class PopulationManager : MonoBehaviour
     public int jobCapacity;
     public int employedPopulation;
 
+    private int commercialEmployedPopulation;
+    private int industrialEmployedPopulation;
+
     [Range(0.0f, 1.0f)]
     public float goodsSatisfaction = 1.0f;
     [Range(0.0f, 1.0f)]
@@ -41,7 +44,6 @@ public class PopulationManager : MonoBehaviour
 
     public void runSimulationTick()
     {
-        // Change Employment to Demand
         calculateEmployment();
         calculateGlobalFactor();
         calculatePopulationChange();
