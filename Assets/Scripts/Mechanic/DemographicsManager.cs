@@ -129,7 +129,7 @@ public class DemographicsManager : MonoBehaviour
     {
         return children + youngAdults + adults + seniors;
     }   
-    public int getWorkForce()
+    public int getEmployablePopulation()
     {
         return youngAdults + adults;
     }
