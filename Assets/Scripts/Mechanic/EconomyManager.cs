@@ -10,11 +10,12 @@ public class EconomyManager : MonoBehaviour
     public ResourcesManager resourcesManager;
     public PopulationManager populationManager;
     public UIController uiController;
+    public SliderController sliderController;
 
     private float budget;
     public float expenses;
     public float income;
-    [Range(0f, 1f)]
+    [Range(0f, 0.3f)]
     public float tax;
 
     public float exportRevenuePerUnit;
@@ -46,6 +47,8 @@ public class EconomyManager : MonoBehaviour
 
         tax = settings.economy.taxRate;
         budget = settings.economy.initialBudget;
+
+        sliderController.initialTaxSlider(tax);
         displayBudget();
     }
 
@@ -76,13 +79,8 @@ public class EconomyManager : MonoBehaviour
         produced = resourcesManager.produceGoods(populationManager.getEmploymentRate());
         sold = resourcesManager.sellGoods(currentDemand);
 
-        //resourcesManager.importDemand = 0f;
-
         exported = handleExport();
         imported = handleImport(sold, currentDemand);
-
-        //calculateExpenses(produced, imported);
-        //calculateIncome(sold,exported);
     }
 
     private float handleExport()
