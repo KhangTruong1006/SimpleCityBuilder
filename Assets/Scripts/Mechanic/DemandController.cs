@@ -84,7 +84,7 @@ public class DemandController : MonoBehaviour
             return;
         }
 
-        float goodsDeficit = 1f - PopulationManager.goodsSatisfaction;
+        float goodsDeficit = 1f - PopulationManager.getGoodsSatisfaction();
         float employmentRatio = calculateEmploymentRatio(employed, population);
         float rawDemand = (0.6f * goodsDeficit) + (0.4f * employmentRatio);
 
