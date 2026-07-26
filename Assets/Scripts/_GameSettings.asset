@@ -29,10 +29,14 @@ MonoBehaviour:
     workersThreshold: 0.25
     productionThreshold: 0.5
     exportThreshold: 0.4
-    shortageThresholdInHour: 6
+    shortageLowerThresholdInHour: 6
+    shortageMiddleThresholdInHour: 10
+    shortageUpperThresholdInHour: 12
   population:
     seedingPop: 2
     basedGrowthRate: 1.5
+    hiringSpeed: 0.15
+    naturalUnemploymentRate: 0.05
   economy:
     initialBudget: 1000
     taxRate: 0.1
@@ -42,3 +46,7 @@ MonoBehaviour:
     salePricePerUnit: 3
   service:
     supplyThreshold: 1
+  demographic:
+    youngAdultEmployableRate: 0.75
+    adultEmployableRate: 0.9
+    seniorEmployableRate: 0.1
