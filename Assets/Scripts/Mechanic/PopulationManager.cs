@@ -61,7 +61,7 @@ public class PopulationManager : MonoBehaviour
             employedPopulation = 0;
             return;
         }
-        employedPopulation = Math.Min(employablePopulation, jobCapacity);
+        employedPopulation = Mathf.Min(employablePopulation, jobCapacity);
     }
 
     private void calculatePopulationChange()
