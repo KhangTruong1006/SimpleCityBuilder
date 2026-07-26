@@ -58,33 +58,21 @@ public class ResourcesManager : MonoBehaviour
     public float sellGoods(float demand)
     {
         // When a new city starts or have shortages in water, sewage, or power
-        if (currentStorage <= 0)
+        // In case of population = 0
+        if (currentStorage <= 0 || demand <= 0)
         {
             // If fail to deliver goods
-            if (populationManager != null)
-            {
-                populationManager.updateGoodsSatisfaction(0f);
-            }
+            populationManager.updateGoodsSatisfaction(0f);
             return 0f;
         }
 
         // If demand > current storage, sell all current storage
         // If demand < current storage, sell based on demand
         float sold = Mathf.Min(demand, currentStorage);
+        float satifaction = sold / demand;
+
         currentStorage -= sold;
-
-        //Recalculate satisfaction score
-        if (populationManager != null && demand > 0)
-        {
-            float satifaction = sold / demand;
-            populationManager.updateGoodsSatisfaction(satifaction);
-        }
-
-        // In case of population = 0
-        else if (demand == 0)
-        {
-            populationManager.updateGoodsSatisfaction(0f);
-        }
+        populationManager.updateGoodsSatisfaction(satifaction);
 
         return sold;
     }
