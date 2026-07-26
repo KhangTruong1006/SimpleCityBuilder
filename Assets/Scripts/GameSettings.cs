@@ -56,7 +56,10 @@ public class GameSettings : ScriptableObject
         public float productionThreshold = 0.5f;
         public float exportThreshold = 0.4f;
 
-        public float shortageThresholdInHour = 6;
+        public int shortageLowerThresholdInHour = 6;
+        public int shortageMiddleThresholdInHour = 10;
+        public int shortageUpperThresholdInHour = 12;
+
     }
 
     [System.Serializable]
