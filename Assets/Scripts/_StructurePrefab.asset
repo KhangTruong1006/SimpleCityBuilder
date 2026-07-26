@@ -38,7 +38,7 @@ MonoBehaviour:
     powerConsumption: 10
   - prefab: {fileID: 3702253504043930072, guid: 4015fa9cd99f36045a3d3a9f1aa52736, type: 3}
     weight: 1
-    workerCapacity: 20
+    workerCapacity: 5
     salesPerTick: 0
     inventory: 30
     waterConsumption: 10
@@ -46,7 +46,7 @@ MonoBehaviour:
   industrialPrefabs:
   - prefab: {fileID: 3702253504043930072, guid: f9b35d1c64309ca43b126ef7c1cf9bd5, type: 3}
     weight: 1
-    workerCapacity: 100
+    workerCapacity: 10
     freightPerTick: 10
     inventory: 100
     waterConsumption: 10
