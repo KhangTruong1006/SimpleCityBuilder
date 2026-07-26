@@ -24,7 +24,7 @@ public class PanelController : MonoBehaviour
     {
         if(panel != null)
         {
-            closeAllPanel();
+            //closeAllPanel();
             bool isActive = panel.activeSelf;
             panel.SetActive(!isActive);
         }
