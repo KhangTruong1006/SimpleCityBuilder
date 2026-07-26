@@ -33,10 +33,10 @@ public class DemandController : MonoBehaviour
             initialSeeding();
         }
 
-        int population = PopulationManager.population;
-        int populationCapacity = PopulationManager.populationCapacity;
-        int jobCapacity = PopulationManager.jobCapacity;
-        int employedPopulation = PopulationManager.employedPopulation;
+        int population = PopulationManager.getCurrentPopulation();
+        int populationCapacity = PopulationManager.getPopulationCapacity();
+        int jobCapacity = PopulationManager.getJobCapacity();
+        int employedPopulation = PopulationManager.getCurrentEmployedPopulation();
 
         updateResidentialDemand(population, populationCapacity, employedPopulation, jobCapacity);
         updateCommercialDemand(population);
@@ -110,12 +110,9 @@ public class DemandController : MonoBehaviour
     }
 
 
-    // Industrial Demand
-
-
     private float clampDemand(float rawDemand)
     {
-        return Mathf.Clamp(rawDemand, 0f, 1f);
+        return Mathf.Clamp01(rawDemand);
     }
 
     private float calculateImportReliance(float currentDemand)
