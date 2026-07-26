@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         gameSpeed_2 = settings.masterSettings.speed_2;
         gameSpeed_3 = settings.masterSettings.speed_3;
 
-        tickRateInSeconds = gameSpeed_3;
+        tickRateInSeconds = gameSpeed_1;
         sliderController.updateTimerBarMaxValue(tickRateInSeconds);
     }
 
@@ -221,6 +221,7 @@ public class GameManager : MonoBehaviour
     private void changeTickRateInSecond(float gameSpeed)
     {
         tickRateInSeconds = gameSpeed;
+        uiController.updateSpeedBtnText(currentSpeedMode + 1);
         sliderController.updateTimerBarMaxValue(tickRateInSeconds);
     }
 
