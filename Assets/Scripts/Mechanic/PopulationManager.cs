@@ -15,6 +15,7 @@ public class PopulationManager : MonoBehaviour
     public int populationCapacity;
     public int jobCapacity;
     public int employedPopulation;
+    public int employablePopulation;
 
     private int commercialEmployedPopulation;
     private int industrialEmployedPopulation;
@@ -53,14 +54,14 @@ public class PopulationManager : MonoBehaviour
 
     private void calculateEmployment()
     {
-        int availableWorkers = demographicsManager.getWorkForce();
+        employablePopulation = demographicsManager.getEmployablePopulation();
 
-        if (availableWorkers < 1)
+        if (employablePopulation < 1)
         {
             employedPopulation = 0;
             return;
         }
-        employedPopulation = Math.Min(availableWorkers, jobCapacity);
+        employedPopulation = Math.Min(employablePopulation, jobCapacity);
     }
 
     private void calculatePopulationChange()
@@ -101,27 +102,58 @@ public class PopulationManager : MonoBehaviour
             globalFactor = 1.0f;
             return;
         }
-        float availableWorkers = demographicsManager.getWorkForce();
-        float employmentRate = (availableWorkers > 0) ? (float)employedPopulation / (float)availableWorkers : 0f;
+        float employmentRate = (employablePopulation > 0) ? (float)employedPopulation / (float)employablePopulation : 0f;
         float housingRate = (float)population / (float)populationCapacity;
 
         globalFactor = 0.4f * housingRate + 0.3f * employmentRate + 0.3f * (float)goodsSatisfaction;
     }
 
-    public void updateGoodsSatisfaction(float change)
-    {
-        goodsSatisfaction = change;
-    }
+
 
     public bool haveWorkers()
     {
         return employedPopulation > 0;
     }
 
+
+    // Get Functions
+    public float getCurrentPopulationRate()
+    {
+        return population / populationCapacity;
+    }
+
+    public int getCurrentPopulation()
+    {
+        return population;
+    }
+
+    public int getPopulationCapacity()
+    {
+        return populationCapacity;
+    }
+
+    public int getCurrentEmployedPopulation()
+    {
+        return employedPopulation;
+    }
+
+    public int getJobCapacity()
+    {
+        return jobCapacity;
+    }
+
     public float getEmploymentRate()
     {
         return employedPopulation / jobCapacity;
     }
+
+    public int getEmployablePopulation()
+    {
+        return employablePopulation;
+    }
+
+
+    // Update Functions
 
     public void updatePopulationCapacity(int capacity)
     {
@@ -135,6 +167,11 @@ public class PopulationManager : MonoBehaviour
         //Debug.Log($"Jobs updated: {jobCapacity}");
     }
 
+    public void updateGoodsSatisfaction(float change)
+    {
+        goodsSatisfaction = change;
+    }
+
     private void initializeDemographicDistribution(int pop)
     {
         if(population > 0)
@@ -143,8 +180,5 @@ public class PopulationManager : MonoBehaviour
         }
     }
 
-    public float getCurrentPopulationRate()
-    {
-        return population / populationCapacity;
-    }
+
 }
