@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class SliderController : MonoBehaviour
 
@@ -15,14 +16,21 @@ public class SliderController : MonoBehaviour
 
     private void Start()
     {
-        taxSlider.onValueChanged.AddListener((value) => updateTaxOnSlider(value));
+        taxSlider.onValueChanged.AddListener((value) => updateTaxOnSliderChanged(value));
     }
 
 
-    public void updateTaxOnSlider(float value)
+    public void updateTaxOnSliderChanged(float value)
     {
         economyManager.updateTax(value / 100);
         updateTextOnSliderChanged(taxTMP, value, "%");
+    }
+
+    public void initialTaxSlider(float decimalTax)
+    {
+        float tax = decimalTax * 100f;
+        fillSliderBasedOnValue(taxSlider, tax);
+        updateTextOnSliderChanged(taxTMP, tax, "%");
     }
 
     public void fillTimerBar(float tickTimer)
