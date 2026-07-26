@@ -11,6 +11,7 @@ public class GameSettings : ScriptableObject
     public Population population;
     public Economy economy;
     public Service service;
+    public Demographic demographic;
 
 
     [System.Serializable]
@@ -47,6 +48,8 @@ public class GameSettings : ScriptableObject
     public class Population {
         public float seedingPop = 0.5f;
         public float basedGrowthRate = 0.5f;
+        public float hiringSpeed = 0.15f;
+        public float naturalUnemploymentRate = 0.05f;
     }
 
     [System.Serializable]
@@ -66,7 +69,7 @@ public class GameSettings : ScriptableObject
     public class Economy
     {
         public float initialBudget = 1000f;
-        [Range(0f, 1f)]
+        [Range(0f, 0.3f)]
         public float taxRate = 0.1f;
 
         public float exportRevenuePerUnit = 10f;
@@ -80,5 +83,13 @@ public class GameSettings : ScriptableObject
     {
         public float supplyThreshold = 1.0f;
 
+    }
+
+    [System.Serializable]
+    public class Demographic
+    {
+        public float youngAdultEmployableRate = 0.75f;
+        public float adultEmployableRate = 0.9f;
+        public float seniorEmployableRate = 0.1f;
     }
 }
