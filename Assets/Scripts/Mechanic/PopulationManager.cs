@@ -29,15 +29,19 @@ public class PopulationManager : MonoBehaviour
     public float precisePopulation = 0f;
     public float globalFactor;
 
+    public float hiringSpeed;
+    public float naturalUnemploymentRate;
+
     private void Awake()
     {
-        //demandController = GetComponent<DemandController>();
         demographicsManager = GetComponent<DemographicsManager>();
     }
 
     private void Start()
     {
         workersThreshold = settings.threshold.workersThreshold;
+        hiringSpeed = settings.population.hiringSpeed;
+        naturalUnemploymentRate = settings.population.naturalUnemploymentRate;
 
         precisePopulation = population;
         initializeDemographicDistribution(population); // If the city starts with a population, initialize the demographics distribution
@@ -61,7 +65,12 @@ public class PopulationManager : MonoBehaviour
             employedPopulation = 0;
             return;
         }
-        employedPopulation = Mathf.Min(employablePopulation, jobCapacity);
+
+        int targetWorkforce = Mathf.FloorToInt(employablePopulation * (1f - naturalUnemploymentRate));
+        int targetEmployed = Mathf.Min(targetWorkforce, jobCapacity);
+
+        float lerpedEmployment = Mathf.Lerp(employedPopulation, targetEmployed, hiringSpeed);
+        employedPopulation = Mathf.RoundToInt(lerpedEmployment);
     }
 
     private void calculatePopulationChange()
@@ -152,9 +161,13 @@ public class PopulationManager : MonoBehaviour
         return employablePopulation;
     }
 
+    public float getGoodsSatisfaction()
+    {
+        return goodsSatisfaction;
+    }
+
 
     // Update Functions
-
     public void updatePopulationCapacity(int capacity)
     {
         populationCapacity += capacity;
