@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class DemographicsManager : MonoBehaviour
 {
+    [SerializeField] private GameSettings settings;
+
     // Children (0-18) - Young Adults (19 - 35) - Adutls (36 - 60) - Seniors (60+)
     public int children;
     public int youngAdults;
@@ -131,6 +133,10 @@ public class DemographicsManager : MonoBehaviour
     }   
     public int getEmployablePopulation()
     {
-        return youngAdults + adults;
+        float employableYoungAdults = youngAdults * settings.demographic.youngAdultEmployableRate;
+        float employableAdults = adults * settings.demographic.adultEmployableRate;
+        float employableSeniors = seniors * settings.demographic.seniorEmployableRate;
+
+        return Mathf.FloorToInt(employableYoungAdults + employableAdults + employableSeniors);
     }
 }
