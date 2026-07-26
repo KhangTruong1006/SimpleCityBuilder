@@ -10,6 +10,7 @@ public class UIController : MonoBehaviour
     public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement, onWaterPlantPlacement, onSewagePlacement, onPowerPlacement, changeSpeed;
     public Button placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton, speedButton;
     public TextMeshProUGUI populationText, budgetText, dayText, hourText;
+    public Text speedBtnText;
 
     public Color outlineColor;
     List<Button> buttonList;
@@ -69,10 +70,14 @@ public class UIController : MonoBehaviour
         action?.Invoke();
     }
 
-    // UPDATE CHANGING GAME SPEED FUNCTION
     private void changeGameSpeed(System.Action action)
     {
         action?.Invoke();
+    }
+
+    public void updateSpeedBtnText(int newSpeed)
+    {
+        speedBtnText.text = $"Speed: {newSpeed}";
     }
 
     public void updateHourText(int hour)
