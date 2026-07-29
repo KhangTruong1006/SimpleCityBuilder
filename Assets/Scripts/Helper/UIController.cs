@@ -77,7 +77,7 @@ public class UIController : MonoBehaviour
 
     public void updateSpeedBtnText(int newSpeed)
     {
-        speedBtnText.text = $"Speed: {newSpeed}";
+        speedBtnText.text = $"{newSpeed}";
     }
 
     public void updateHourText(int hour)
