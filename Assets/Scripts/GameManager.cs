@@ -33,7 +33,6 @@ public class GameManager : MonoBehaviour
 
     [ReadOnly]
     public float tickTimer = 0.0f;
-    private bool paused = false;
 
     private float gameSpeed_1;
     private float gameSpeed_2;
@@ -77,11 +76,6 @@ public class GameManager : MonoBehaviour
         // 1 day in game = 24 mins (24 in-games hours)
         // 1 mins (1 in-game hour) = 20 counters ( 1 per 3 seconds (speed 1))
 
-        if (paused) { 
-            return;
-        }
-
-        // REMEMBER TO UPDATE COUNTER
         tickTimer += Time.deltaTime;
         sliderController.fillTimerBar(tickTimer);
 
