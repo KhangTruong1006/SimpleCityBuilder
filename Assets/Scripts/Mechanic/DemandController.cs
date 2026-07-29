@@ -34,6 +34,7 @@ public class DemandController : MonoBehaviour
         if (isInitialSeeding)
         {
             initialSeeding();
+            return;
         }
 
         int population = PopulationManager.getCurrentPopulation();
@@ -56,12 +57,11 @@ public class DemandController : MonoBehaviour
             return;
         }
 
-        else
-        {
-            residentialDemand = 1.0f;
-            commercialDemand = 0.0f;
-            industrialDemand = 0.0f;
-        }
+        
+        residentialDemand = 1.0f;
+        commercialDemand = 0.0f;
+        industrialDemand = 0.0f;
+        
     }
 
   
