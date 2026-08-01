@@ -98,7 +98,6 @@ public class PopulationManager : MonoBehaviour
         employedPopulation = Mathf.RoundToInt(lerpedEmployment);
     }
 
-
     private void calculateGlobalFactor()
     {
         // This method calculates the global factor based on various city metrics
@@ -113,8 +112,6 @@ public class PopulationManager : MonoBehaviour
 
         globalFactor = 0.4f * housingRate + 0.3f * employmentRate + 0.3f * (float)goodsSatisfaction;
     }
-
-
 
     public bool haveWorkers()
     {
