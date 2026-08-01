@@ -56,23 +56,6 @@ public class PopulationManager : MonoBehaviour
         uiController.displayPopulation(population);
     }
 
-    private void calculateEmployment()
-    {
-        employablePopulation = demographicsManager.getEmployablePopulation();
-
-        if (employablePopulation < 1)
-        {
-            employedPopulation = 0;
-            return;
-        }
-
-        int targetWorkforce = Mathf.FloorToInt(employablePopulation * (1f - naturalUnemploymentRate));
-        int targetEmployed = Mathf.Min(targetWorkforce, jobCapacity);
-
-        float lerpedEmployment = Mathf.Lerp(employedPopulation, targetEmployed, hiringSpeed);
-        employedPopulation = Mathf.RoundToInt(lerpedEmployment);
-    }
-
     private void calculatePopulationChange()
     {
         // To handle calculation when population is zero (the start of the game) / Seeding
@@ -97,9 +80,24 @@ public class PopulationManager : MonoBehaviour
         int updatedPopulation = demographicsManager.updateDemographics(growthRate, populationCapacity);
         population = Mathf.Min(updatedPopulation, populationCapacity);
         precisePopulation = population;
-
-        //Debug.Log($"Population : {population} Precise Pop: {precisePopulation} GF: {globalFactor} Jobs: {jobCapacity} Workers: {employedPopulation}");
     }
+    private void calculateEmployment()
+    {
+        employablePopulation = demographicsManager.getEmployablePopulation();
+
+        if (employablePopulation < 1)
+        {
+            employedPopulation = 0;
+            return;
+        }
+
+        int targetWorkforce = Mathf.FloorToInt(employablePopulation * (1f - naturalUnemploymentRate));
+        int targetEmployed = Mathf.Min(targetWorkforce, jobCapacity);
+
+        float lerpedEmployment = Mathf.Lerp(employedPopulation, targetEmployed, hiringSpeed);
+        employedPopulation = Mathf.RoundToInt(lerpedEmployment);
+    }
+
 
     private void calculateGlobalFactor()
     {
