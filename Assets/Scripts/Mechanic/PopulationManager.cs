@@ -93,7 +93,6 @@ public class PopulationManager : MonoBehaviour
 
         float basedGrowthRate = settings.population.basedGrowthRate;
         float growthRate = basedGrowthRate * globalFactor * precisePopulation * (1f - (precisePopulation / populationCapacity));
-        //float growthRate = basedGrowthRate * precisePopulation * (1f - (precisePopulation / populationCapacity));
 
         int updatedPopulation = demographicsManager.updateDemographics(growthRate, populationCapacity);
         population = Mathf.Min(updatedPopulation, populationCapacity);
