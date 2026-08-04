@@ -2,7 +2,7 @@
 **Software required to download and run the game**
 - GitHub Desktop (Recommended)
 - Unity (Required)
-- Visual Code (Or other code editor)
+- Visual Code / other code editor (Required for code editting)
 
 **Installation** (Using GitHub Desktop)
 1. Click the green **Code** button and select **Open with GitHub Desktop**
