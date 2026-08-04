@@ -51,7 +51,7 @@ public class DemandController : MonoBehaviour
 
     private void initialSeeding()
     {
-        if (PopulationManager.population > 1)
+        if (PopulationManager.getCurrentPopulation() > 1)
         {
             isInitialSeeding = false;
             return;
@@ -91,9 +91,10 @@ public class DemandController : MonoBehaviour
         }
 
         float goodsDeficit = 1f - PopulationManager.getGoodsSatisfaction();
-        float employmentRatio = (float)employed / population;
-        
-        float rawDemand = (0.5f * goodsDeficit) + (0.5f * employmentRatio);
+        float employmentRate = (float)employed / population;
+        float basePopulationDemand = clamp01Input((float) population / 50f); 
+
+        float rawDemand = (0.2f * goodsDeficit) + (0.3f * employmentRate) + (0.5f * basePopulationDemand);
 
         commercialDemand = clamp01Input(rawDemand);
     }
@@ -106,7 +107,7 @@ public class DemandController : MonoBehaviour
             return;
         }
         float unemploymentRate = calculateUnemploymentRate(employablePopulation, employed);
-        float currentDemand = ResourcesManager.dynamicDemand;
+        float currentDemand = ResourcesManager.getDynamicDemand();
         float importReliance = calculateImportReliance(currentDemand);
 
         float rawDemand = 0.5f * unemploymentRate + 0.5f * importReliance;
@@ -133,7 +134,7 @@ public class DemandController : MonoBehaviour
             return 0f;
         }
 
-        float importReliance = ResourcesManager.importDemand / currentDemand;
+        float importReliance = ResourcesManager.getImportDemand() / currentDemand;
         return clamp01Input(importReliance);
     }
 
