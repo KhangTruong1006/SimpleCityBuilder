@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public class InputManager : MonoBehaviour
 {
     public Action<Vector3Int> OnMouseClick, OnMouseHold;
-    public Action OnMouseUp;
+    public Action OnMouseUp, PauseGame;
 	private Vector2 cameraMovementVector;
 
     [SerializeField]
@@ -73,6 +73,14 @@ public class InputManager : MonoBehaviour
             {
                 OnMouseClick?.Invoke(position.Value);
             }
+        }
+    }
+
+    public void checkKeyInput(KeyCode key, Action action)
+    {
+        if (Input.GetKeyDown(key))
+        {
+            action?.Invoke();
         }
     }
 }

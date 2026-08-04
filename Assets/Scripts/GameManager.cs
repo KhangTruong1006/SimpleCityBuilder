@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
     {
         uiController.onRoadPlacement += RoadPlacementHandler;
         uiController.onBigStructurePlacement += BigStructureHandler;
-        uiController.changeSpeed += changeGameSpeed;
+        uiController.changeSpeed += changeSpeedModeOnButtonClicked;
         uiController.pauseGame += togglePause;
 
         // Zones
@@ -73,6 +73,11 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         cameraMovement.MoveCamera(new Vector3(inputManager.CameraMovementVector.x, 0, inputManager.CameraMovementVector.y));
+
+        inputManager.checkKeyInput(KeyCode.Space, togglePause);
+        inputManager.checkKeyInput(KeyCode.Alpha1, () => setCurrentSpeedMode(0));
+        inputManager.checkKeyInput(KeyCode.Alpha2, () => setCurrentSpeedMode(1));
+        inputManager.checkKeyInput(KeyCode.Alpha3, () => setCurrentSpeedMode(2));
 
         if (isPaused)
         {
@@ -198,7 +203,7 @@ public class GameManager : MonoBehaviour
         inputManager.OnMouseUp += roadManager.finishPlacingRoad;
     }
 
-    private void changeGameSpeed()
+    private void changeSpeedModeOnButtonClicked() // For panel button input
     {
         currentSpeedMode += 1;
 
@@ -206,7 +211,19 @@ public class GameManager : MonoBehaviour
             currentSpeedMode = 0;
         }
 
-        switch (currentSpeedMode) { 
+        switchGameSpeed();
+    }
+
+    private void setCurrentSpeedMode(int speedMode) // For num key input
+    {
+        currentSpeedMode = speedMode;
+        switchGameSpeed();
+    }
+
+    private void switchGameSpeed()
+    {
+        switch (currentSpeedMode)
+        {
             case 0:
                 changeTickRateInSecond(gameSpeed_1);
                 break;
@@ -238,7 +255,5 @@ public class GameManager : MonoBehaviour
         inputManager.OnMouseClick = null ;
         inputManager.OnMouseHold = null;
         inputManager.OnMouseUp = null;
-    }
-
-    
+    }  
 }
