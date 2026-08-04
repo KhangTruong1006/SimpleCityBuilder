@@ -4,7 +4,6 @@ public class ResourcesManager : MonoBehaviour
 {
     [SerializeField] private GameSettings settings;
     public PopulationManager populationManager;
-    public WaterAndPowerService waterAndPowerService;
 
     // Unit: Tons
     public float totalStorageCapacity;
@@ -32,7 +31,6 @@ public class ResourcesManager : MonoBehaviour
 
     public float produceGoods(float employmentRate)
     {
-        // isOverProduction() || waterAndPowerService.haveShortages()
         if (isOverProduction())
         {
             return 0;
