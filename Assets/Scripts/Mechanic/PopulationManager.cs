@@ -25,7 +25,7 @@ public class PopulationManager : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float workersThreshold;
 
-    private float growthRate;
+    private float baseGrowthRate;
     public float precisePopulation = 0f;
     public float globalFactor;
 
@@ -42,6 +42,7 @@ public class PopulationManager : MonoBehaviour
         workersThreshold = settings.threshold.workersThreshold;
         hiringSpeed = settings.population.hiringSpeed;
         naturalUnemploymentRate = settings.population.naturalUnemploymentRate;
+        baseGrowthRate = settings.population.basedGrowthRate;
 
         precisePopulation = population;
         initializeDemographicDistribution(population); // If the city starts with a population, initialize the demographics distribution
@@ -64,21 +65,24 @@ public class PopulationManager : MonoBehaviour
             precisePopulation = settings.population.seedingPop;
             initializeDemographicDistribution((int)precisePopulation);
         }
+        if (populationCapacity <= 0){
+            return;
+        }
 
-        // Prevent negative/over population 
+        float growthRate = baseGrowthRate * globalFactor * precisePopulation;
+
+        // Force negative growth if overpopulation
         if (precisePopulation > populationCapacity)
         {
-            return;
+            growthRate = -baseGrowthRate * (precisePopulation - populationCapacity);
         }
 
         // This method uses Logistic Growth Model based on various factors (metrics)
         // rate = base * factors point * population * (1 - population / capacity)
 
-        float basedGrowthRate = settings.population.basedGrowthRate;
-        float growthRate = basedGrowthRate * globalFactor * precisePopulation * (1f - (precisePopulation / populationCapacity));
-
+       
         int updatedPopulation = demographicsManager.updateDemographics(growthRate, populationCapacity);
-        population = Mathf.Min(updatedPopulation, populationCapacity);
+        population = Mathf.Clamp(updatedPopulation, 0, populationCapacity);
         precisePopulation = population;
     }
     private void calculateEmployment()
@@ -107,10 +111,26 @@ public class PopulationManager : MonoBehaviour
             globalFactor = 1.0f;
             return;
         }
-        float employmentRate = (employablePopulation > 0) ? (float)employedPopulation / (float)employablePopulation : 0f;
-        float housingRate = (float)population / (float)populationCapacity;
+;       float openJobsRatio = calculateJobsRatio();
+        float housingVacancyRatio = Mathf.Max(0f,1f - ((float)population / populationCapacity));
+        float lifeSatisfaction = goodsSatisfaction; // Add tax
 
-        globalFactor = 0.4f * housingRate + 0.3f * employmentRate + 0.3f * (float)goodsSatisfaction;
+        float jobAttractionFactor = 0.5f + openJobsRatio * 1.5f;
+        float satisfactionFactor = 0.5f + lifeSatisfaction * 0.5f;
+        float housingFactor = housingVacancyRatio > 0 ? 1.0f : 0.1f;
+
+        globalFactor = jobAttractionFactor * satisfactionFactor * housingVacancyRatio;
+    }
+
+    public float calculateJobsRatio()
+    {
+        if(jobCapacity <= 0)
+        {
+            return 0f;
+        }
+        int openJobs = Mathf.Max(0, jobCapacity - employedPopulation);
+        float jobRatio = (float)openJobs / jobCapacity;
+        return jobRatio;
     }
 
     public bool haveWorkers()
@@ -119,6 +139,31 @@ public class PopulationManager : MonoBehaviour
     }
 
 
+    // Update Functions
+    public void updatePopulationCapacity(int capacity)
+    {
+        populationCapacity += capacity;
+        //Debug.Log($"Population capacity updated: {populationCapacity}");
+    }
+
+    public void updateJobCapacity(int newJobs)
+    {
+        jobCapacity += newJobs;
+        //Debug.Log($"Jobs updated: {jobCapacity}");
+    }
+
+    public void updateGoodsSatisfaction(float change)
+    {
+        goodsSatisfaction = change;
+    }
+
+    private void initializeDemographicDistribution(int pop)
+    {
+        if (population > 0)
+        {
+            demographicsManager.initializeDemographics(pop);
+        }
+    }
     // Get Functions
     public float getCurrentPopulationRate()
     {
@@ -158,32 +203,5 @@ public class PopulationManager : MonoBehaviour
     public float getGoodsSatisfaction()
     {
         return goodsSatisfaction;
-    }
-
-
-    // Update Functions
-    public void updatePopulationCapacity(int capacity)
-    {
-        populationCapacity += capacity;
-        //Debug.Log($"Population capacity updated: {populationCapacity}");
-    }
-
-    public void updateJobCapacity(int newJobs)
-    {
-        jobCapacity += newJobs;
-        //Debug.Log($"Jobs updated: {jobCapacity}");
-    }
-
-    public void updateGoodsSatisfaction(float change)
-    {
-        goodsSatisfaction = change;
-    }
-
-    private void initializeDemographicDistribution(int pop)
-    {
-        if(population > 0)
-        {
-            demographicsManager.initializeDemographics(pop);
-        }
     }
 }
