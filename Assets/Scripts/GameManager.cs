@@ -117,8 +117,6 @@ public class GameManager : MonoBehaviour
             counter = 0;
 
             uiController.updateHourText(hour);
-
-            runSimulationTick();
         }
     }
 
