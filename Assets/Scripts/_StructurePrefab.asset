@@ -40,24 +40,38 @@ MonoBehaviour:
     powerConsumption: 25
   commercialPrefabs:
   - prefab: {fileID: 3702253504043930072, guid: 838f9b485bb510747a4b89e3cb91e1bd, type: 3}
-    weight: 0
+    weight: 0.5
     workerCapacity: 10
+    salesPerTick: 0
+    inventory: 10
+    waterConsumption: 10
+    powerConsumption: 10
+  - prefab: {fileID: 3702253504043930072, guid: 4015fa9cd99f36045a3d3a9f1aa52736, type: 3}
+    weight: 0.25
+    workerCapacity: 5
+    salesPerTick: 0
+    inventory: 15
+    waterConsumption: 10
+    powerConsumption: 10
+  - prefab: {fileID: 3702253504043930072, guid: b321851838c450e4cb34e024949700f1, type: 3}
+    weight: 0.25
+    workerCapacity: 15
     salesPerTick: 0
     inventory: 20
     waterConsumption: 10
     powerConsumption: 10
-  - prefab: {fileID: 3702253504043930072, guid: 4015fa9cd99f36045a3d3a9f1aa52736, type: 3}
-    weight: 1
-    workerCapacity: 5
+  - prefab: {fileID: 3702253504043930072, guid: 87a44fcb9c1e26f4a9f2f749f518be36, type: 3}
+    weight: 0.25
+    workerCapacity: 15
     salesPerTick: 0
-    inventory: 30
+    inventory: 20
     waterConsumption: 10
     powerConsumption: 10
   industrialPrefabs:
   - prefab: {fileID: 3702253504043930072, guid: f9b35d1c64309ca43b126ef7c1cf9bd5, type: 3}
     weight: 1
-    workerCapacity: 10
-    freightPerTick: 30
+    workerCapacity: 50
+    freightPerTick: 20
     inventory: 100
     waterConsumption: 10
     powerConsumption: 10

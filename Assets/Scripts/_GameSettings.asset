@@ -30,21 +30,18 @@ MonoBehaviour:
     productionThreshold: 0.5
     exportThreshold: 0.4
     taxThreshold: 0.15
-    shortageLowerThresholdInHour: 6
-    shortageMiddleThresholdInHour: 10
-    shortageUpperThresholdInHour: 12
   population:
     seedingPop: 2
-    basedGrowthRate: 1.5
+    basedGrowthRate: 0.5
     hiringSpeed: 0.15
     naturalUnemploymentRate: 0.05
   economy:
     initialBudget: 1000
     taxRate: 0.1
-    exportRevenuePerUnit: 100
-    importCostPerUnit: 10
-    productionCostPerUnit: 3
-    salePricePerUnit: 150
+    exportRevenuePerUnit: 25
+    importCostPerUnit: 15
+    productionCostPerUnit: 5
+    salePricePerUnit: 100
   service:
     supplyThreshold: 1
   demographic:
