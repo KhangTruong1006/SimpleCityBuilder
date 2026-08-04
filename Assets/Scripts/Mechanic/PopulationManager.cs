@@ -17,9 +17,6 @@ public class PopulationManager : MonoBehaviour
     public int employedPopulation;
     public int employablePopulation;
 
-    private int commercialEmployedPopulation;
-    private int industrialEmployedPopulation;
-
     [Range(0.0f, 1.0f)]
     public float goodsSatisfaction = 1.0f;
     [Range(0.0f, 1.0f)]
@@ -69,7 +66,8 @@ public class PopulationManager : MonoBehaviour
             return;
         }
 
-        float growthRate = baseGrowthRate * globalFactor * precisePopulation;
+        float capacityRatio = Mathf.Max(0f, 1.0f - (precisePopulation / populationCapacity));
+        float growthRate = baseGrowthRate * globalFactor * precisePopulation * capacityRatio;
 
         // Force negative growth if overpopulation
         if (precisePopulation > populationCapacity)
@@ -112,14 +110,12 @@ public class PopulationManager : MonoBehaviour
             return;
         }
 ;       float openJobsRatio = calculateJobsRatio();
-        float housingVacancyRatio = Mathf.Max(0f,1f - ((float)population / populationCapacity));
         float lifeSatisfaction = goodsSatisfaction; // Add tax
 
-        float jobAttractionFactor = 0.5f + openJobsRatio * 1.5f;
-        float satisfactionFactor = 0.5f + lifeSatisfaction * 0.5f;
-        float housingFactor = housingVacancyRatio > 0 ? 1.0f : 0.1f;
+        float jobAttractionFactor =  openJobsRatio * 0.5f;
+        float satisfactionFactor = lifeSatisfaction * 0.3f;
 
-        globalFactor = jobAttractionFactor * satisfactionFactor * housingVacancyRatio;
+        globalFactor = Mathf.Clamp01(jobAttractionFactor + satisfactionFactor);
     }
 
     public float calculateJobsRatio()
@@ -192,7 +188,7 @@ public class PopulationManager : MonoBehaviour
 
     public float getEmploymentRate()
     {
-        return employedPopulation / jobCapacity;
+        return (float)employedPopulation / jobCapacity;
     }
 
     public int getEmployablePopulation()

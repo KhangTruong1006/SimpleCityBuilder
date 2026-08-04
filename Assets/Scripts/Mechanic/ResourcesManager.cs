@@ -11,7 +11,7 @@ public class ResourcesManager : MonoBehaviour
 
     public float productionRatePerTimeUnit;
 
-    public float goodsDemandPerCapita = 0.05f;
+    public float goodsDemandPerCapita = 0.1f;
     public float dynamicDemand;
 
     [Header("Export and Import")]
@@ -49,7 +49,7 @@ public class ResourcesManager : MonoBehaviour
 
     public float calculateCurrentDemand()
     {
-        dynamicDemand = populationManager.population * goodsDemandPerCapita;
+        dynamicDemand = populationManager.getCurrentPopulation() * goodsDemandPerCapita;
         return dynamicDemand;
     }
 
@@ -147,4 +147,14 @@ public class ResourcesManager : MonoBehaviour
     {
         productionRatePerTimeUnit += change;
     }
+
+    public float getImportDemand()
+    {
+        return importDemand;
+    }   
+
+    public float getDynamicDemand()
+    {
+        return dynamicDemand;
+    }   
 }
