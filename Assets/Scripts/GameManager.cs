@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
     private float gameSpeed_3;
     private int currentSpeedMode = 0;
 
+    private bool isPaused = false;
+
     private void Awake()
     {
         gameSpeed_1 = settings.masterSettings.speed_1;
@@ -54,6 +56,7 @@ public class GameManager : MonoBehaviour
         uiController.onRoadPlacement += RoadPlacementHandler;
         uiController.onBigStructurePlacement += BigStructureHandler;
         uiController.changeSpeed += changeGameSpeed;
+        uiController.pauseGame += togglePause;
 
         // Zones
         uiController.onResidentialPlacement  += ResidentialPlacementHandler;
@@ -71,6 +74,10 @@ public class GameManager : MonoBehaviour
     {
         cameraMovement.MoveCamera(new Vector3(inputManager.CameraMovementVector.x, 0, inputManager.CameraMovementVector.y));
 
+        if (isPaused)
+        {
+            return;
+        }
 
         // Central clock
         // 1 day in game = 24 mins (24 in-games hours)
@@ -82,11 +89,13 @@ public class GameManager : MonoBehaviour
         if (tickTimer >= tickRateInSeconds)
         {
 
+            runSimulationTick();
+
             updateCounter();
             updateHour();
             updateDay();
 
-            runSimulationTick();
+            
             
             tickTimer = 0.0f;
         }
@@ -94,13 +103,13 @@ public class GameManager : MonoBehaviour
 
     private void runSimulationTick()
     {
-        if(counter == 5)
+        if(counter % 5 == 0 && counter > 0)
         {   
-            waterAndPowerService.runSimulationTick();
+            //waterAndPowerService.runSimulationTick();
             populationManager.runSimulationTick();
-            economyManager.runSimulationTick();
-            demandController.runSimulationTick();
+            economyManager.runSimulationTick();       
         }
+        demandController.runSimulationTick();
     }
 
     // Timer Functions
@@ -210,6 +219,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void togglePause()
+    {
+        isPaused = !isPaused;
+        uiController.updatePauseBtnText(isPaused);
+    }
+
     private void changeTickRateInSecond(float gameSpeed)
     {
         tickRateInSeconds = gameSpeed;
@@ -224,4 +239,6 @@ public class GameManager : MonoBehaviour
         inputManager.OnMouseHold = null;
         inputManager.OnMouseUp = null;
     }
+
+    
 }
