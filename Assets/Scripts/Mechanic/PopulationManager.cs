@@ -186,6 +186,4 @@ public class PopulationManager : MonoBehaviour
             demographicsManager.initializeDemographics(pop);
         }
     }
-
-
 }
