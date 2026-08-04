@@ -19,15 +19,25 @@ MonoBehaviour:
     waterConsumption: 10
     powerConsumption: 10
   - prefab: {fileID: 801535651834448878, guid: 3240703552f47d04d9bf7207ca5bfa85, type: 3}
-    weight: 0.8
-    populationCapacity: 12
-    waterConsumption: 10
-    powerConsumption: 10
-  - prefab: {fileID: 8067785501733222628, guid: 4617fd335db984f4bb34f5eb561fd82b, type: 3}
-    weight: 0.7
+    weight: 0.5
     populationCapacity: 15
     waterConsumption: 10
     powerConsumption: 10
+  - prefab: {fileID: 8067785501733222628, guid: 4617fd335db984f4bb34f5eb561fd82b, type: 3}
+    weight: 0.5
+    populationCapacity: 15
+    waterConsumption: 10
+    powerConsumption: 10
+  - prefab: {fileID: 7864668269691680764, guid: 44c75b500bfebf84993deb17f38a98f6, type: 3}
+    weight: 0.3
+    populationCapacity: 90
+    waterConsumption: 20
+    powerConsumption: 20
+  - prefab: {fileID: 8172496117335426106, guid: 3527735cc30c8554aadd1222f91bf61f, type: 3}
+    weight: 0.2
+    populationCapacity: 100
+    waterConsumption: 25
+    powerConsumption: 25
   commercialPrefabs:
   - prefab: {fileID: 3702253504043930072, guid: 838f9b485bb510747a4b89e3cb91e1bd, type: 3}
     weight: 0
