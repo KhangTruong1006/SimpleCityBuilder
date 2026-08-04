@@ -14,7 +14,7 @@ public class DemandController : MonoBehaviour
     public float commercialDemand = 0.0f;
     public float industrialDemand = 0.0f;
 
-    private bool isInitialSeeding = true;
+    public bool isInitialSeeding = true;
 
     private float targetHousingVacancy = 0.05f;
 
@@ -51,7 +51,7 @@ public class DemandController : MonoBehaviour
 
     private void initialSeeding()
     {
-        if (PopulationManager.population > 5)
+        if (PopulationManager.population > 1)
         {
             isInitialSeeding = false;
             return;
@@ -68,12 +68,18 @@ public class DemandController : MonoBehaviour
     // Demands Methods
     private void updateResidentialDemand(int population, int capcity, int employed, int jobCapacity)
     {
+        if(jobCapacity <= 0)
+        {
+            residentialDemand = 0.5f;
+            return;
+        }
 
-        float housingFactor = calculateHousingFactor(population, capcity);
-        float jobRatio = calculateAvailableJobRatio(employed, jobCapacity);
+        int openJobs = Mathf.Max(0, jobCapacity - employed);
+        float jobRatio = (float)openJobs / jobCapacity;
+        float housingFactor = calculateHousingFactor(population,capcity);  
 
-        float rawDemand =  0.7f * jobRatio + 0.3f * housingFactor;
-        
+        float rawDemand = (0.5f * housingFactor) + (0.5f * jobRatio);
+
         residentialDemand = clamp01Input(rawDemand);
     }
     private void updateCommercialDemand(int population, int employed)
@@ -85,8 +91,9 @@ public class DemandController : MonoBehaviour
         }
 
         float goodsDeficit = 1f - PopulationManager.getGoodsSatisfaction();
-        float employmentRatio = calculateEmploymentRatio(employed, population);
-        float rawDemand = (0.6f * goodsDeficit) + (0.4f * employmentRatio);
+        float employmentRatio = (float)employed / population;
+        
+        float rawDemand = (0.5f * goodsDeficit) + (0.5f * employmentRatio);
 
         commercialDemand = clamp01Input(rawDemand);
     }
@@ -102,7 +109,7 @@ public class DemandController : MonoBehaviour
         float currentDemand = ResourcesManager.dynamicDemand;
         float importReliance = calculateImportReliance(currentDemand);
 
-        float rawDemand = 0.2f * unemploymentRate + 0.8f * importReliance;
+        float rawDemand = 0.5f * unemploymentRate + 0.5f * importReliance;
 
         industrialDemand = clamp01Input(rawDemand);
     }
@@ -118,10 +125,7 @@ public class DemandController : MonoBehaviour
         float vancancyRate = 1.0f - ((float)population / capcity);
         float housingFactor = 1.0f - (vancancyRate / (targetHousingVacancy * 2f));
         return clamp01Input(housingFactor);
-
     }
-
-
     private float calculateImportReliance(float currentDemand)
     {
         if (currentDemand <= 0)
@@ -133,28 +137,6 @@ public class DemandController : MonoBehaviour
         return clamp01Input(importReliance);
     }
 
-    private float calculateAvailableJobRatio(int employed, int jobCapacity)
-    {
-        // New city - prevent 0 division
-        if (jobCapacity <= 0)
-        {
-            return 0f;
-        }
-
-        int openJobs = Mathf.Max(0, jobCapacity - employed);
-        float ratio = (float)openJobs / jobCapacity;
-        return ratio;
-    }
-
-    private float calculateEmploymentRatio(int employed, int population)
-    {
-        if (population <= 0)
-        {
-            return 0f;
-        }
-
-        return employed/population;
-    }
 
     private float calculateUnemploymentRate (int employable, int employed)
     {
@@ -173,5 +155,10 @@ public class DemandController : MonoBehaviour
     private float clamp01Input(float input)
     {
         return Mathf.Clamp01(input);
+    }
+
+    public float getResidentialDemand()
+    {
+        return residentialDemand;
     }
 }
