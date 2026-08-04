@@ -58,6 +58,7 @@ public class GameSettings : ScriptableObject
         public float workersThreshold = 0.25f;
         public float productionThreshold = 0.5f;
         public float exportThreshold = 0.4f;
+        public float taxThreshold = 0.15f;
 
         public int shortageLowerThresholdInHour = 6;
         public int shortageMiddleThresholdInHour = 10;
