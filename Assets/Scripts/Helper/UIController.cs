@@ -7,10 +7,10 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement, onWaterPlantPlacement, onSewagePlacement, onPowerPlacement, changeSpeed;
-    public Button placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton, speedButton;
+    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement, onWaterPlantPlacement, onSewagePlacement, onPowerPlacement, changeSpeed, pauseGame;
+    public Button placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton, speedButton, pauseBtn;
     public TextMeshProUGUI populationText, budgetText, dayText, hourText;
-    public Text speedBtnText;
+    public Text speedBtnText, gamePauseBtnText;
 
     public Color outlineColor;
     List<Button> buttonList;
@@ -21,6 +21,7 @@ public class UIController : MonoBehaviour
 
         placeRoadButton.onClick.AddListener(() => handleButtonClick(placeRoadButton, onRoadPlacement));
         speedButton.onClick.AddListener(() => changeGameSpeed(changeSpeed));
+        pauseBtn.onClick.AddListener(() => changeGameSpeed(pauseGame));
 
         // Zones
         placeResidentialButton.onClick.AddListener(() => handleButtonClick(placeResidentialButton, onResidentialPlacement));
@@ -78,6 +79,11 @@ public class UIController : MonoBehaviour
     public void updateSpeedBtnText(int newSpeed)
     {
         speedBtnText.text = $"{newSpeed}";
+    }
+
+    public void updatePauseBtnText(bool isPaused)
+    {
+        gamePauseBtnText.text = isPaused ? "Resume" : "Pause";
     }
 
     public void updateHourText(int hour)
