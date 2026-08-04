@@ -24,17 +24,18 @@ public class PanelController : MonoBehaviour
     {
         if(panel != null)
         {
-            //closeAllPanel();
+            closeAllPanel(panel);
             bool isActive = panel.activeSelf;
             panel.SetActive(!isActive);
         }
     }
 
-    public void closeAllPanel()
+    public void closeAllPanel(GameObject currentPanel = null)
     {
         foreach (GameObject panel in panels)
         {
-            panel.SetActive(false);
+            if(panel != currentPanel)
+                panel.SetActive(false);
         }
     }
 }
