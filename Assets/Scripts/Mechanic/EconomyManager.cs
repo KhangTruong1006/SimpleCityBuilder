@@ -66,7 +66,6 @@ public class EconomyManager : MonoBehaviour
         displayBudget();
     }
 
-    //!!! CHECK AND FIX LOGIC FOR CALCULATING EXPENSES AND INCOME
     // === Logistics Handling ===`
     private void handleLogistics()
     {
@@ -87,7 +86,8 @@ public class EconomyManager : MonoBehaviour
     {
         if (resourcesManager.isExportThreshold() && !triggeredExport)
         {
-            triggerExport();
+            //triggerExport();
+            toggleExport();
         }
 
 
@@ -98,7 +98,8 @@ public class EconomyManager : MonoBehaviour
                 return resourcesManager.exportSurplus();
             }
             
-            deactiveExport();
+            //deactiveExport();
+            toggleExport();
         }
         
         return 0f;
@@ -161,6 +162,11 @@ public class EconomyManager : MonoBehaviour
     private void deactiveExport()
     {
         triggeredExport = false;
+    }
+
+    private void toggleExport()
+    {
+        triggeredExport = !triggeredExport;
     }
 
     public void updateTax(float newTax) {
