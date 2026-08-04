@@ -86,7 +86,6 @@ public class EconomyManager : MonoBehaviour
     {
         if (resourcesManager.isExportThreshold() && !triggeredExport)
         {
-            //triggerExport();
             toggleExport();
         }
 
@@ -98,7 +97,6 @@ public class EconomyManager : MonoBehaviour
                 return resourcesManager.exportSurplus();
             }
             
-            //deactiveExport();
             toggleExport();
         }
         
@@ -152,16 +150,6 @@ public class EconomyManager : MonoBehaviour
     private void displayBudget()
     {
         uiController.displayBudget(budget);
-    }
-
-    private void triggerExport()
-    {
-        triggeredExport = true;
-    }
-
-    private void deactiveExport()
-    {
-        triggeredExport = false;
     }
 
     private void toggleExport()
