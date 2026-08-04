@@ -18,10 +18,6 @@ public class WaterAndPowerService : MonoBehaviour
     public float sewageProcessingCapacity; // Sewage capacity depends on water treatment to process
     public float sewageCurrentUsage;
 
-    private float powerActualCurrentUsage;
-    private float sewageActualCurrentUsage;
-    private float waterActualCurrentUsage;
-
     private bool isPowerShortage = false;
     private bool isWaterShortage = false;
     private bool isSewageShortage = false;
@@ -71,6 +67,11 @@ public class WaterAndPowerService : MonoBehaviour
             messageShortageType(isWaterShortage, "Water");
             messageShortageType(isSewageShortage, "Sewage");
         }
+    }
+
+    private void applyPenalties()
+    {
+
     }
 
     private void messageShortageType(bool shortage, string resourceType)
