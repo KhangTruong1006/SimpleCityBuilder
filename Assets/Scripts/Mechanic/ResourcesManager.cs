@@ -67,7 +67,7 @@ public class ResourcesManager : MonoBehaviour
         // If demand > current storage, sell all current storage
         // If demand < current storage, sell based on demand
         float sold = Mathf.Min(demand, currentStorage);
-        float satifaction = sold / demand;
+        float satifaction = Mathf.Clamp01(sold / demand);
 
         currentStorage -= sold;
         populationManager.updateGoodsSatisfaction(satifaction);
