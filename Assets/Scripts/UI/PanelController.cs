@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PanelController : MonoBehaviour
 {
     public GameObject zonePanel, servicePanel, statsPanel;
+    public GameObject warningPowerPanel, warningSewagePanel, warningWaterPanel;
     public Button zoneBtn, serviceBtn, statsBtn;
 
 
@@ -36,6 +37,15 @@ public class PanelController : MonoBehaviour
         {
             if(panel != currentPanel)
                 panel.SetActive(false);
+        }
+    }
+
+    public void toggleWarningPanel(GameObject panel)
+    {
+        if (panel != null)
+        {
+            bool isActive = panel.activeSelf;
+            panel.SetActive(!isActive);
         }
     }
 }
