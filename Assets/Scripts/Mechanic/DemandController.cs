@@ -94,7 +94,7 @@ public class DemandController : MonoBehaviour
         float employmentRate = (float)employed / population;
         float basePopulationDemand = clamp01Input((float) population / 50f); 
 
-        float rawDemand = (0.2f * goodsDeficit) + (0.3f * employmentRate) + (0.5f * basePopulationDemand);
+        float rawDemand = (0.3f * goodsDeficit) + (0.4f * employmentRate) + (0.3f * basePopulationDemand);
 
         commercialDemand = clamp01Input(rawDemand);
     }
