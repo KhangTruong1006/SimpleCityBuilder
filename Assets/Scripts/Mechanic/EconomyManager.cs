@@ -11,6 +11,7 @@ public class EconomyManager : MonoBehaviour
     public PopulationManager populationManager;
     public UIController uiController;
     public SliderController sliderController;
+    public StatsPanelController statsPanelController;
 
     private float budget;
     public float expenses;
@@ -31,8 +32,11 @@ public class EconomyManager : MonoBehaviour
     private float produced;
     private float sold;
 
-    private float servicesMaintenanceSpending;
-    
+    public float powerMaintenanceSpending;
+    public float waterMaintenanceSpending;
+    public float sewageMaintenanceSpending;
+
+    private float incomePerCapita;
 
     private void Awake()
     {
@@ -44,6 +48,7 @@ public class EconomyManager : MonoBehaviour
         importCostPerUnit = settings.economy.importCostPerUnit;
         productionCostPerUnit = settings.economy.productionCostPerUnit;
         salePricePerUnit = settings.economy.salePricePerUnit;
+        incomePerCapita = settings.economy.incomePerCapita;
 
         tax = settings.economy.taxRate;
         budget = settings.economy.initialBudget;
@@ -52,7 +57,7 @@ public class EconomyManager : MonoBehaviour
         displayBudget();
     }
 
-    public void runSimulationTick()
+    public void runSimulationTick(int counter)
     {
         handleLogistics();
         calculateIncome();
@@ -75,7 +80,7 @@ public class EconomyManager : MonoBehaviour
 
         float currentDemand = resourcesManager.calculateCurrentDemand();
 
-        produced = resourcesManager.produceGoods(populationManager.getEmploymentRate());
+        produced = resourcesManager.produceGoods(populationManager.getEmploymentAndJobRatio());
         sold = resourcesManager.sellGoods(currentDemand);
 
         exported = handleExport();
@@ -103,9 +108,9 @@ public class EconomyManager : MonoBehaviour
         return 0f;
     }
 
-    public void addMaintenanceSpending(float cost)
+    public float calculateMaintenanceSpending()
     {
-        servicesMaintenanceSpending += cost;
+        return waterMaintenanceSpending + powerMaintenanceSpending + sewageMaintenanceSpending;
     }
 
     private float handleImport(float sold, float goodsDemand)
@@ -124,26 +129,41 @@ public class EconomyManager : MonoBehaviour
     // === Budget Calculation ===
     private void calculateIncome()
     {
-        float salesRevenue = sold * salePricePerUnit;
-        float exportRevenue = exported * exportRevenuePerUnit;
+        float incomeCommerical = sold * salePricePerUnit; // Sales
+        float incomeIndustrial = exported * exportRevenuePerUnit; // Exports
+        float incomeResidential = 0;
 
-        income = (salesRevenue + exportRevenue) * tax;
+        if(populationManager.getEmploymentRate() > 0f)
+        {
+            incomeResidential = populationManager.getCurrentPopulation() * incomePerCapita;
+        }
+
+        income = (incomeCommerical + incomeIndustrial + incomeResidential) * tax;
+        
+        statsPanelController.displayIncomeStats(incomeResidential * tax, incomeCommerical * tax, incomeIndustrial * tax);
     }
 
     private void calculateExpenses()
     {
-        float productionCost = produced * productionCostPerUnit;
-        float importCost = imported * importCostPerUnit;
+        float productionCost = produced * productionCostPerUnit; // Industrial
+        float importCost = imported * importCostPerUnit; // Commercial
+        float maintenanceCost = calculateMaintenanceSpending(); // Services
 
-        expenses = productionCost + importCost;
-        //expenses = productionCost + importCost + servicesMaintenanceSpending;
+        expenses = productionCost + importCost + maintenanceCost;
+        statsPanelController.displayExpenseStats(importCost, productionCost, powerMaintenanceSpending, waterMaintenanceSpending, sewageMaintenanceSpending);
     }
 
+    private void subtractMaintenanceCost()
+    {
+        budget -= calculateMaintenanceSpending();
+    }
 
     // Helpers
     private void updateBudget()
     {
-        budget += (income - expenses);
+        float netIncome = income - expenses;
+        budget += netIncome;
+        statsPanelController.displaySummaryStats(income, expenses, netIncome);
         displayBudget();
     }
 
@@ -159,5 +179,17 @@ public class EconomyManager : MonoBehaviour
 
     public void updateTax(float newTax) {
         tax = newTax;
+    }
+
+    public void updateWaterSpending(float cost) {
+        waterMaintenanceSpending += cost;
+    }
+
+    public void updatePowerSpending(float cost) {
+        powerMaintenanceSpending += cost;
+    }
+
+    public void updateSewageSpending(float cost) {
+        sewageMaintenanceSpending += cost;
     }
 }
