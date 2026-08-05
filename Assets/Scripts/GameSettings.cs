@@ -47,6 +47,7 @@ public class GameSettings : ScriptableObject
     [System.Serializable]
     public class Population {
         public float seedingPop = 0.5f;
+        [Range(0f, 1f)]
         public float basedGrowthRate = 0.5f;
         public float hiringSpeed = 0.15f;
         public float naturalUnemploymentRate = 0.05f;
