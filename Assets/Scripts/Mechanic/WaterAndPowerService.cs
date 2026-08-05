@@ -3,6 +3,8 @@ using UnityEngine;
 public class WaterAndPowerService : MonoBehaviour
 {
     [SerializeField] private GameSettings settings;
+    public StatsPanelController statsPanelController;
+    public PanelController panelController;
 
     public PopulationManager populationManager;
 
@@ -33,6 +35,8 @@ public class WaterAndPowerService : MonoBehaviour
 
         checkShortages();
         messageShortage();
+        statsPanelController.displayServiceUsageStats(waterCurrentUsage, sewageCurrentUsage, powerCurrentUsage);
+        statsPanelController.displayServiceGeneratingStats(waterSupplyCapacity, sewageProcessingCapacity, powerSupplyCapacity);
     }
 
 
@@ -63,18 +67,14 @@ public class WaterAndPowerService : MonoBehaviour
     {
         if (haveShortages())
         {
-            messageShortageType(isPowerShortage, "Power");
-            messageShortageType(isWaterShortage, "Water");
-            messageShortageType(isSewageShortage, "Sewage");
+            displayShortageType(isPowerShortage, "Power");
+            displayShortageType(isWaterShortage, "Water");
+            displayShortageType(isSewageShortage, "Sewage");
         }
     }
 
-    private void applyPenalties()
-    {
-
-    }
-
-    private void messageShortageType(bool shortage, string resourceType)
+    // Display shortage message in the console
+    private void displayShortageType(bool shortage, string resourceType)
     {
         if (shortage)
         {
