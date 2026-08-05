@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
+    public StructurePrefab structurePrefab;
+
     public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement,  onWaterPlantPlacement, onSewagePlacement, onPowerPlacement, changeSpeed, pauseGame;
 
     public Button placeRoadButton;
@@ -34,25 +36,48 @@ public class UIController : MonoBehaviour
     public Color outlineColor;
     List<Button> buttonList;
 
+    [Header("Service Info")]
+    public TextMeshProUGUI powerInfoText;
+    public TextMeshProUGUI waterInfoText, sewageInfoText;
+
     private void Start()
     {
         buttonList = new List<Button> { placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton,  placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton };
 
+        initializServiceInfo();
+        initializeControlButton();
+        initializeZoneButtons();
+        initializeServiceButtons();
+
+    }
+
+    private void initializeControlButton()
+    {
         placeRoadButton.onClick.AddListener(() => handleButtonClick(placeRoadButton, onRoadPlacement));
         speedButton.onClick.AddListener(() => changeGameSpeed(changeSpeed));
         pauseBtn.onClick.AddListener(() => changeGameSpeed(pauseGame));
+    }
 
-        // Zones
+    private void initializeZoneButtons()
+    {
         placeResidentialButton.onClick.AddListener(() => handleButtonClick(placeResidentialButton, onResidentialPlacement));
         placeCommercialButton.onClick.AddListener(() => handleButtonClick(placeCommercialButton, onCommercialPlacement));
         placeIndustrialButton.onClick.AddListener(() => handleButtonClick(placeIndustrialButton, onIndustrialPlacement));
+    }
 
-        // Service
+    private void initializeServiceButtons()
+    {
         placeWaterPlantButton.onClick.AddListener(() => handleButtonClick(placeWaterPlantButton, onWaterPlantPlacement));
         placeSewagePlantButton.onClick.AddListener(() => handleButtonClick(placeSewagePlantButton, onSewagePlacement));
         placePowerPlantButton.onClick.AddListener(() => handleButtonClick(placePowerPlantButton, onPowerPlacement));
     }
 
+    private void initializServiceInfo()
+    {
+        displayServiceInfo(waterInfoText, structurePrefab.waterPrefabs, "m³/h");
+        displayServiceInfo(sewageInfoText, structurePrefab.sewagePrefab, "m³/h");
+        displayServiceInfo(powerInfoText, structurePrefab.powerPrefabs, "kWh");
+    }
 
     public void displayPopulation(int population)
     {
@@ -90,6 +115,12 @@ public class UIController : MonoBehaviour
     private void changeGameSpeed(System.Action action)
     {
         action?.Invoke();
+    }
+
+    private void displayServiceInfo(TextMeshProUGUI text, IServicesPrefab prefab, string unit)
+    {
+        string infoText = $"Cost: ${prefab.Cost:N2} \r\nMaint.: ${prefab.ExpensePerTimeUnit * 20f:N2}/h\r\nGen: {prefab.GeneratingCapacityPerTick:N2} {unit}";
+        text.text = infoText;
     }
 
     public void updateSpeedBtnText(int newSpeed)
