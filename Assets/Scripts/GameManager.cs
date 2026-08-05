@@ -54,19 +54,18 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         uiController.onRoadPlacement += RoadPlacementHandler;
-        uiController.onBigStructurePlacement += BigStructureHandler;
         uiController.changeSpeed += changeSpeedModeOnButtonClicked;
         uiController.pauseGame += togglePause;
 
         // Zones
-        uiController.onResidentialPlacement  += ResidentialPlacementHandler;
-        uiController.onCommercialPlacement += CommercialPlacementHandler;
-        uiController.onIndustrialPlacement += IndustrialPlacementHandler;
+        uiController.onResidentialPlacement  += () => PlacmentHandler(structureManager.placeResidential);
+        uiController.onCommercialPlacement += () => PlacmentHandler(structureManager.placeCommercial);
+        uiController.onIndustrialPlacement += () => PlacmentHandler(structureManager.placeIndustrial);
 
         // Services    
-        uiController.onWaterPlantPlacement += WaterPlantPlacementHandler;
-        uiController.onSewagePlacement += SewagePlantPlacementHandler;
-        uiController.onPowerPlacement += PowerPlantPlacementHandler;       
+        uiController.onWaterPlantPlacement += () => PlacmentHandler(structureManager.placeWaterPlant);
+        uiController.onSewagePlacement += () => PlacmentHandler(structureManager.placeSewagePlant);
+        uiController.onPowerPlacement += () => PlacmentHandler(structureManager.placePowerPlant);
     }
 
     
@@ -149,45 +148,6 @@ public class GameManager : MonoBehaviour
     {
         clearInputActions();
         inputManager.OnMouseClick += action;
-    }
-
-    // ===== Handler Functions
-    // Zones
-    private void ResidentialPlacementHandler()
-    {
-        PlacmentHandler(structureManager.placeResidential);
-    }
-
-    private void CommercialPlacementHandler()
-    {
-        PlacmentHandler(structureManager.placeCommercial);
-    }
-
-    private void IndustrialPlacementHandler()
-    {
-        PlacmentHandler(structureManager.placeIndustrial);
-    }
-
-    // Services
-    private void WaterPlantPlacementHandler()
-    {
-        PlacmentHandler(structureManager.placeWaterPlant);
-    }
-
-    private void PowerPlantPlacementHandler()
-    {
-        PlacmentHandler(structureManager.placePowerPlant);
-    }
-
-    private void SewagePlantPlacementHandler()
-    {
-        PlacmentHandler(structureManager.placeSewagePlant);
-    }
-
-    // Others
-    private void BigStructureHandler()
-    {
-        PlacmentHandler(structureManager.placeBigStructure);
     }
 
     private void RoadPlacementHandler()
