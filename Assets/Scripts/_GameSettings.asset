@@ -36,11 +36,12 @@ MonoBehaviour:
     hiringSpeed: 0.15
     naturalUnemploymentRate: 0.05
   economy:
-    initialBudget: 1000
+    initialBudget: 5000
     taxRate: 0.05
-    exportRevenuePerUnit: 10
-    importCostPerUnit: 3
-    productionCostPerUnit: 2
+    incomePerCapita: 50
+    exportRevenuePerUnit: 30
+    importCostPerUnit: 10
+    productionCostPerUnit: 1
     salePricePerUnit: 50
   service:
     supplyThreshold: 1

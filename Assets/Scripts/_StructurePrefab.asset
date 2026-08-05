@@ -69,25 +69,39 @@ MonoBehaviour:
     powerConsumption: 10
   industrialPrefabs:
   - prefab: {fileID: 3702253504043930072, guid: f9b35d1c64309ca43b126ef7c1cf9bd5, type: 3}
-    weight: 1
-    workerCapacity: 50
+    weight: 0.5
+    workerCapacity: 30
     freightPerTick: 20
     inventory: 100
     waterConsumption: 10
     powerConsumption: 10
+  - prefab: {fileID: 3702253504043930072, guid: 0d59c3b26a4ffed48b362beb7bba99c0, type: 3}
+    weight: 0.2
+    workerCapacity: 40
+    freightPerTick: 30
+    inventory: 110
+    waterConsumption: 20
+    powerConsumption: 25
+  - prefab: {fileID: 3702253504043930072, guid: 55357c51058b32d40bcd36aa2d2b6654, type: 3}
+    weight: 0.2
+    workerCapacity: 50
+    freightPerTick: 25
+    inventory: 120
+    waterConsumption: 25
+    powerConsumption: 30
   bigPrefabs: []
   powerPrefabs:
     prefab: {fileID: 3702253504043930072, guid: 41d9dfcfdddae0340b6c2e604c2307b7, type: 3}
-    cost: 15
-    expensePerTimeUnit: 25
-    powerGeneration: 100
+    cost: 10
+    expensePerTimeUnit: 15
+    powerGeneration: 300
   waterPrefabs:
     prefab: {fileID: 3702253504043930072, guid: 73d45a49ecaa5ae478427c3735eaacbc, type: 3}
     cost: 10
-    expensePerTimeUnit: 25
-    waterGeneration: 100
+    expensePerTimeUnit: 10
+    waterGeneration: 300
   sewagePrefab:
     prefab: {fileID: 3702253504043930072, guid: f602db7a18cf73848a47a49fb5e77574, type: 3}
     cost: 10
-    expensePerTimeUnit: 25
-    sewageProcessing: 100
+    expensePerTimeUnit: 10
+    sewageProcessing: 300
