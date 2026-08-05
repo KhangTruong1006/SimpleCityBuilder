@@ -4,6 +4,7 @@ using UnityEngine;
 public class PopulationManager : MonoBehaviour
 {
     [SerializeField] private GameSettings settings;
+    public StatsPanelController statsPanelController;
 
     public DemandController demandController;
     public DemographicsManager demographicsManager;
@@ -52,6 +53,7 @@ public class PopulationManager : MonoBehaviour
         calculatePopulationChange();
 
         uiController.displayPopulation(population);
+        statsPanelController.displayEmploymentStats(getEmploymentRate(),employedPopulation, employablePopulation, jobCapacity);
     }
 
     private void calculatePopulationChange()
@@ -186,10 +188,18 @@ public class PopulationManager : MonoBehaviour
         return jobCapacity;
     }
 
-    public float getEmploymentRate()
+    public float getEmploymentAndJobRatio()
     {
         return (float)employedPopulation / jobCapacity;
     }
+    public float getEmploymentRate()
+    {
+        if (employablePopulation <= 0)
+        {
+            return 0f;
+        }
+        return (float)employedPopulation / population;
+    } 
 
     public int getEmployablePopulation()
     {
