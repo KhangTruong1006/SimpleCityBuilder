@@ -3,6 +3,7 @@ using UnityEngine;
 public class DemographicsManager : MonoBehaviour
 {
     [SerializeField] private GameSettings settings;
+    public StatsPanelController statsPanelController;
 
     // Children (0-18) - Young Adults (19 - 35) - Adutls (36 - 60) - Seniors (60+)
     public int children;
@@ -66,7 +67,9 @@ public class DemographicsManager : MonoBehaviour
 
         updatePopulationValues();
 
-        return getTotalPopulation();
+        int population = getTotalPopulation();
+        statsPanelController.displayPopulationStats(children, youngAdults, adults, seniors, population);
+        return population;
     }
 
 
