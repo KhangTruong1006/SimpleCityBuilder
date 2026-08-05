@@ -70,6 +70,7 @@ public class GameSettings : ScriptableObject
         public float initialBudget = 1000f;
         [Range(0f, 0.3f)]
         public float taxRate = 0.1f;
+        public float incomePerCapita = 120f;
 
         public float exportRevenuePerUnit = 10f;
         public float importCostPerUnit = 25f;
