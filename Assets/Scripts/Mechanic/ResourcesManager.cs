@@ -11,7 +11,7 @@ public class ResourcesManager : MonoBehaviour
 
     public float productionRatePerTimeUnit;
 
-    public float goodsDemandPerCapita = 0.1f;
+    public float goodsDemandPerCapita;
     public float dynamicDemand;
 
     [Header("Export and Import")]
