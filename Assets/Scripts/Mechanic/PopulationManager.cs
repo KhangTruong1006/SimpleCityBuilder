@@ -112,8 +112,8 @@ public class PopulationManager : MonoBehaviour
 ;       float openJobsRatio = calculateJobsRatio();
         float lifeSatisfaction = goodsSatisfaction; // Add tax
 
-        float jobAttractionFactor =  openJobsRatio * 0.5f;
-        float satisfactionFactor = lifeSatisfaction * 0.3f;
+        float jobAttractionFactor =  1.0f + openJobsRatio * 1.5f;
+        float satisfactionFactor = 0.5f + lifeSatisfaction * 0.5f;
 
         globalFactor = Mathf.Clamp01(jobAttractionFactor + satisfactionFactor);
     }
