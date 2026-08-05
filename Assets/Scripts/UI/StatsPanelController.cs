@@ -25,4 +25,9 @@ public class StatsPanelController : MonoBehaviour
 
     [Header("Expenses")]
     public TextMeshProUGUI expensesCommercial;
+    public TextMeshProUGUI expenseIndustrial, expensePower, expenseWater,expenseSewage;
+
+    [Header("Summary")]
+    public TextMeshProUGUI totalIncomeText;
+    public TextMeshProUGUI totalExpensesText, netIncomeText;
 }
