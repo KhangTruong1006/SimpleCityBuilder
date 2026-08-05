@@ -55,6 +55,8 @@ public class StructureManager : MonoBehaviour
         if(prefab != null) 
         { 
             waterAndPowerService.updateWaterSupplyCapacity(prefab.GeneratingCapacityPerTick);
+            economyManager.substractConstructionCost(prefab.Cost);
+            economyManager.updateWaterSpending(prefab.ExpensePerTimeUnit);
         }
     }
 
@@ -64,6 +66,8 @@ public class StructureManager : MonoBehaviour
         if (prefab != null)
         {
             waterAndPowerService.updateSewageProcessingCapacity(prefab.GeneratingCapacityPerTick);
+            economyManager.substractConstructionCost(prefab.Cost);
+            economyManager.updateSewageSpending(prefab.ExpensePerTimeUnit);
         }
     }
 
@@ -73,6 +77,8 @@ public class StructureManager : MonoBehaviour
         if (prefab != null) 
         { 
             waterAndPowerService.updateElectricitySupplyCapacity(prefab.GeneratingCapacityPerTick);
+            economyManager.substractConstructionCost(prefab.Cost);
+            economyManager.updatePowerSpending(prefab.ExpensePerTimeUnit);
         }
     }
 
@@ -107,10 +113,6 @@ public class StructureManager : MonoBehaviour
 
         placementManager.placeObjectOnTheMap(position, prefab.Prefab, CellType.Service);
         AudioPlayer.instance.PlayPlacementSound();
-
-        
-        economyManager.substractConstructionCost(prefab.Cost);
-        economyManager.addMaintenanceSpending(prefab.ExpensePerTimeUnit);
         return prefab;
     }
 
