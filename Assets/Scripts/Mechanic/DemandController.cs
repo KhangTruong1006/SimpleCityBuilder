@@ -78,7 +78,7 @@ public class DemandController : MonoBehaviour
         float jobRatio = (float)openJobs / jobCapacity;
         float housingFactor = calculateHousingFactor(population,capcity);  
 
-        float rawDemand = (0.5f * housingFactor) + (0.5f * jobRatio);
+        float rawDemand = (0.6f * housingFactor) + (0.4f * jobRatio);
 
         residentialDemand = clamp01Input(rawDemand);
     }
@@ -110,7 +110,7 @@ public class DemandController : MonoBehaviour
         float currentDemand = ResourcesManager.getDynamicDemand();
         float importReliance = calculateImportReliance(currentDemand);
 
-        float rawDemand = 0.5f * unemploymentRate + 0.5f * importReliance;
+        float rawDemand = (0.4f * unemploymentRate) + (0.6f * importReliance);
 
         industrialDemand = clamp01Input(rawDemand);
     }
