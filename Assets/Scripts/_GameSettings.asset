@@ -32,16 +32,16 @@ MonoBehaviour:
     taxThreshold: 0.15
   population:
     seedingPop: 2
-    basedGrowthRate: 0.05
+    basedGrowthRate: 0.1
     hiringSpeed: 0.15
     naturalUnemploymentRate: 0.05
   economy:
     initialBudget: 1000
-    taxRate: 0.1
-    exportRevenuePerUnit: 25
+    taxRate: 0.05
+    exportRevenuePerUnit: 10
     importCostPerUnit: 3
     productionCostPerUnit: 2
-    salePricePerUnit: 100
+    salePricePerUnit: 50
   service:
     supplyThreshold: 1
   demographic:
