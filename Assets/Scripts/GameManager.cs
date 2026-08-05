@@ -108,12 +108,9 @@ public class GameManager : MonoBehaviour
 
     private void runSimulationTick()
     {
-        if(counter % 5 == 0 && counter > 0)
-        {   
-            //waterAndPowerService.runSimulationTick();
-            populationManager.runSimulationTick();
-            economyManager.runSimulationTick();       
-        }
+        //waterAndPowerService.runSimulationTick();
+        populationManager.runSimulationTick();
+        economyManager.runSimulationTick();
         demandController.runSimulationTick();
     }
 
