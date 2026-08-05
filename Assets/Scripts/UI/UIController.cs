@@ -7,17 +7,36 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement, onBigStructurePlacement, onWaterPlantPlacement, onSewagePlacement, onPowerPlacement, changeSpeed, pauseGame;
-    public Button placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton, speedButton, pauseBtn;
-    public TextMeshProUGUI populationText, budgetText, dayText, hourText;
-    public Text speedBtnText, gamePauseBtnText;
+    public Action onRoadPlacement, onResidentialPlacement, onCommercialPlacement, onIndustrialPlacement,  onWaterPlantPlacement, onSewagePlacement, onPowerPlacement, changeSpeed, pauseGame;
+
+    public Button placeRoadButton;
+
+    [Header("Zone Buttons")]
+    public Button placeResidentialButton;
+    public Button placeCommercialButton, placeIndustrialButton;
+    
+    [Header("Service Buttons")]
+    public Button placeWaterPlantButton;
+    public Button placeSewagePlantButton, placePowerPlantButton;
+
+    [Header("Game Controll Button")]
+    public Button speedButton;
+    public Button pauseBtn;
+
+    [Header("TMP Stats Text")]
+    public TextMeshProUGUI populationText;
+    public TextMeshProUGUI budgetText, dayText, hourText;
+
+    [Header("Normal Text")]
+    public Text speedBtnText;
+    public Text gamePauseBtnText;
 
     public Color outlineColor;
     List<Button> buttonList;
 
     private void Start()
     {
-        buttonList = new List<Button> { placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton, placeBigStructureButton, placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton };
+        buttonList = new List<Button> { placeRoadButton, placeResidentialButton, placeCommercialButton, placeIndustrialButton,  placeWaterPlantButton, placeSewagePlantButton, placePowerPlantButton };
 
         placeRoadButton.onClick.AddListener(() => handleButtonClick(placeRoadButton, onRoadPlacement));
         speedButton.onClick.AddListener(() => changeGameSpeed(changeSpeed));
@@ -27,9 +46,6 @@ public class UIController : MonoBehaviour
         placeResidentialButton.onClick.AddListener(() => handleButtonClick(placeResidentialButton, onResidentialPlacement));
         placeCommercialButton.onClick.AddListener(() => handleButtonClick(placeCommercialButton, onCommercialPlacement));
         placeIndustrialButton.onClick.AddListener(() => handleButtonClick(placeIndustrialButton, onIndustrialPlacement));
-
-        //Big Structure Button (Remove Later)
-        placeBigStructureButton.onClick.AddListener(() => handleButtonClick(placeBigStructureButton, onBigStructurePlacement));
 
         // Service
         placeWaterPlantButton.onClick.AddListener(() => handleButtonClick(placeWaterPlantButton, onWaterPlantPlacement));
