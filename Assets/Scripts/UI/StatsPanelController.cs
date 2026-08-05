@@ -30,4 +30,65 @@ public class StatsPanelController : MonoBehaviour
     [Header("Summary")]
     public TextMeshProUGUI totalIncomeText;
     public TextMeshProUGUI totalExpensesText, netIncomeText;
+
+    //General Function
+    private void displayStat(TextMeshProUGUI textElement, string text)
+    {
+        textElement.text = text;
+    } 
+
+    //
+    private void displayPopulationStats(int children, int youngAdult, int adult, int senior, int population)
+    {
+        displayStat(childrenText, $"{children}");
+        displayStat(youngAdultText, $"{youngAdult}");
+        displayStat(adultText, $"{adult}");
+        displayStat(seniorText, $"{senior}");
+        displayStat(totalPopulation, $"{population}");
+    }
+
+    private void displayEmploymentStats(int unemployedRate, int employed, int employable, int jobs)
+    {
+        displayStat(unemployedText, $"{unemployedRate}");
+        displayStat(employedText, $"{employed}");
+        displayStat(employableText, $"{employable}");
+        displayStat(jobsText, $"{jobs}");
+    }
+
+    private void displayServiceGeneratingStats(float water, float sewage, float power)
+    {
+        displayStat(waterText, $"{water:N2}");
+        displayStat(sewageText, $"{sewage:N2}");
+        displayStat(powerText, $"{power:N2}");
+    }
+
+    private void displayServiceUsageStats(float waterUsage, float sewageUsage, float powerUsage)
+    {
+        displayStat(waterUsageText, $"{waterUsage:N2}");
+        displayStat(sewageUsageText, $"{sewageUsage:N2}");
+        displayStat(powerUsageText, $"{powerUsage:N2}");
+    }
+
+    private void displayIncomeStats(float incomeResidential, float incomeCommercial, float incomeIndustrial)
+    {
+        displayStat(this.incomeResidential, $"{incomeResidential:N2}");
+        displayStat(this.incomeCommercial, $"{incomeCommercial:N2}");
+        displayStat(this.incomeIdustrial, $"{incomeIndustrial:N2}");
+    }
+
+    private void displayExpenseStats(float expenseCommercial, float expenseIndustrial, float expensePower, float expenseWater, float expenseSewage)
+    {
+        displayStat(this.expensesCommercial, $"{expenseCommercial:N2}");
+        displayStat(this.expenseIndustrial, $"{expenseIndustrial:N2}");
+        displayStat(this.expensePower, $"{expensePower:N2}");
+        displayStat(this.expenseWater, $"{expenseWater:N2}");
+        displayStat(this.expenseSewage, $"{expenseSewage:N2}");
+    }
+
+     private void displaySummaryStats(float totalIncome, float totalExpenses, float netIncome)
+    {
+        displayStat(totalIncomeText, $"{totalIncome:N2}");
+        displayStat(totalExpensesText, $"{totalExpenses:N2}");
+        displayStat(netIncomeText, $"{netIncome:N2}");
+    }
 }
