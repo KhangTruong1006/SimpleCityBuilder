@@ -45,7 +45,7 @@ public class UIController : MonoBehaviour
 
     public void displayBudget(float budget)
     {
-        displayStat(budgetText, $"{budget}");
+        displayStat(budgetText, $"{budget:N2}");
     }
 
     private void modifyOutline(Button button)
