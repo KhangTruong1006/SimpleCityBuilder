@@ -37,7 +37,7 @@ MonoBehaviour:
     naturalUnemploymentRate: 0.05
   economy:
     initialBudget: 5000
-    taxRate: 0.05
+    taxRate: 0.1
     incomePerCapita: 50
     exportRevenuePerUnit: 30
     importCostPerUnit: 10
