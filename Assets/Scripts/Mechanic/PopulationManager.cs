@@ -20,8 +20,6 @@ public class PopulationManager : MonoBehaviour
 
     [Range(0.0f, 1.0f)]
     public float goodsSatisfaction = 1.0f;
-    [Range(0.0f, 1.0f)]
-    public float workersThreshold;
 
     private float baseGrowthRate;
     public float precisePopulation = 0f;
@@ -37,7 +35,6 @@ public class PopulationManager : MonoBehaviour
 
     private void Start()
     {
-        workersThreshold = settings.threshold.workersThreshold;
         hiringSpeed = settings.population.hiringSpeed;
         naturalUnemploymentRate = settings.population.naturalUnemploymentRate;
         baseGrowthRate = settings.population.basedGrowthRate;
