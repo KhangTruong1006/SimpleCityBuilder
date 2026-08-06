@@ -28,13 +28,14 @@ public class WaterAndPowerService : MonoBehaviour
     public void runSimulationTick()
     {
         // When starts a new city
-        if (populationManager.population < 1)
+        if (populationManager.getCurrentPopulation() < 1)
         {
             return;
         }
 
         checkShortages();
-        messageShortage();
+        displayShortages();
+
         statsPanelController.displayServiceUsageStats(waterCurrentUsage, sewageCurrentUsage, powerCurrentUsage);
         statsPanelController.displayServiceGeneratingStats(waterSupplyCapacity, sewageProcessingCapacity, powerSupplyCapacity);
     }
@@ -63,23 +64,25 @@ public class WaterAndPowerService : MonoBehaviour
         return isPowerShortage || isWaterShortage || isSewageShortage;
     }
 
-    private void messageShortage()
+    private void displayShortages()
     {
-        if (haveShortages())
-        {
-            displayShortageType(isPowerShortage, "Power");
-            displayShortageType(isWaterShortage, "Water");
-            displayShortageType(isSewageShortage, "Sewage");
-        }
+        displayShortageType(isPowerShortage, panelController.warningPowerPanel);
+        displayShortageType(isWaterShortage, panelController.warningWaterPanel);
+        displayShortageType(isSewageShortage, panelController.warningSewagePanel);
     }
 
     // Display shortage message in the console
-    private void displayShortageType(bool shortage, string resourceType)
+    private void displayShortageType(bool shortage, GameObject panel)
     {
-        if (shortage)
+        if (shortage && !panel.activeSelf)
         {
-            Debug.Log($"Warning: {resourceType} shortage detected!");
+            panelController.enablePanel(panel);
+            return;
         }
+        if (!shortage && panel.activeSelf) 
+        {
+            panelController.disablePanel(panel); 
+        }            
     }
 
     // ===== Update methods =====
