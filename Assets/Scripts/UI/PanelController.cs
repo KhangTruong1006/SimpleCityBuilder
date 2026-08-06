@@ -40,12 +40,19 @@ public class PanelController : MonoBehaviour
         }
     }
 
-    public void toggleWarningPanel(GameObject panel)
+    public void enablePanel(GameObject panel)
     {
         if (panel != null)
         {
-            bool isActive = panel.activeSelf;
-            panel.SetActive(!isActive);
+            panel.SetActive(true);
+        }
+    }
+
+    public void disablePanel(GameObject panel)
+    {
+        if (panel != null)
+        {
+            panel.SetActive(false);
         }
     }
 }
