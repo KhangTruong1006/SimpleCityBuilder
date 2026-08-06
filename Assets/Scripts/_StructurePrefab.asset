@@ -92,16 +92,16 @@ MonoBehaviour:
   bigPrefabs: []
   powerPrefabs:
     prefab: {fileID: 3702253504043930072, guid: 41d9dfcfdddae0340b6c2e604c2307b7, type: 3}
-    cost: 10
+    cost: 100
     expensePerTimeUnit: 15
     powerGeneration: 300
   waterPrefabs:
     prefab: {fileID: 3702253504043930072, guid: 73d45a49ecaa5ae478427c3735eaacbc, type: 3}
-    cost: 10
+    cost: 100
     expensePerTimeUnit: 10
     waterGeneration: 300
   sewagePrefab:
     prefab: {fileID: 3702253504043930072, guid: f602db7a18cf73848a47a49fb5e77574, type: 3}
-    cost: 10
+    cost: 100
     expensePerTimeUnit: 10
     sewageProcessing: 300
